@@ -2,8 +2,8 @@ import classes from "./herader.module.css";
 
 export default function Header () {
     return (
-        <header className={classes.header_container}>
-                
-        </header>
+       <div className={classes.header_container}>
+            나는 헤더임!!!!!!!!!!!!! 
+       </div>
     )
 }
