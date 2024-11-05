@@ -15,10 +15,17 @@
   }
 }
 
+@font-face {
+  font-family: 'NanumGothic';
+  src: url('/fonts/NanumGothic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, 'NanumGothic', sans-serif;
   width: 100%;
   min-height: 100vh;
   margin: 0;
