@@ -1,6 +1,6 @@
 import "./globals.css";
 import Navigation from "@/components/navigation/navigation";
-import Header from "@/components/header/header";
+import GuestHeader from "@/components/header/guest-header/guest-header";
 
 export const metadata = {
   title: "Create Next App",
@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <div className="layout-container">
           
           <header className="header">
-            <Header />
+            <GuestHeader />
           </header>
           
           <aside className="sidebar">
@@ -26,6 +26,9 @@ export default function RootLayout({ children }) {
           </div>
 
         </div>
+    
+    
+        {children}
       </body>
     </html>
   );
