@@ -1,4 +1,4 @@
-// app/find-id/page.tsx
+// app/find-id/page.js
 'use client'
 
 import styles from './findId.module.css'

@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import styles from './SignupForm.module.css'
+import styles from './signup.module.css'
 
 export default function signup() {
     return (

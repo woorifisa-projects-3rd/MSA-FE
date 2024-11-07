@@ -1,7 +1,6 @@
-/* app/login/login.module.css */
 .container {
     display: flex;
-    min-height: 100vh;
+    height: calc(100vh - var(--header-height));
     background-color: #fff;
 }
 

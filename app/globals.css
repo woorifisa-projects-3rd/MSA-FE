@@ -3,29 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --header-height:100px;
+  --header-height:80px;
+  --header-padding: 20px 100px;
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-@font-face {
-  font-family: 'NanumGothic';
-  src: url('/fonts/NanumGothic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  --main-woori-blue: #0180CD;
+  --woori-light-blue: #38BEEF;
+  --woori-deep-blue: #0067AC;
+  --sidebar-width: 15%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, 'NanumGothic', sans-serif;
   width: 100%;
   min-height: 100vh;
   margin: 0;
@@ -33,38 +21,4 @@ body {
   overflow-x: hidden;
 }
 
-.layout-container {
-    display: grid;
-    grid-template-areas: 
-      "header header"
-      "sidebar main";
-    grid-template-rows: var(--header-height) 1fr;
-    grid-template-columns: 15% 1fr;
-    min-height: 100vh;
-}
-
-.header{
-    grid-area: header;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    width: 100%;
-    height: var(--header-height);
-}
-.sidebar{
-    grid-area: sidebar;
-    position: sticky;  /* 혹은 position relative로  */
-    top: var(--header-height);
-    height: calc(100vh - var(--header-height));
-}
-.main{
-    grid-area: main;
-    padding: 20px;
-}
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
 

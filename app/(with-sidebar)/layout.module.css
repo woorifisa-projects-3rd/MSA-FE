@@ -1,0 +1,32 @@
+.layoutContainer {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "sidebar main";
+    grid-template-rows: var(--header-height) 1fr;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+}
+
+.header{
+    grid-area: header;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: var(--header-height);
+}
+.sidebar{
+    grid-area: sidebar;
+    position: sticky;  /* 혹은 position relative로  */
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+}
+.main{
+    grid-area: main;
+    padding: 20px;
+    background-color: whitesmoke;
+}
+  
+  

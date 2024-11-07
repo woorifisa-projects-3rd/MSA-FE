@@ -1,7 +1,7 @@
-/* components/SignupForm.module.css */
 .container {
-    min-height: 100vh;
-    background-color: #fff;
+    height: calc(100vh - var(--header-height));
+    /* background-color: #fff; */
+    background-color: green;
     padding: 2rem;
 }
 

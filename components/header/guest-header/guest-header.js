@@ -1,15 +1,18 @@
-import classes from "./header.module.css";
+import classes from "./guest-header.module.css";
 import Link from 'next/link';
-
-
+import Image from "next/image";
 
 export default function GuestHeader () {
+    const logoWidth = 250;
     return (
         <header className={classes.header_container}>
             <div className={classes.header_left}>
-            <img src="/집계사장.png" alt="로고" className={classes.logo_image} />
+                <Link href="/onboarding">
+                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26}/>
+                </Link>
             </div>
             <div className={classes.header_right}>
+                
                 <Link href="/login">
                     <button className={classes.profile_button}>로그인</button>
                 </Link>
