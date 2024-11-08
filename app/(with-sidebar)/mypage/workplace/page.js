@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import Button from '@/components/button/button';
+import Image from "next/image";
 
 export default function Workplace() {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -36,11 +37,15 @@ export default function Workplace() {
               <div className={styles.formGroup}>
                 <label>계좌 등록</label>
                 <div className={styles.inputGroup}>
-                    <select>
-                    <option>우리은행</option>
-                    <option>하나은행</option>
-                    <option>국민은행</option>
-                    </select>
+                    <div className={styles.bankContainer}>
+                        <Image
+                            src="/images/woori.png"
+                            alt="우리은행 로고"
+                            width={24}
+                            height={24}
+                        />
+                        <span>우리은행</span>
+                    </div>
                     <input type="text" placeholder="계좌 번호를 입력하세요" />
                     <Button text="계좌 확인" color="#007bff" />
                 </div>
