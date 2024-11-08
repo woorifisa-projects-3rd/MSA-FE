@@ -84,16 +84,6 @@ export default function EmployeeForm() {
                 </div>
 
                 <div className={styles.formGroup}>
-                    <label>직급</label>
-                    <select
-                        value={formData.position}
-                        onChange={(e) => setFormData({...formData, position: e.target.value})}
-                    >
-                        <option value="">선택하세요</option>
-                        <option value="사원">사원</option>
-                        <option value="대리">대리</option>
-                        <option value="과장">과장</option>
-                    </select>
                 </div>
 
                 <div className={styles.formRow}>

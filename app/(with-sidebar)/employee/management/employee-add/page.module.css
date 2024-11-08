@@ -114,3 +114,11 @@
 .submitButton:hover {
     background-color: #2c5282;
 }
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center; /* 중앙 정렬 추가 */
+}
