@@ -1,4 +1,6 @@
 /* ProfileEdit.module.css */
+
+
 .container {
     padding: 20px;
     background-color: #fff;
@@ -61,7 +63,7 @@
   
   .verifyButton {
     padding: 8px 16px;
-    background-color: #40c4ff;
+    background-color: var(--woori-button-hover);
     color: white;
     border: none;
     border-radius: 4px;

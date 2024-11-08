@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import styles from './page.module.css';
@@ -21,7 +21,7 @@ const ProfileEdit = () => {
     <div className={styles.container}>
       <div className={styles.tabs}>
         <button className={styles.activeTab}>프로필 편집</button>
-        <button>열람 설정</button>
+        <button>알람 설정</button>
         <button>비밀번호 변경</button>
       </div>
 
