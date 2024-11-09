@@ -7,6 +7,7 @@ import classes from "./navigation.module.css";
 import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
+import BusinessSelectDropdown from "../dropdown/business-dropdown";
 
 
 export default function Navigation(){
@@ -15,6 +16,9 @@ export default function Navigation(){
 
     return (
         <nav className={classes.nav}>
+            <div>
+                <BusinessSelectDropdown/>
+            </div>
             <div>
                 <ul>
                     {NAVIGATION_ITEMS.map((item, index)=>(
