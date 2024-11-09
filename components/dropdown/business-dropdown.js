@@ -27,7 +27,7 @@ const BusinessSelectDropdown = () => {
                 className={`${styles.dropbtn} ${isOpen ? styles.active : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span>{selectedBusiness}</span>
+                <span className={styles.businessName}>{selectedBusiness}</span>
                 <span className={styles.arrow}>▼</span>
             </button>
             {isOpen && (
