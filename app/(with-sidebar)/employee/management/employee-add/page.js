@@ -8,24 +8,23 @@ export default function EmployeeForm() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        phone: '',
-        gender: '남자',
         birthDate: '',
-        position: '',
-        salaryType: '시급',
+        sex: true,
+        phoneNumber: '',
+        employmentType: true,
+        bankCode: '',
+        accountNumber: '',
         salary: '',
         paymentDate: '',
-        bank: '',
-        accountNumber: '',
-        postcode: '',
         address: '',
-        detailAddress: ''
     });
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
     };
+
 
     return (
         <div className={styles.formContainer}>
@@ -56,8 +55,8 @@ export default function EmployeeForm() {
                     <input
                         type="tel"
                         placeholder="010-1111-1111"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        value={formData.phoneNumber}
+                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
                     />
                 </div>
 
@@ -65,11 +64,11 @@ export default function EmployeeForm() {
                     <div className={styles.formGroup}>
                         <label>성별</label>
                         <select
-                            value={formData.gender}
-                            onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                            value={formData.sex}
+                            onChange={(e) => setFormData({...formData, sex: e.target.value})}
                         >
-                            <option value="남자">남자</option>
-                            <option value="여자">여자</option>
+                            <option value="true">남자</option>
+                            <option value="false">여자</option>
                         </select>
                     </div>
 
@@ -88,13 +87,13 @@ export default function EmployeeForm() {
 
                 <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                        <label>급여 유형</label>
+                        <label>고용 형태</label>
                         <select
-                            value={formData.salaryType}
-                            onChange={(e) => setFormData({...formData, salaryType: e.target.value})}
+                            value={formData.employmentType}
+                            onChange={(e) => setFormData({...formData, employmentType: e.target.value})}
                         >
-                            <option value="시급">시급</option>
-                            <option value="월급">월급</option>
+                            <option value="true">시급</option>
+                            <option value="false">월급</option>
                         </select>
                     </div>
 
@@ -104,18 +103,25 @@ export default function EmployeeForm() {
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => setFormData({...formData, salary: e.target.value})}
+                                onChange={(e) => setFormData({...formData, salary:parseInt(e.target.value)})}
                             />
                             <span>원</span>
                         </div>
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>급여일</label>
+                        <label>급여날짜</label>
                         <input
-                            type="date"
+                            type="number"
+                            min="1"
+                            max="28"
                             value={formData.paymentDate}
-                            onChange={(e) => setFormData({...formData, paymentDate: e.target.value})}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value);
+                                if (value >= 1 && value <= 28) {
+                                    setFormData({...formData, paymentDate: value})
+                                }
+                            }}
                         />
                     </div>
                 </div>
@@ -127,8 +133,8 @@ export default function EmployeeForm() {
                         <div className={styles.formGroup}>
                             <label>은행 선택</label>
                             <select
-                                value={formData.bank}
-                                onChange={(e) => setFormData({...formData, bank: e.target.value})}
+                                value={formData.bankCode}
+                                onChange={(e) => setFormData({...formData, bankCode: e.target.value})}
                             >
                                 <option value="">은행을 선택하세요</option>
                                 <option value="KB">국민은행</option>
@@ -153,7 +159,7 @@ export default function EmployeeForm() {
                 </div>
 
                 {/* 주소 섹션 추가 */}
-                <div className={styles.formSection}>
+                {/* <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>주소</h3>
                     <div className={styles.formGroup}>
                         <div className={styles.postcodeRow}>
@@ -187,9 +193,22 @@ export default function EmployeeForm() {
                             className={styles.addressInput}
                         />
                     </div>
+                </div> */}
+
+                <div className={styles.formSection}>
+                    <h3 className={styles.sectionTitle}>주소</h3>
+                    <div className={styles.formGroup}>
+                        <input
+                            type="text"
+                            placeholder="주소를 입력해주세요"
+                            value={formData.address}
+                            onChange={(e) => setFormData({...formData, address: e.target.value})}
+                            className={styles.addressInput}
+                        />
+                    </div>
                 </div>
 
-                <button type="submit" className={styles.submitButton}>추가</button>
+                <button type="submit" className={styles.submitButton} >추가</button>
             </form>
         </div>
     );
