@@ -1,4 +1,4 @@
-import AccountInputForm from '@/components/input/AccountInputForm';
+import AccountInput from "@/components/input/account-input";
 
 export default function AccountTestPage() {
  return (
@@ -9,13 +9,13 @@ export default function AccountTestPage() {
        {/* 일반 계좌 입력 */}
        <div>
          <h2 className="text-lg font-medium mb-2">일반 계좌 입력</h2>
-         <AccountInputForm />
+         <AccountInput />
        </div>
 
        {/* 우리은행 전용 계좌 입력 */}
        <div>
          <h2 className="text-lg font-medium mb-2">우리은행 전용 계좌 입력</h2>
-         <AccountInputForm isPresident={true} />
+         <AccountInput isPresident={true} />
        </div>
      </div>
 
