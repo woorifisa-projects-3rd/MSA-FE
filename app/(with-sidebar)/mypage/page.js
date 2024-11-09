@@ -1,14 +1,26 @@
+// pages/index.jsx 또는 app/page.jsx
+'use client';
+import { useState } from 'react';
+import WorkplaceModal from '@/components/modal/workplace-registraion.js/workplace-registration';
+import Button from '@/components/button/button';
+
 export default function Home() {
-    return (
-     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-     
-        <div style={{ backgroundColor: '#f0f8ff', padding: '15px', borderRadius: '8px', color: '#333', marginBottom: '10px' }}>
-          ddddddddddddddddddd
-        </div>
-        
-        <div style={{ height:'100vh', backgroundColor: '#ffebcd', padding: '15px', borderRadius: '8px', color: '#333' }}>
-            여긴 mypage
-        </div>
-     </div>
-    );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <Button
+        text="button 클릭하면 modal창 열림" 
+        color="red" 
+        onClick={openModal}
+      />
+      <WorkplaceModal 
+        isOpen={isModalOpen} 
+        onClose={closeModal}
+      />
+    </div>
+  );
 }
