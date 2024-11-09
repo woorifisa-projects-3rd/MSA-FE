@@ -1,0 +1,131 @@
+.container {
+    width: 100%;
+    max-width: 42rem;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+  
+  .inputContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    position: relative;
+  }
+  
+  .bankSelector, .bankSelectorDisabled {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .bankSelector {
+    cursor: pointer;
+  }
+  
+  .bankSelector:hover {
+    background-color: #f9fafb;
+  }
+  
+  .bankSelectorDisabled {
+    background-color: #f9fafb;
+  }
+  
+  .bankLogo {
+    width: 1.5rem;
+    height: 1.5rem;
+    /* overflow: hidden; */
+    /* background-color: yellow; */
+  }
+  
+  .bankLogo  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .bankLogo svg * {
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.25rem;
+    width: 18rem;
+    height: 20rem;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+  }
+  
+  .dropdownHeader {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+  }
+  
+  .dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .dropdownItem:hover {
+    background-color: #f9fafb;
+  }
+  
+  .accountInput {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+  }
+  
+  .accountInput:focus {
+    outline: none;
+    ring: 2px solid #3b82f6;
+  }
+  
+  .submitButton {
+    padding: 0.5rem 1rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .submitButton:hover {
+    background-color: #2563eb;
+  }
+  
+  .linkContainer {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .link {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+  .divider {
+    margin: 0 0.5rem;
+  }
