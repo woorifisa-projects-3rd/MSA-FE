@@ -1,13 +1,50 @@
+/* 공통 버튼 스타일 */
 .button {
-    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    color: white;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* 버튼 크기 스타일 */
+.small {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.medium {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.large {
+    padding: 15px 30px;
+    font-size: 18px;
 }
 
 .button:hover {
-    opacity: 0.8;
+    opacity: 0.6;
+}
+
+/* 특정 버튼 스타일 */
+.btn-submit {
+    background-color: var(--main-woori-blue);
+    color: #000000;
+}
+
+.btn-cancel {
+    background-color: #d3d3d3;
+    color: #000000;
+}
+
+/* 파란 테두리 스타일 (투명 배경) */
+.btn-outline {
+    border: 2px solid #4a90e2; /* 파란색 테두리 */
+    background-color: transparent;
+    color: #4a90e2; /* 텍스트 색상도 파란색 */
+}
+
+.btn-outline:hover {
+    background-color: #f0f8ff; /* 살짝 푸른 배경 */
 }
