@@ -1,138 +1,154 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.formWrapper {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.formGroup:last-of-type {
+  margin-bottom: 0;
+}
+
+.select,
+.dateInput,
+.timeInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.select:focus,
+.dateInput:focus,
+.timeInput:focus {
+  border-color: #0066ff;
+  box-shadow: 0 0 0 1px #0066ff;
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8.825L1.175 4 2.238 2.938 6 6.7l3.763-3.762L10.825 4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.timeInputs {
+  display: flex;
+  gap: 10px;
+}
+
+.timeInputs .inputGroup {
+  flex: 1;
+  position: relative;
+  margin-bottom: 0;
+}
+
+.timeLabel {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.timeLabel[data-type="start"] {
+  color: #ff0000;
+}
+
+.timeLabel[data-type="end"] {
+  color: #0066ff;
+}
+
+.timeInput {
+  padding-left: 45px;
+}
+
+.timeInput::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.workHoursText {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 700; 
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.cancelButton,
+.submitButton {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.submitButton {
+  background-color: #0066ff;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #e0e0e0;
+}
+
+.submitButton:hover {
+  background-color: #0052cc;
+}
+
+@media (max-width: 480px) {
   .formWrapper {
-    background: white;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 600px; /* 증가 */
-    padding: 32px; /* 증가 */
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+    margin: 16px;
+    border-radius: 8px;
   }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px; /* 증가 */
-  }
-  
-  .header h2 {
-    font-size: 24px; /* 증가 */
-    font-weight: 500;
-    color: #333;
-    margin: 0;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    font-size: 24px; /* 증가 */
-    cursor: pointer;
-    color: #666;
-    padding: 8px;
-  }
-  
-  .formGroup {
-    margin-bottom: 24px; /* 증가 */
-  }
-  
-  .inputRow {
-    display: flex;
-    gap: 16px; /* 증가 */
-    margin-bottom: 24px; /* 증가 */
-  }
-  
-  .inputGroup {
-    flex: 1;
-    position: relative;
-  }
-  
-  .inputGroup label {
-    display: block;
-    margin-bottom: 12px; /* 증가 */
-    font-size: 16px; /* 증가 */
-    color: #666;
-  }
-  
-  .inputGroup input,
-  .inputGroup select {
-    width: 100%;
-    padding: 14px 40px 14px 16px; /* 증가 */
-    border: 1px solid #e1e1e1;
-    border-radius: 10px; /* 증가 */
-    font-size: 16px; /* 증가 */
-    background-color: #fff;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    gap: 16px; /* 증가 */
-    margin-top: 32px; /* 증가 */
-  }
-  
-  .cancelButton,
-  .submitButton {
-    background-color: whitesmoke; /* 배경색을 흰색으로 변경 */
-    color: #666; /* 텍스트 색상을 회색으로 */
-    border: 1px solid #e1e1e1; /* 테두리 추가 */
-    flex: 1;
-    padding: 16px; /* 증가 */
-    border: none;
-    border-radius: 10px; /* 증가 */
-    font-size: 16px; /* 증가 */
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .cancelButton:hover {
-    background-color: #a0a0a0; /* 호버 시 배경색 살짝 변경 */
-    border-color: #d1d1d1; /* 호버 시 테두리 색상 약간 진하게 */
-  }
-  
-  /* 모바일 대응 */
-  @media (max-width: 640px) { /* 브레이크포인트 증가 */
-    .formWrapper {
-      max-width: 100%;
-      margin: 24px; /* 증가 */
-      padding: 24px; /* 증가 */
-    }
-    
-    .inputRow {
-      flex-direction: column;
-      gap: 20px; /* 증가 */
-    }
-    
-    .buttonGroup {
-      flex-direction: column;
-      gap: 16px; /* 증가 */
-    }
-  }
-
-  .submitButton {
-    background-color: #0066ff; /* 이미지의 파란색과 동일한 색상 */
-    color: white;
-    flex: 1;
-    padding: 16px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .submitButton:hover {
-    background-color: #0052cc; /* 호버 시 약간 어두운 색상 */
-  }
-  
-  .submitButton:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+}
