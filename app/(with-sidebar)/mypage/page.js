@@ -1,25 +1,37 @@
-// pages/index.jsx 또는 app/page.jsx
 'use client';
 import { useState } from 'react';
-import WorkplaceModal from '@/components/modal/workplace-registraion.js/workplace-registration';
+import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
 import Button from '@/components/button/button';
+import DeleteConfirmModal from '@/components/modal/delete-confirm.js/delete-confirm';
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWorkplaceModalOpen, setIsWorkplaceModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openWorkplaceModal = () => setIsWorkplaceModalOpen(true);
+  const closeModal = () => setIsWorkplaceModalOpen(false);
+  const openDeleteConfirmModal = () => setIsDeleteConfirmModalOpen(true);
+  const closeDeleteConfirmModal = () => setIsDeleteConfirmModalOpen(false);
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <Button
-        text="button 클릭하면 modal창 열림" 
+        text="사업장 등록 모달창" 
         color="red" 
-        onClick={openModal}
+        onClick={openWorkplaceModal}
       />
       <WorkplaceModal 
-        isOpen={isModalOpen} 
+        isOpen={isWorkplaceModalOpen} 
         onClose={closeModal}
+      />
+      <Button
+        text="삭제 확인 모달창" 
+        color="blue" 
+        onClick={openDeleteConfirmModal}
+      />
+      <DeleteConfirmModal
+        isOpen={isDeleteConfirmModalOpen} 
+        onClose={closeDeleteConfirmModal}
       />
     </div>
   );

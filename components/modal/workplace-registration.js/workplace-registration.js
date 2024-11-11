@@ -1,7 +1,6 @@
 // components/WorkplaceModal.jsx
 'use client';
-import { useState } from 'react';
-import styles from './workplace-registrion.module.css';
+import styles from './workplace-registration.module.css';
 import Button from '@/components/button/button';
 import Image from "next/image";
 
@@ -22,7 +21,7 @@ export default function WorkplaceModal({ isOpen, onClose }) {
             <label>사업자 번호</label>
             <div className={styles.inputGroup}>
               <input type="text" placeholder="사업자 번호를 입력하세요" />
-              <Button text="번호 확인" color="#007bff" />
+              <Button text="번호 확인" color="var(--main-woori-blue)" />
             </div>
           </div>
 
@@ -39,7 +38,7 @@ export default function WorkplaceModal({ isOpen, onClose }) {
                 <span>우리은행</span>
               </div>
               <input type="text" placeholder="계좌 번호를 입력하세요" />
-              <Button text="계좌 확인" color="#007bff" />
+              <Button text="계좌 확인" color="var(--main-woori-blue)" />
             </div>
           </div>
 
@@ -51,8 +50,8 @@ export default function WorkplaceModal({ isOpen, onClose }) {
           </div>
 
           <div className={styles.buttonGroup}>
-            <Button text="취소" color="black" onClick={onClose} />
-            <Button text="확인" color="#007bff" />
+            <Button text="취소" color="var(--gray)" onClick={onClose} />
+            <Button text="확인" color="var(--main-woori-blue)" />
           </div>
         </form>
       </div>
