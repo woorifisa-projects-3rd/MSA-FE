@@ -6,16 +6,16 @@ export default function TestPage() {
         <div>
             <h1>버튼 컴포넌트 예제</h1>
             {/* 확인 버튼 (submit) */}
-            <Button type="submit" text="확인" size="large" />
+            <Button type="submit" size="xlarge" text="확인"  />
 
             {/* 취소 버튼 (cancel) */}
-            <Button type="cancel" text="취소" size="large" />
+            <Button type="cancel" width="300px" height="500px" text="취소" />
 
             {/* 파란 테두리 버튼 (outline) */}
-            <Button type="outline" text="인증" size="medium" />
+            <Button type="outline" text="인증"  />
            
             {/* 파란 테두리 버튼 (outline) */}
-            <Button type="outline" text="우편번호 찾기" size="medium" />
+            <Button type="outline" text="우편번호 찾기" />
 
             {/* 커스텀 버튼 */}
             <Button
@@ -23,8 +23,22 @@ export default function TestPage() {
                 text="커스텀 버튼"
                 color="#28a745"
                 textColor="#ffffff"
-                size="small"
+                width="274px"
+                heigh="44px"
             />
         </div>
     );
 }
+
+
+//width = "500.16px"
+//heigh "61.55px"
+
+// width="274px"
+// heigh="44px"
+
+// width="75px"
+// heigh="30px"
+
+//width= "119.33px"
+// heigh="35.75px"

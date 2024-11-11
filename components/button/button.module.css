@@ -1,50 +1,64 @@
-/* 공통 버튼 스타일 */
+/* button.module.css */
 .button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, opacity 0.3s ease;
-}
+    transition: all 0.2s ease;
+ }
 
-/* 버튼 크기 스타일 */
-.small {
-    padding: 5px 10px;
-    font-size: 14px;
+.button:hover {  /* style 속성이 있는 버튼(커스텀)에만 적용 */
+   opacity: 0.8;      /* 약간 투명하게 */
 }
-
-.medium {
-    padding: 10px 20px;
-    font-size: 16px;
-}
-
-.large {
-    padding: 15px 30px;
-    font-size: 18px;
-}
-
-.button:hover {
-    opacity: 0.6;
-}
-
-/* 특정 버튼 스타일 */
-.btn-submit {
-    background-color: var(--main-woori-blue);
-    color: #000000;
-}
-
-.btn-cancel {
-    background-color: #d3d3d3;
-    color: #000000;
-}
-
-/* 파란 테두리 스타일 (투명 배경) */
-.btn-outline {
-    border: 2px solid #4a90e2; /* 파란색 테두리 */
+ 
+ /* 타입별 스타일 */
+ .btn-submit {
+    background-color: #4B71F4;
+    color: white;
+ }
+ 
+ .btn-submit:hover {
+    background-color: #3B5FE3;
+ }
+ 
+ .btn-cancel {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 0.0625rem solid #E5E7EB; 
+ }
+ 
+ .btn-cancel:hover {
+    background-color: #F3F4F6;
+ }
+ 
+ .btn-outline {
     background-color: transparent;
-    color: #4a90e2; /* 텍스트 색상도 파란색 */
-}
-
-.btn-outline:hover {
-    background-color: #f0f8ff; /* 살짝 푸른 배경 */
-}
+    border: 0.0625rem solid #4B71F4;
+    color: #4B71F4;
+ }
+ 
+ .btn-outline:hover {
+    background-color: rgba(75, 113, 244, 0.1);
+ }
+ 
+ .xlarge {
+    width: 31.26rem;    /* 500.16px */
+    height: 3.85rem;    /* 61.55px */
+ }
+ 
+ .large {
+    width: 17.125rem;   /* 274px */
+    height: 2.75rem;    /* 44px */
+ }
+ 
+ .small {
+    width: 7.46rem;     /* 119.33px */
+    height: 2.23rem;    /* 35.75px */
+ }
+ 
+ .xsmall {
+    width: 4.6875rem;   /* 75px */
+    height: 1.875rem;   /* 30px */
+ }

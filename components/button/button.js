@@ -1,33 +1,30 @@
 import React from 'react';
 import styles from './button.module.css';
 
-export default function Button({
-    text,
-    color,
-    textColor,
-    size = 'medium',
-    type = 'custom',
-}) {
-    // 버튼 스타일을 동적으로 설정
-    const buttonStyle = {
-        backgroundColor: type === 'custom' ? color : undefined,
-        color: type === 'custom' ? textColor : undefined,
-    };
 
-    // 버튼의 클래스 이름을 동적으로 설정
-    const buttonClass = `${styles.button} ${styles[size]} ${
-        type === 'submit'
-            ? styles['btn-submit']
-            : type === 'cancel'
-            ? styles['btn-cancel']
-            : type === 'outline'
-            ? styles['btn-outline']
-            : ''
-    }`;
+export default function Button({text,color,textColor,
+    width, height, size ,type, onClick}) {
 
-    return (
-        <button className={buttonClass} style={buttonStyle}>
-            {text}
-        </button>
-    );
+        const buttonStyle = type === 'custom' ? {
+            backgroundColor: color,
+            color: textColor,
+            width: width,
+            height: height
+        } : undefined;
+
+        const typeStyles = {
+            submit: styles['btn-submit'],
+            cancel: styles['btn-cancel'],
+            outline: styles['btn-outline'],
+            custom: ''
+        };
+
+        const buttonClass = `${styles.button} ${size ? styles[size] : ''} ${typeStyles[type]}`;
+
+        return (
+            <button className={buttonClass} style={buttonStyle} onClick={onClick}>
+                {text}
+            </button>
+        );
+
 }
