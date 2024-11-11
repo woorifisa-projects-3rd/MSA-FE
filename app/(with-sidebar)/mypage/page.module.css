@@ -1,0 +1,45 @@
+/* Home.module.css */
+.container {
+    padding: 1.25rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.content {
+    border-radius: 0.5rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.tabNavigation {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tabList {
+    display: flex;
+    gap: 2rem;
+}
+
+.tabButton {
+    padding: 1rem 0.25rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tabButtonActive {
+    border-bottom-color: #3b82f6;
+    color: #2563eb;
+}
+
+.tabButtonInactive {
+    border-color: transparent;
+    color: #6b7280;
+}
+
+.tabButtonInactive:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+
+.tabContent {
+    margin-top: 1rem;
+}
