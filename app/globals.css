@@ -15,12 +15,18 @@
   --sidebar-width: 16%;
 }
 
+@font-face {
+  font-family: 'NanumGothic';
+  src: url('/fonts/NanumGothic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: 'NanumGothic', sans-serif;
 }
-
-
