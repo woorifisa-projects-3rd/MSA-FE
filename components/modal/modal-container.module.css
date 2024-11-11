@@ -1,0 +1,36 @@
+/* modal-container.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+  }
+  
+  .modalContent {
+    background-color: white;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 28rem;
+    width: 100%;
+    margin: 0 1rem;
+    position: relative;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #6b7280; /* gray-500 */
+    transition: color 0.3s;
+  }
+  
+  .closeButton:hover {
+    color: #4b5563; /* gray-700 */
+  }
+  
