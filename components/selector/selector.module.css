@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navButton:hover {
+    transform: scale(1.2);
+}
+
+.dateText {
+    margin: 0 15px;
+    font-weight: bold;
+}
