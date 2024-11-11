@@ -103,11 +103,9 @@ const AccountInputForm = ({ isPresident = false }) => {
       </div>
 
       {/* 하단 링크 - isPresident가 아닐 때만 표시 */}
-      {!isPresident && (
+      {isPresident && (
         <div className="mt-2 text-sm text-gray-500">
-          <a href="#" className="text-blue-500 hover:underline">우리은행 서비스 계좌가 없으신가요?</a>
-          <span className="mx-2">|</span>
-          <a href="#" className="text-blue-500 hover:underline">우리체크카드발급하러가기</a>
+          <a href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131" className="text-blue-500 hover:underline">우리은행 사업자 계좌가 없으신가요?</a>
         </div>
       )}
     </div>
