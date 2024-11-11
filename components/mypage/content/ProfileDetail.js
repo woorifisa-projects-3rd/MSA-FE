@@ -1,49 +1,26 @@
 // PageProfileDetail.js
 'use client'
+import DefaultTable from '@/components/table/DefaultTable';
 import classes from './ProfileDetail.module.css';
 
 export default function ProfileDetail({content}) {
     const name =content.name;
     const email =content.email;
     const workplaceInfo =content.workplaceInfo;
+    
    return (
        <div className={classes.container}>
            <div className={classes.headerSection}>
                <h2 className={classes.title}>{name} 사장님</h2>
                <div className={classes.email}>{email}</div>
            </div>
-
+                
+            {/* 다른 컴포넌트 적용해야함 */}
            <div className={classes.otherComponent}>여기는 다른 컴포넌트</div>
 
-           <div>
-               <h3 className={classes.workplaceTitle}>보유하신 사업장</h3>
-               <table className={classes.table}>
-                   <thead className={classes.tableHeader}>
-                       <tr className={classes.headerRow}>
-                           <th className={classes.headerCell}>사업장 상호명</th>
-                           <th className={classes.headerCell}>사업자 번호</th>
-                           <th className={classes.headerCell}>계좌번호</th>
-                           <th className={`${classes.headerCell} ${classes.centerAlign}`}>직원 수</th>
-                           <th className={`${classes.headerCell} ${classes.rightAlign}`}>편집 / 삭제</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       {workplaceInfo.map((info, index) => (
-                           <tr key={index} className={classes.bodyRow}>
-                               <td className={classes.cell}>{info.name}</td>
-                               <td className={classes.cell}>{info.serialNumber}</td>
-                               <td className={classes.cell}>{info.phoneNumber}</td>
-                               <td className={`${classes.cell} ${classes.centerAlign}`}>{info.count}</td>
-                               <td className={`${classes.cell} ${classes.rightAlign}`}>
-                                   <button className={classes.editButton}>편집</button>
-                                   <button className={classes.deleteButton}>삭제</button>
-                               </td>
-                           </tr>
-                       ))}
-                   </tbody>
-               </table>
+           <DefaultTable tableName={tableName} tableHeaders={tableHeaders} list={workplaceInfo}/>
 
-               <div className={classes.addButtonContainer}>
+            <div className={classes.addButtonContainer}>
                    <button className={classes.addButton}>
                        <div className={classes.iconContainer}>
                            <svg 
@@ -62,8 +39,18 @@ export default function ProfileDetail({content}) {
                        </div>
                        <span className={classes.addButtonText}>사업장 추가 및 등록</span>
                    </button>
-               </div>
-           </div>
+            </div>
        </div>
    );
 }
+
+//테스트 데이터
+const tableName='보유하신 사업장'
+const tableHeaders = {
+    storeName: "사업장 상호명",
+    businessNumber: "사업자 번호",
+    accountNumber: "계좌번호",
+    count: "직원 수",
+    edit: "편집",
+    actions: "삭제"
+};

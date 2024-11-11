@@ -1,0 +1,31 @@
+/* DefaultTable.module.css */
+.workplaceTitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.table {
+    width: 100%;
+}
+
+.tableHeader {
+    color: #93c5fd;  /* blue-300 */
+}
+
+.headerRow, .bodyRow {
+    border-bottom: 1px solid #e5e7eb;  /* gray-200 */
+}
+
+.headerCell, .cell {
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.centerAlign {
+    text-align: center;
+}
+
+.rightAlign {
+    text-align: right;
+}

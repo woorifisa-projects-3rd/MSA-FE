@@ -4,6 +4,7 @@ import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
 import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import classes from "./page.module.css";
+import DefaultTable from "@/components/table/DefaultTable";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -56,41 +57,37 @@ const tabs = [
   { 
       name: '프로필 편집',
       email: 'alexarawles@gmail.com',
+      
       workplaceInfo:[
         {
-            name: '빅디빅',
-            serialNumber: '#12548796',
-            phoneNumber: '1002-850-391601',
+            storeName: '빅디빅',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
             count: 3,
         },
         {
-            name: '설명탕',
-            serialNumber: '#12548796',
-            phoneNumber: '1002-850-391601',
+            storeName: '설명탕',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
             count: 2,
         },
         {
-            name: '먹투이',
-            serialNumber: '#12548796',
-            phoneNumber: '1002-850-391601',
+            storeName: '먹투이',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
             count: 1,
         }
       ]
   },
   { 
       name: '알림 설정',
-      content: (
-          <div>
-              <h2>알림 설정 내용</h2>
-          </div>
-      )
+      content: '알림 설정 내용'
   },
   { 
       name: '비밀번호 변경',
-      content: (
-          <div>
-              <h2>비밀번호 변경 내용</h2>
-          </div>
-      )
+      content:'비밀번호 변경 내용'
   }
 ];
