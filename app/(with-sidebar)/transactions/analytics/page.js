@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from '@/components/button/button';
 import classes from "./page.module.css";
 import ModalContainer from '@/components/modal/modal-container';
+import WorkplaceModal from '@/components/modal/workplace-registraion.js/workplace-registration';
 
 export default function SalesExpenses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +17,8 @@ export default function SalesExpenses() {
                 isOpen={isModalOpen}
                 onClose={()=>setIsModalOpen(false)}
             >
-                <div>이거는 모달임~</div>
+               {/* 여기메 모달  content 넣기  */}
+               <WorkplaceModal />
             </ModalContainer>
         </div>
     );

@@ -9,17 +9,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 50;
   }
   
   .modalContent {
     background-color: white;
     border-radius: 8px;
-    padding: 24px;
-    max-width: 28rem;
-    width: 100%;
-    margin: 0 1rem;
+    padding: 30px;
     position: relative;
+    margin: 20px;
   }
   
   .closeButton {

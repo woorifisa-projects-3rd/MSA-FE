@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from './modal-container.module.css';  
 
-export default function ModalContainer({isOpen, onClose, children}) {
+export default function ModalContainer({isOpen, onClose,children}) {
     const [mounted, setMounted] = useState(false); 
 
     useEffect(() => {  
