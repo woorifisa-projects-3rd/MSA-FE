@@ -34,7 +34,7 @@
   }
   
   .address-field {
-    width: 43.2%; /* 주소 필드의 가로 크기 유지 */
+    width: 100%; /* 주소 필드의 가로 크기 유지 */
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -47,7 +47,7 @@
   }
   
   .detailed-address-field {
-    width: 43.2%; /* 상세 주소 필드의 가로 크기 유지 */
+    width: 100%; /* 상세 주소 필드의 가로 크기 유지 */
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;

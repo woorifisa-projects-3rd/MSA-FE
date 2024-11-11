@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
+import AccountInputForm from '@/components/input/account-input';
+import AddressSearch from '@/components/addsearch/AddressSearch';
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 const DATE_ERROR = "잘못된 날짜입니다.";
@@ -19,12 +21,35 @@ export default function EmployeeForm() {
         accountNumber: '',
         salary: '',
         paymentDate: '',
-        baseAddress: '서울특별시 용산구 한남동', // 주소찾기 로직 완료 후 빈 문자열로 수정해야 함
-        detailAddress: ''
+        address:''
     });
+
+    const handleAddressChange = (postcodeAddress, detailAddress) => {
+        const fullAddress = `${postcodeAddress} ${detailAddress}`
+        setFormData(prev => ({
+            ...prev,
+            address: fullAddress
+        }));
+    };
+
+    console.log(formData.address);
 
     const [formErrors, setFormErrors] = useState({});
 
+     // 유효성 검사 함수
+     const validateForm = (data) => {
+        const errors = {};
+    
+        // 각 필드에 대해 유효성 검사 수행
+        Object.keys(validateRules).forEach(field => {
+            const error = validateRules[field](data[field]);
+            if (error) errors[field] = error;
+        });
+    
+        return errors;
+    };
+
+    // 제출 버튼 클릭시 유효성 검사 실행 
     const handleSubmit = (e) => {
         e.preventDefault();
     
@@ -50,8 +75,6 @@ export default function EmployeeForm() {
         bankCode: value => value.trim() ? '' : REQUIRED_ERROR,
         accountNumber: value => value.trim() ? '' : REQUIRED_ERROR,
         salary: value => value ? '' : REQUIRED_ERROR,
-        baseAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
         paymentDate: value => {
             if (!value.trim()) return REQUIRED_ERROR;
             if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
@@ -65,18 +88,8 @@ export default function EmployeeForm() {
         }
     };
     
-    // 유효성 검사 함수
-    const validateForm = (data) => {
-        const errors = {};
-    
-        // 각 필드에 대해 유효성 검사 수행
-        Object.keys(validateRules).forEach(field => {
-            const error = validateRules[field](data[field]);
-            if (error) errors[field] = error;
-        });
-    
-        return errors;
-    };
+   
+
 
     return (
         <div className={styles.formContainer}>
@@ -179,78 +192,19 @@ export default function EmployeeForm() {
                 </div>
 
                 <div className={styles.formSection}>
-                    <h3 className={styles.sectionTitle}>계좌 정보</h3>
                     <div className={styles.formRow}>
-                        <div className={styles.formGroup}>
-                            <label>은행 선택</label>
-                            <select
-                                value={formData.bankCode}
-                                onChange={(e) => setFormData({...formData, bankCode: e.target.value})}
-                            >
-                                <option value="">은행을 선택하세요</option>
-                                <option value="KB">국민은행</option>
-                                <option value="shinhan">신한은행</option>
-                                <option value="woori">우리은행</option>
-                                <option value="hana">하나은행</option>
-                                <option value="nh">농협은행</option>
-                                <option value="ibk">기업은행</option>
-                                <option value="kakao">카카오뱅크</option>
-                            </select>
-                            {formErrors.bankCode && <span className={styles.error}>{formErrors.bankCode}</span>}
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>계좌번호</label>
-                            <input
-                                type="text"
-                                placeholder="'-' 없이 입력해주세요"
-                                value={formData.accountNumber}
-                                onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
-                            />
-                            {formErrors.accountNumber && <span className={styles.error}>{formErrors.accountNumber}</span>}
-                        </div>
+                    
+                        <AccountInputForm />
                     </div>
                 </div>
 
                 {/* 주소 섹션 추가 */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>주소</h3>
-                    <div className={styles.formGroup}>
-                        <div className={styles.postcodeRow}>
-                            <input
-                                type="text"
-                                placeholder="우편번호"
-                                value={formData.postcode}
-                                readOnly
-                                className={styles.postcodeInput}
-                            />
-                            <button type="button" className={styles.searchButton}>
-                                우편번호 찾기
-                            </button>
-                        </div>
-                    </div>
-                    <div className={styles.formGroup}>
-                        <input
-                            type="text"
-                            placeholder="기본주소"
-                            value={formData.address}
-                            readOnly
-                            className={styles.addressInput}
-                        />
-                        {formErrors.baseAddress && <span className={styles.error}>{formErrors.baseAddress}</span>}
-                    </div>
-                    <div className={styles.formGroup}>
-                        <input
-                            type="text"
-                            placeholder="상세주소를 입력해주세요"
-                            value={formData.detailAddress}
-                            onChange={(e) => setFormData({...formData, detailAddress: e.target.value})}
-                            className={styles.addressInput}
-                        />
-                        {formErrors.detailAddress && <span className={styles.error}>{formErrors.detailAddress}</span>}
-                    </div>
+                    <AddressSearch onAddressChange={handleAddressChange} />
                 </div>
 
-                <button type="submit" className={styles.submitButton} >추가</button>
+                <button type="submit" className={styles.submitButton}>직원 등록하기</button>
             </form>
         </div>
     );

@@ -2,7 +2,7 @@
 'use client'
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bankCodeList } from '@/constants/bankCodeList';
-import styles from '@/components/input/AccountInputForm.module.css'
+import styles from "./account-input.module.css";
 
 const AccountInputForm = ({ isPresident = false }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
@@ -100,6 +100,7 @@ const AccountInputForm = ({ isPresident = false }) => {
         />
 
         <button 
+          type='button'
           onClick={handleSubmit}
           className={styles.submitButton}
         >
