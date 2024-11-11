@@ -1,11 +1,16 @@
+.header_box{
+    height: var(--header-height);
+    width: 100%;
+    background-color: var(--background);
+}
+
 .header_container {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;  
     align-items: center; 
     justify-content: space-between; 
-    width: 100%;
-    height: var(--header-height);
-    background-color: var(--background);
-    border-bottom: 1px solid #e5e7eb;
+    height: 100%;
 }
 
 .header_left{
@@ -25,11 +30,11 @@
 .header_right {
     width: calc(100% - var(--sidebar-width));
     height: 100%;
-    padding-right: 80px;
+    padding-right: 20px;
     display: flex; /* 오른쪽 영역도 flex로 설정 */
     align-items: center; /* 수직 가운데 정렬 */
-    gap: 20px;
     justify-content: end;
+    gap: 20px;
 }
 
 .profile_button {

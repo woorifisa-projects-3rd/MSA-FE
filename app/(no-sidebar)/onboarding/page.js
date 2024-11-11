@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
 
@@ -18,15 +17,6 @@ export default function OnboardingPage() {
 
   return (
       <div className={styles.container}>
-        {/* <header className={styles.header}>
-          <div className={styles.logo}>
-            <Image src="/images/logo.png" alt="집계사장" width={120} height={40} />
-          </div>
-          <nav className={styles.nav}>
-            <Link href="/login">로그인</Link>
-            <Link href="/login/SignupForm">회원가입</Link>
-          </nav>
-        </header> */}
 
         <main className={styles.main}>
           <section className={styles.hero}>

@@ -1,0 +1,54 @@
+/* modal-container.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContent {
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    position: relative;
+    margin: 20px;
+  }
+
+  .modalHeader {
+    font-size: 1.5rem;
+    font-weight: bold;
+    /* text-align: st; */
+    margin-bottom: 20px;
+  }
+  .modalBody{
+    margin-bottom: 30px;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #6b7280; /* gray-500 */
+    transition: color 0.3s;
+  }
+  
+  .closeButton:hover {
+    color: #4b5563; /* gray-700 */
+  }
+  
+
+  .buttonGroup {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+  }
+  
+  .buttonGroup button {
+    flex: 1;
+  }
+  

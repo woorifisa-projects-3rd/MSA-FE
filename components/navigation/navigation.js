@@ -7,6 +7,7 @@ import classes from "./navigation.module.css";
 import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
+import BusinessSelectDropdown from "../dropdown/business-dropdown";
 
 
 export default function Navigation(){
@@ -15,7 +16,13 @@ export default function Navigation(){
 
     return (
         <nav className={classes.nav}>
-            <div>
+            {/* 상단 드롭다운 섹션 */}
+            <div className={classes.topSection}>
+                <BusinessSelectDropdown/>
+            </div>
+
+            {/* 메인 네비게이션 섹션  */}
+            <div className={classes.navigationSection}>
                 <ul>
                     {NAVIGATION_ITEMS.map((item, index)=>(
                         <li 
@@ -45,6 +52,8 @@ export default function Navigation(){
                     ))}
                 </ul>
             </div>
+
+            {/* 로그아웃 섹션 */}
             <div className={classes.logout}>
                 <div>로그아웃</div>
                 <div><BsBoxArrowRight /></div>

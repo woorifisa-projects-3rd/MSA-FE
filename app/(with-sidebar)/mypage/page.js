@@ -6,6 +6,46 @@ import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import classes from "./page.module.css";
 import DefaultTable from "@/components/table/DefaultTable";
 
+const tabs = [
+  { 
+      name: '프로필 편집',
+      email: 'alexarawles@gmail.com',
+      
+      workplaceInfo:[
+        {
+            storeName: '빅디빅',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
+            count: 3,
+        },
+        {
+            storeName: '설명탕',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
+            count: 2,
+        },
+        {
+            storeName: '먹투이',
+            businessNumber: '#12548796',
+            accountNumber: '1002-850-391601',
+            bankCode:"020",
+            count: 1,
+        }
+      ]
+  },
+  { 
+      name: '알림 설정',
+      content: '알림 설정 내용'
+  },
+  { 
+      name: '비밀번호 변경',
+      content:'비밀번호 변경 내용'
+  }
+];
+
+
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
   
@@ -53,41 +93,5 @@ export default function Home() {
 }
 
 
-const tabs = [
-  { 
-      name: '프로필 편집',
-      email: 'alexarawles@gmail.com',
-      
-      workplaceInfo:[
-        {
-            storeName: '빅디빅',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 3,
-        },
-        {
-            storeName: '설명탕',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 2,
-        },
-        {
-            storeName: '먹투이',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 1,
-        }
-      ]
-  },
-  { 
-      name: '알림 설정',
-      content: '알림 설정 내용'
-  },
-  { 
-      name: '비밀번호 변경',
-      content:'비밀번호 변경 내용'
-  }
-];
+
+
