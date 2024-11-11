@@ -6,7 +6,6 @@ import styles from "./workplace-registrion.module.css"
 export default function WorkplaceModal() {
   return (
     <div className={styles.formContainer}>
-      <h2 className={styles.formTitle}>사업장 등록</h2>
       <form className={styles.form}>
         <div className={styles.formGroup}>
           <label>사업장 상호명</label>
@@ -45,10 +44,7 @@ export default function WorkplaceModal() {
           </a>
         </div>
 
-        <div className={styles.buttonGroup}>
-          <Button text="취소" color="black" />
-          <Button text="확인" color="#007bff" />
-        </div>
+       
       </form>
     </div>
   );

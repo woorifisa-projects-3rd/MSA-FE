@@ -18,6 +18,16 @@
     position: relative;
     margin: 20px;
   }
+
+  .modalHeader {
+    font-size: 1.5rem;
+    font-weight: bold;
+    /* text-align: st; */
+    margin-bottom: 20px;
+  }
+  .modalBody{
+    margin-bottom: 30px;
+  }
   
   .closeButton {
     position: absolute;
@@ -29,5 +39,16 @@
   
   .closeButton:hover {
     color: #4b5563; /* gray-700 */
+  }
+  
+
+  .buttonGroup {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+  }
+  
+  .buttonGroup button {
+    flex: 1;
   }
   

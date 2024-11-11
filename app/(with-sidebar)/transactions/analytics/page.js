@@ -16,6 +16,7 @@ export default function SalesExpenses() {
             <ModalContainer
                 isOpen={isModalOpen}
                 onClose={()=>setIsModalOpen(false)}
+                title="사업장 등록"
             >
                {/* 여기메 모달  content 넣기  */}
                <WorkplaceModal />

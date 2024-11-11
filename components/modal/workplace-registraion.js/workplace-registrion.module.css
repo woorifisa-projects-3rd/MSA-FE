@@ -89,13 +89,4 @@
   cursor: pointer;
 }
 
-.buttonGroup {
-  display: flex;
-  width: 100%;
-  gap: 15px;
-}
-
-.buttonGroup button {
-  flex: 1;
-}
 
