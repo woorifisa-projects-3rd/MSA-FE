@@ -1,27 +1,42 @@
 .container {
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* min-height: 100vh; */
-    width: 500px;
-    min-width: 400px;
-    /* background-color: #f5f5f5; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
   }
   
-  .form{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .formGroup{
-    display: flex;
+  .formWrapper {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
   
-
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  .header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+  
+  .formGroup {
+    margin-bottom: 24px;
+  }
+  
+  .formGroup:last-of-type {
+    margin-bottom: 0;
+  }
   
   .select,
-  .dateInput {
+  .dateInput,
+  .timeInput {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #e1e1e1;
@@ -31,24 +46,7 @@
     outline: none;
     transition: border-color 0.2s ease;
   }
-  .timeInputs{
-    display: flex;
-    width: 100%;
-    gap:15px;
-  }
-  .inputGroup{
-    flex:1;
-  }
-  .timeInput{
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease;
-  }
- 
+  
   .select:focus,
   .dateInput:focus,
   .timeInput:focus {
@@ -64,7 +62,10 @@
     cursor: pointer;
   }
   
- 
+  .timeInputs {
+    display: flex;
+    gap: 10px;
+  }
   
   .timeInputs .inputGroup {
     flex: 1;
@@ -107,11 +108,43 @@
     font-size: 14px;
     color: #333;
     font-weight: 700px; 
-    margin-bottom: 20px;
   }
   
-
+  .buttonGroup {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
   
+  .cancelButton,
+  .submitButton {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cancelButton {
+    background-color: #f5f5f5;
+    color: #666;
+  }
+  
+  .submitButton {
+    background-color: #0066ff;
+    color: white;
+  }
+  
+  .cancelButton:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .submitButton:hover {
+    background-color: #0052cc;
+  }
   
   @media (max-width: 480px) {
     .formWrapper {

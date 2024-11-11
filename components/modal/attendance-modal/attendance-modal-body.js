@@ -72,75 +72,66 @@ export default function AttendanceModalBody(){
 
     return (
         <div className={styles.container}>
-            <div className={styles.formWrapper}>
-            <div className={styles.header}>
-                <h2>출퇴근 기록 수정하기</h2>
-            </div>
-            
             <form className={styles.form} >
                 <div className={styles.formGroup}>
-                <select 
-                    name="storeemployeeId"
-                    value={formData.storeemployeeId}
-                    onChange={handleChange}
-                    className={styles.select}
-                >
-                    <option value="">직원명</option>
-                    {employees.map((employee) => (
-                    <option key={employee.storeemployeeId} value={employee.storeemployeeId}>
-                        {employee.name}
-                    </option>
-                    ))}
-                </select>
+                  <select 
+                      name="storeemployeeId"
+                      value={formData.storeemployeeId}
+                      onChange={handleChange}
+                      className={styles.select}
+                  >
+                      <option value="">직원명</option>
+                      {employees.map((employee) => (
+                      <option key={employee.storeemployeeId} value={employee.storeemployeeId}>
+                          {employee.name}
+                      </option>
+                      ))}
+                  </select>
                 </div>
     
                 <div className={styles.formGroup}>
-                <input 
-                    type="date" 
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    className={styles.dateInput}
-                />
+                  <input 
+                      type="date" 
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
+                      className={styles.dateInput}
+                  />
                 </div>
     
                 <div className={styles.formGroup}>
-                <div className={styles.timeInputs}>
-                    <div className={styles.inputGroup}>
-                    <input 
-                        type="time" 
-                        name="startTime"
-                        value={formData.startTime}
-                        onChange={handleChange}
-                        className={styles.timeInput}
-                    />
-                    <span className={styles.timeLabel} data-type="start">출근</span>
-                    </div>
-                    <div className={styles.inputGroup}>
-                    <input 
-                        type="time"
-                        name="endTime"
-                        value={formData.endTime}
-                        onChange={handleChange}
-                        className={styles.timeInput}
-                    />
-                    <span className={styles.timeLabel} data-type="end">퇴근</span>
-                    </div>
-                </div>
+                  <div className={styles.timeInputs}>
+                      <div className={styles.inputGroup}>
+                        <input 
+                            type="time" 
+                            name="startTime"
+                            value={formData.startTime}
+                            onChange={handleChange}
+                            className={styles.timeInput}
+                        />
+                        <span className={styles.timeLabel} data-type="start">출근</span>
+                      </div>
+                      
+                      <div className={styles.inputGroup}>
+                        <input 
+                            type="time"
+                            name="endTime"
+                            value={formData.endTime}
+                            onChange={handleChange}
+                            className={styles.timeInput}
+                        />
+                        <span className={styles.timeLabel} data-type="end">퇴근</span>
+                      </div>
+                  </div>
                 </div>
     
                 <div className={styles.formGroup}>
-                <div className={styles.workHoursText}>
-                    {workHours}
-                </div>
+                  <div className={styles.workHoursText}>
+                      {workHours}
+                  </div>
                 </div>
                 
-                <div className={styles.buttonGroup}>
-                <button type="button" className={styles.cancelButton}>취소</button>
-                <button type="submit" className={styles.submitButton}>확인</button>
-                </div>
             </form>
-            </div>
         </div>
     )
 }
