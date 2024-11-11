@@ -22,7 +22,7 @@ const AddressSearch = ({ onSelectAddress }) => {
     setDetailedAddress(e.target.value);
   };
 
-  // 주소 선택 후 부모 컴포넌트에 전달하는 함수
+  // 주소 선택 후 부모 컴포넌트에 전달하는 함수 (저장버튼 누를시 이거 사용)
   const handleSubmit = () => {
     onSelectAddress(zipCode, address, detailedAddress);
     setIsOpen(false);
