@@ -3,26 +3,6 @@
     background-color: #f8f9ff;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.nav {
-    display: flex;
-    gap: 1rem;
-}
-
-.nav a {
-    color: #666;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-}
-
 .main {
     max-width: 1200px;
     margin: 0 auto;
