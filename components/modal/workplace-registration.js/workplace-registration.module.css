@@ -1,133 +1,87 @@
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modal {
-    background-color: var(--background);
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modal h2 {
-    display: flex;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .bankContainer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .form label {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .form input {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .inputGroup div {
-    width: 120px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .inputGroup {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .checkButton {
-    width: 100px;
-    height: 48px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    flex-shrink: 0; /* 버튼의 크기가 줄어들지 않도록 설정 */
-  }
-  
-  .checkButton:hover {
-    background-color: #0056b3;
-  }
-  
-  .linkGroup {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: 40px;
-  }
-  
-  .link {
-    color: #007bff;
-    text-decoration: underline;
-    margin-left: 10px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    width: 100%;
-    gap: 15px;
-  }
-  
-  .buttonGroup button {
-    flex: 1;
-  }
-  
-  .cancelButton {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    padding: 12px 30px;
-    cursor: pointer;
-    color: black;
-  }
-  
-  .confirmButton {
-    background-color: var(--main-woori-blue);
-    border: none;
-    padding: 12px 30px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .confirmButton:hover {
-    background-color: var(--woori-light-blue);
-  }
-  
+.formContainer{
+  width: 600px;  /* max-width 대신 width로 고정 */
+  min-width: 600px;  /* 최소 너비 추가 */
+}
+ /* 반응형을 고려할 경우  */
+ /* .formContainer {
+  width: 100%;
+  max-width: 600px;
+  min-width: min(600px, 90vw); 
+} */
+.formTitle{
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.form label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.form input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.bankContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.inputGroup div {
+  width: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.checkButton {
+  width: 100px;
+  height: 48px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.checkButton:hover {
+  background-color: #0056b3;
+}
+.linkGroup {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+.link {
+  color: #007bff;
+  text-decoration: underline;
+  margin-left: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.buttonGroup {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+}
+.buttonGroup button {
+  flex: 1;
+}
