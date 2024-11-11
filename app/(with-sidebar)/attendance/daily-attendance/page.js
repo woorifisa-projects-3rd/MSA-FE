@@ -3,25 +3,63 @@ import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
 export default function Form() {
-  const employees = ['정성윤', '류혜리', '이현아', '박준현', '임지혁'];
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [workHours, setWorkHours] = useState('총 근무시간:');
+  const [employees, setEmployees] = useState([]);
+  const [formData, setFormData] = useState({
+    storeemployeeId: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    workTime: '00:00:00'
+  });
+  const [workHours, setWorkHours] = useState('총 근무시간: ');
 
   useEffect(() => {
-    if (startTime && endTime) {
-      const start = new Date(`2024-01-01T${startTime}:00`);
-      let end = new Date(`2024-01-01T${endTime}:00`);
+    const fetchEmployees = async () => {
+      try {
+        const response = [
+          {
+            "storeemployeeId": 1,
+            "name": "정성윤"
+          },
+          {
+            "storeemployeeId": 2,
+            "name": "박준현"
+          },
+          {
+            "storeemployeeId": 3,
+            "name": "임지혁"
+          }
+        ];
+        setEmployees(response);
+      } catch (error) {
+        console.error('직원 데이터를 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    if (formData.startTime && formData.endTime) {
+      const start = new Date(`2024-01-01T${formData.startTime}:00`);
+      let end = new Date(`2024-01-01T${formData.endTime}:00`);
       
       if (end < start) {
-        end = new Date(`2024-01-02T${endTime}:00`);
+        end = new Date(`2024-01-02T${formData.endTime}:00`);
       }
       
       const diff = end - start;
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      
+      const formattedHours = hours.toString().padStart(2, '0');
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+      const timeFormat = `${formattedHours}:${formattedMinutes}:00`;
+      
+      setFormData(prev => ({
+        ...prev,
+        workTime: timeFormat
+      }));
       
       if (hours === 0) {
         setWorkHours(`총 근무시간: ${minutes}분`);
@@ -31,26 +69,46 @@ export default function Form() {
         setWorkHours(`총 근무시간: ${hours}시간 ${minutes}분`);
       }
     }
-  }, [startTime, endTime]);
+  }, [formData.startTime, formData.endTime]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!name) {
+    if (!formData.storeemployeeId) {
       alert('직원명을 선택해주세요');
       return;
     }
-    if (!date) {
+    if (!formData.date) {
       alert('날짜를 선택해주세요');
       return;
     }
-    if (!startTime) {
+    if (!formData.startTime) {
       alert('출근시간을 입력해주세요');
       return;
     }
+    if (!formData.endTime) {
+      alert('퇴근시간을 입력해주세요');
+      return;
+    }
 
+      // formData 콘솔 출력
+    console.log('formData:', {
+      storeemployeeId: formData.storeemployeeId,
+      date: formData.date,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+      workTime: formData.workTime
+    });
   };
-
+  
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
@@ -61,14 +119,15 @@ export default function Form() {
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <select 
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="storeemployeeId"
+              value={formData.storeemployeeId}
+              onChange={handleChange}
               className={styles.select}
             >
               <option value="">직원명</option>
               {employees.map((employee) => (
-                <option key={employee} value={employee}>
-                  {employee}
+                <option key={employee.storeemployeeId} value={employee.storeemployeeId}>
+                  {employee.name}
                 </option>
               ))}
             </select>
@@ -77,8 +136,9 @@ export default function Form() {
           <div className={styles.formGroup}>
             <input 
               type="date" 
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
               className={styles.dateInput}
             />
           </div>
@@ -88,8 +148,9 @@ export default function Form() {
               <div className={styles.inputGroup}>
                 <input 
                   type="time" 
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  name="startTime"
+                  value={formData.startTime}
+                  onChange={handleChange}
                   className={styles.timeInput}
                 />
                 <span className={styles.timeLabel} data-type="start">출근</span>
@@ -97,8 +158,9 @@ export default function Form() {
               <div className={styles.inputGroup}>
                 <input 
                   type="time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
+                  name="endTime"
+                  value={formData.endTime}
+                  onChange={handleChange}
                   className={styles.timeInput}
                 />
                 <span className={styles.timeLabel} data-type="end">퇴근</span>
