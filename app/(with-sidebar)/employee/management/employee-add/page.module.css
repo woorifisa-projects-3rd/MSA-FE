@@ -120,5 +120,12 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 30px;
-    text-align: center; /* 중앙 정렬 추가 */
+    text-align: center;
+}
+
+.error {
+    color: red;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    font-weight: bold;
 }

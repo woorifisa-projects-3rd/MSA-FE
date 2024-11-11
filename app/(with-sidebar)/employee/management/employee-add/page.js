@@ -1,8 +1,11 @@
 "use client";
 
-// components/EmployeeForm.jsx
 import { useState } from 'react';
 import styles from './page.module.css';
+
+const REQUIRED_ERROR = "필수 항목입니다.";
+const DATE_ERROR = "잘못된 날짜입니다.";
+const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
 export default function EmployeeForm() {
     const [formData, setFormData] = useState({
@@ -16,15 +19,64 @@ export default function EmployeeForm() {
         accountNumber: '',
         salary: '',
         paymentDate: '',
-        address: '',
+        baseAddress: '서울특별시 용산구 한남동', // 주소찾기 로직 완료 후 빈 문자열로 수정해야 함
+        detailAddress: ''
     });
 
+    const [formErrors, setFormErrors] = useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+    
+        // 유효성 검사 수행
+        const errors = validateForm(formData);
+        setFormErrors(errors);
+        
+        // 오류가 없으면 제출
+        if (Object.keys(errors).length === 0) {
+            const fullAddress = `${formData.baseAddress} ${formData.detailAddress}`;
+            const { baseAddress, detailAddress, ...rest } = formData;
+            const updatedFormData = { ...rest, address: fullAddress };
+            console.log(updatedFormData);
+        } else {
+            console.log("유효성 검사 실패 !!!");
+        }
     };
-
+    
+    const validateRules = {
+        name: value => value.trim() ? '' : REQUIRED_ERROR,
+        email: value => value.trim() ? '' : REQUIRED_ERROR,
+        phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
+        bankCode: value => value.trim() ? '' : REQUIRED_ERROR,
+        accountNumber: value => value.trim() ? '' : REQUIRED_ERROR,
+        salary: value => value ? '' : REQUIRED_ERROR,
+        baseAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+        paymentDate: value => {
+            if (!value.trim()) return REQUIRED_ERROR;
+            if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
+            return '';
+        },
+        birthDate: value => {
+            if (!value.trim()) return REQUIRED_ERROR;
+            const inputDate = new Date(value);
+            const today = new Date();
+            if (inputDate >= today) return DATE_ERROR;
+        }
+    };
+    
+    // 유효성 검사 함수
+    const validateForm = (data) => {
+        const errors = {};
+    
+        // 각 필드에 대해 유효성 검사 수행
+        Object.keys(validateRules).forEach(field => {
+            const error = validateRules[field](data[field]);
+            if (error) errors[field] = error;
+        });
+    
+        return errors;
+    };
 
     return (
         <div className={styles.formContainer}>
@@ -38,6 +90,7 @@ export default function EmployeeForm() {
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
+                    {formErrors.name && <span className={styles.error}>{formErrors.name}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
@@ -48,6 +101,7 @@ export default function EmployeeForm() {
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />
+                    {formErrors.email && <span className={styles.error}>{formErrors.email}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
@@ -58,6 +112,7 @@ export default function EmployeeForm() {
                         value={formData.phoneNumber}
                         onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
                     />
+                    {formErrors.phoneNumber && <span className={styles.error}>{formErrors.phoneNumber}</span>}
                 </div>
 
                 <div className={styles.formRow}>
@@ -79,10 +134,8 @@ export default function EmployeeForm() {
                             value={formData.birthDate}
                             onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
                         />
+                        {formErrors.birthDate && <span className={styles.error}>{formErrors.birthDate}</span>}
                     </div>
-                </div>
-
-                <div className={styles.formGroup}>
                 </div>
 
                 <div className={styles.formRow}>
@@ -103,30 +156,28 @@ export default function EmployeeForm() {
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => setFormData({...formData, salary:parseInt(e.target.value)})}
+                                onChange={(e) => setFormData({ ...formData, salary: parseInt(e.target.value) })}
                             />
                             <span>원</span>
                         </div>
+                        {formErrors.salary && <span className={styles.error}>{formErrors.salary}</span>}
                     </div>
 
                     <div className={styles.formGroup}>
                         <label>급여날짜</label>
                         <input
                             type="number"
-                            min="1"
-                            max="28"
+                            placeholder='1부터 28까지 입력'
                             value={formData.paymentDate}
+
                             onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                if (value >= 1 && value <= 28) {
-                                    setFormData({...formData, paymentDate: value})
-                                }
+                                setFormData({ ...formData, paymentDate: e.target.value });
                             }}
                         />
+                        {formErrors.paymentDate && <span className={styles.error}>{formErrors.paymentDate}</span>}
                     </div>
                 </div>
 
-                {/* 계좌 정보 섹션 추가 */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>계좌 정보</h3>
                     <div className={styles.formRow}>
@@ -145,6 +196,7 @@ export default function EmployeeForm() {
                                 <option value="ibk">기업은행</option>
                                 <option value="kakao">카카오뱅크</option>
                             </select>
+                            {formErrors.bankCode && <span className={styles.error}>{formErrors.bankCode}</span>}
                         </div>
                         <div className={styles.formGroup}>
                             <label>계좌번호</label>
@@ -154,12 +206,13 @@ export default function EmployeeForm() {
                                 value={formData.accountNumber}
                                 onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
                             />
+                            {formErrors.accountNumber && <span className={styles.error}>{formErrors.accountNumber}</span>}
                         </div>
                     </div>
                 </div>
 
                 {/* 주소 섹션 추가 */}
-                {/* <div className={styles.formSection}>
+                <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>주소</h3>
                     <div className={styles.formGroup}>
                         <div className={styles.postcodeRow}>
@@ -183,6 +236,7 @@ export default function EmployeeForm() {
                             readOnly
                             className={styles.addressInput}
                         />
+                        {formErrors.baseAddress && <span className={styles.error}>{formErrors.baseAddress}</span>}
                     </div>
                     <div className={styles.formGroup}>
                         <input
@@ -192,19 +246,7 @@ export default function EmployeeForm() {
                             onChange={(e) => setFormData({...formData, detailAddress: e.target.value})}
                             className={styles.addressInput}
                         />
-                    </div>
-                </div> */}
-
-                <div className={styles.formSection}>
-                    <h3 className={styles.sectionTitle}>주소</h3>
-                    <div className={styles.formGroup}>
-                        <input
-                            type="text"
-                            placeholder="주소를 입력해주세요"
-                            value={formData.address}
-                            onChange={(e) => setFormData({...formData, address: e.target.value})}
-                            className={styles.addressInput}
-                        />
+                        {formErrors.detailAddress && <span className={styles.error}>{formErrors.detailAddress}</span>}
                     </div>
                 </div>
 
