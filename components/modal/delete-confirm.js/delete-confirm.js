@@ -24,7 +24,6 @@ export default function DeleteConfirmModal({ isOpen, onClose }) {
     }
     setError('');
     console.log('삭제 처리'); // 비밀번호 일치하면 삭제 처리
-    onClose();
   }
 
   return (
