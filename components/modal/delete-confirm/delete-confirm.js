@@ -5,6 +5,7 @@ import Button from '@/components/button/button';
 
 const realPassword = "1234"; // 사장님 비밀번호를 임의로 설정해둠
 
+
 export default function DeleteConfirmModal({ isOpen, onClose }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
