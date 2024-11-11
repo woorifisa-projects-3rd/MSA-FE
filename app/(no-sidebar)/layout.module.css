@@ -1,0 +1,24 @@
+.no_sidebar_layout{
+    display: grid;
+    grid-template-areas: 
+        "header"
+        "main";
+    grid-template-rows: var(--header-height) 1fr;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+}
+.no_side_header{
+    grid-area: header;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: var(--header-height);
+}
+
+.no_side_main{
+    grid-area: main;
+}
+  
+  
