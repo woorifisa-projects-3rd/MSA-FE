@@ -10,8 +10,8 @@ export default function DefaultTable({ tableName, tableHeaders, list }) {
             <table className={classes.table}>
                 <thead className={classes.tableHeader}>
                     <tr className={classes.headerRow}>
-                        {Object.entries(tableHeaders).map(([key, label]) => (
-                            <th key={key} className={classes.headerCell}>
+                        {Object.values(tableHeaders).map((label, index) => (
+                            <th key={index} className={classes.headerCell}>
                                 {label}
                             </th>
                         ))}
@@ -19,21 +19,20 @@ export default function DefaultTable({ tableName, tableHeaders, list }) {
                 </thead>
 
                 <tbody>
-                    {list.map((data, index) => (
-                        <tr key={index} className={classes.bodyRow}>
-                            {Object.keys(tableHeaders).map(key => {
-                                if (data[key] === undefined) {
+                    {list.map((data, rowIndex) => (
+                        <tr key={rowIndex} className={classes.bodyRow}>
+                            {Object.values(tableHeaders).map((label, colIndex) => {
+                                const values = Object.values(data);
+                                if (colIndex >= values.length) {
                                     return (
-                                        <td key={key} className={classes.cell}>
-                                            {/* 여기 버튼 컴포넌트 넣기 */}
-                                            <TestButton text={tableHeaders[key]} color={"#007BFF"}/>
+                                        <td key={colIndex} className={classes.cell}>
+                                            <TestButton text={label} color={"#007BFF"}/>
                                         </td>
                                     );
                                 }
-
                                 return (
-                                    <td key={key} className={classes.cell}>
-                                        {data[key]}
+                                    <td key={colIndex} className={classes.cell}>
+                                        {values[colIndex]}
                                     </td>
                                 );
                             })}
@@ -44,4 +43,3 @@ export default function DefaultTable({ tableName, tableHeaders, list }) {
         </div>
     );
 }
-
