@@ -8,6 +8,8 @@ import { useState } from 'react';
 
 export default function Form() {
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedAttendance, setSelectedAttendance] = useState(null);
 
   const tableHeaders = {
     no: "No.",
@@ -28,7 +30,6 @@ const list = [
       endTime: "18:04",
       totalHours: "04:04",
       salary: "38000원",
-     
   },
   {
       no: "02",
@@ -64,13 +65,14 @@ const list = [
   }
 ];
 
-
-  
+ 
   return (
     <>
       <button onClick={() => setIsModalOpen(true)}>
         출퇴근 기록 추가 모달 오픈
       </button>
+
+      {/*등록 모달*/}
       <ModalContainer
         isOpen={isModalOpen}
         onClose={()=>setIsModalOpen(false)}
@@ -78,6 +80,17 @@ const list = [
       >
         <AttendanceModalBody/>
       </ModalContainer>
+
+      {/* 수정 모달 */}
+      <ModalContainer
+                title="출퇴근 기록 수정하기"
+                isOpen={isEditModalOpen}
+                onClose={()=>setEditModalOpen(false)}
+                onConfirm={()=>console.log("나중에 submit 할 것")}
+            >
+              <AttendanceModalBody mode='edit' attendanceData={selectedAttendance} />
+      </ModalContainer>
+
       <DefaultTable tableName="출퇴근 조회" tableHeaders={tableHeaders} list={list}/>
    
     </>

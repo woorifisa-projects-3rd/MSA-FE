@@ -17,7 +17,10 @@ const employees = [
     }
   ];
 
-export default function AttendanceModalBody(){
+export default function AttendanceModalBody({
+    mode="create",
+    attendanceData
+}){
     const [formData, setFormData] = useState({
         storeemployeeId: '',
         date: '',
@@ -96,6 +99,8 @@ export default function AttendanceModalBody(){
                       value={formData.date}
                       onChange={handleChange}
                       className={styles.dateInput}
+                     // attendance값이 있다면 default값 넣기 
+
                   />
                 </div>
     
@@ -108,6 +113,8 @@ export default function AttendanceModalBody(){
                             value={formData.startTime}
                             onChange={handleChange}
                             className={styles.timeInput}
+                            // attendance값이 있다면 default값 넣기 
+
                         />
                         <span className={styles.timeLabel} data-type="start">출근</span>
                       </div>
@@ -117,6 +124,7 @@ export default function AttendanceModalBody(){
                             type="time"
                             name="endTime"
                             value={formData.endTime}
+                            // attendance값이 있다면 default값 넣기 
                             onChange={handleChange}
                             className={styles.timeInput}
                         />
