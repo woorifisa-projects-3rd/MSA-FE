@@ -4,7 +4,7 @@ import classes from "./page.module.css";
 import DefaultTable from '@/components/table/DefaultTable';
 import ModalContainer from '@/components/modal/modal-container';
 
-const modify = "수정";
+const edit = "수정";
 const del = "삭제";
 
 export default function SalesExpenses() {
@@ -13,7 +13,7 @@ export default function SalesExpenses() {
         phone: "전화번호",
         birthDate: "생년월일",
         address: "주소",
-        modify: "수정",
+        edit: "수정",
         delete: "삭제"
     };
 
