@@ -7,7 +7,9 @@ import ModalContainer from '@/components/modal/modal-container';
 import { useState } from 'react';
 
 export default function ProfileDetail({content}) {
-    const [registrationModalOpen, setRegistrionModalOpen] = useState(false);
+    const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const name =content.name;
     const email =content.email;
     const workplaceInfo =content.workplaceInfo;
@@ -26,7 +28,7 @@ export default function ProfileDetail({content}) {
 
             <div className={classes.addButtonContainer}>
                    <button 
-                    onClick={()=>setRegistrionModalOpen(true)}
+                    onClick={()=>setRegistrationModalOpen(true)}
                     className={classes.addButton}
                    >
                        <div className={classes.iconContainer}>
@@ -50,8 +52,8 @@ export default function ProfileDetail({content}) {
 
             <ModalContainer
                 title="사업장 등록"
-                isOpen={registrationModalOpen}
-                isClose={()=>setRegistrionModalOpen(false)}
+                isOpen={isRegistrationModalOpen}
+                onClose={()=>setRegistrationModalOpen(false)}
                 onConfirm={()=>console.log("submit 완료")}
             >
                 <WorkplaceModal />

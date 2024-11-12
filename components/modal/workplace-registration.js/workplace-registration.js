@@ -1,6 +1,6 @@
-import Button from '@/components/button/button';
-import Image from "next/image";
 import styles from "./workplace-registration.module.css"
+import BaseButton from '@/components/button/base-button';
+import AccountInputForm from "@/components/input/account-input";
 
 export default function WorkplaceModal() {
   return (
@@ -16,13 +16,13 @@ export default function WorkplaceModal() {
           <label>사업자 번호</label>
           <div className={styles.inputGroup}>
             <input type="text" placeholder="사업자 번호를 입력하세요" />
-            <Button text="번호 확인" color="#007bff" />
+            <BaseButton text="번호 확인" />
           </div>
         </div>
 
         <div className={styles.formGroup}>
           <label>계좌 등록</label>
-          <div className={styles.inputGroup}>
+          {/* <div className={styles.inputGroup}>
             <div className={styles.bankContainer}>
               <Image
                 src="/images/woori.png"
@@ -33,8 +33,9 @@ export default function WorkplaceModal() {
               <span>우리은행</span>
             </div>
             <input type="text" placeholder="계좌 번호를 입력하세요" />
-            <Button text="계좌 확인" color="#007bff" />
-          </div>
+            <BaseButton text="계좌 확인"  />
+          </div> */}
+          <AccountInputForm />
         </div>
 
         <div className={styles.linkGroup}>

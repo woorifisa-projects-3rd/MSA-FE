@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
+import BaseButton from '../button/base-button';
 
 const AccountInputForm = ({ isPresident = false }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
@@ -63,7 +64,7 @@ const AccountInputForm = ({ isPresident = false }) => {
 
   return (
     <div className={styles.form}>
-      <h2 className="text-lg mb-4">계좌 등록</h2>
+      {/* <h2 className="text-lg mb-4">계좌 등록</h2> */}
       <div className="flex gap-2 items-center relative">
         {BankSelector}
 
@@ -99,13 +100,13 @@ const AccountInputForm = ({ isPresident = false }) => {
           className={styles.input}
         />
 
-        <button 
-          type='button'
+
+        <BaseButton 
+          text="계좌 확인"
+          type="button"
           onClick={handleSubmit}
-          className={styles.submitButton}
-        >
-          계좌 확인
-        </button>
+        />
+     
       </div>
 
       {isPresident && (
