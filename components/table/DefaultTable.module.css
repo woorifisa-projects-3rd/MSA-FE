@@ -36,3 +36,13 @@
     padding: 10px;
     text-align: center;
 }
+
+.noDataContainer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.noDataText {
+    color: var(--gray);
+}
