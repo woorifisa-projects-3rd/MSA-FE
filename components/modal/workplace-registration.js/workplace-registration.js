@@ -1,11 +1,11 @@
-// components/WorkplaceModal.jsx
 import Button from '@/components/button/button';
 import Image from "next/image";
-import styles from "./workplace-registrion.module.css"
+import styles from "./workplace-registration.module.css"
 
 export default function WorkplaceModal() {
   return (
     <div className={styles.formContainer}>
+      <h2 className={styles.formTitle}>사업장 등록</h2>
       <form className={styles.form}>
         <div className={styles.formGroup}>
           <label>사업장 상호명</label>
@@ -44,7 +44,7 @@ export default function WorkplaceModal() {
           </a>
         </div>
 
-       
+      
       </form>
     </div>
   );

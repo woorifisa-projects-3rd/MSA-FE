@@ -1,0 +1,131 @@
+/* EmployeeForm.module.css에 추가 */
+.formContainer {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.formSection {
+    margin: 24px 0;
+    padding: 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+}
+
+.postcodeRow {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.postcodeInput {
+    width: 200px !important;
+}
+
+.searchButton {
+    padding: 8px 16px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.searchButton:hover {
+    background-color: #2c5282;
+}
+
+.addressInput {
+    margin-bottom: 8px;
+}
+
+.addressInput[readonly] {
+    background-color: #edf2f7;
+}
+
+.inputWithUnit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inputWithUnit input {
+    flex: 1;
+}
+
+.inputWithUnit span {
+    color: #4a5568;
+    font-size: 14px;
+}
+
+/* 기존 스타일 유지 */
+.formGroup {
+    margin-bottom: 16px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+.formGroup input,
+.formGroup select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 24px;
+}
+
+.submitButton:hover {
+    background-color: #2c5282;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    font-weight: bold;
+}

@@ -2,8 +2,12 @@
 'use client'
 import DefaultTable from '@/components/table/DefaultTable';
 import classes from './ProfileDetail.module.css';
+import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
+import ModalContainer from '@/components/modal/modal-container';
+import { useState } from 'react';
 
 export default function ProfileDetail({content}) {
+    const [registrationModalOpen, setRegistrionModalOpen] = useState(false);
     const name =content.name;
     const email =content.email;
     const workplaceInfo =content.workplaceInfo;
@@ -21,7 +25,10 @@ export default function ProfileDetail({content}) {
            <DefaultTable tableName={tableName} tableHeaders={tableHeaders} list={workplaceInfo}/>
 
             <div className={classes.addButtonContainer}>
-                   <button className={classes.addButton}>
+                   <button 
+                    onClick={()=>setRegistrionModalOpen(true)}
+                    className={classes.addButton}
+                   >
                        <div className={classes.iconContainer}>
                            <svg 
                                className={classes.icon}
@@ -40,6 +47,15 @@ export default function ProfileDetail({content}) {
                        <span className={classes.addButtonText}>사업장 추가 및 등록</span>
                    </button>
             </div>
+
+            <ModalContainer
+                title="사업장 등록"
+                isOpen={registrationModalOpen}
+                isClose={()=>setRegistrionModalOpen(false)}
+                onConfirm={()=>console.log("submit 완료")}
+            >
+                <WorkplaceModal />
+            </ModalContainer>
        </div>
    );
 }

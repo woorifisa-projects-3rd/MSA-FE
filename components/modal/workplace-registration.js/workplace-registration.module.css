@@ -8,7 +8,6 @@
   max-width: 600px;
   min-width: min(600px, 90vw); 
 } */
-
 .formTitle{
   display: flex;
   justify-content: center;
@@ -20,44 +19,37 @@
   flex-direction: column;
   gap: 10px;
 }
-
 .formGroup {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
 }
-
 .form label {
   font-weight: bold;
   margin-bottom: 8px;
 }
-
 .form input {
   flex: 1;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
 .bankContainer {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .inputGroup div {
   width: 120px;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
 .inputGroup {
   display: flex;
   gap: 10px;
   align-items: center;
 }
-
 .checkButton {
   width: 100px;
   height: 48px;
@@ -68,11 +60,9 @@
   border-radius: 5px;
   flex-shrink: 0;
 }
-
 .checkButton:hover {
   background-color: #0056b3;
 }
-
 .linkGroup {
   display: flex;
   justify-content: flex-start;
@@ -80,7 +70,6 @@
   margin-top: 10px;
   margin-bottom: 40px;
 }
-
 .link {
   color: #007bff;
   text-decoration: underline;
@@ -88,5 +77,11 @@
   font-size: 14px;
   cursor: pointer;
 }
-
-
+.buttonGroup {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+}
+.buttonGroup button {
+  flex: 1;
+}
