@@ -5,6 +5,7 @@ import classes from "./page.module.css";
 import DefaultTable from '@/components/table/DefaultTable';
 import MonthSelector from "@/components/selector/selector";
 import { useState } from 'react';
+import NameSearch from "@/components/namesearch/NameSearch";
 
 const buttonText = "확인";
 
@@ -44,6 +45,7 @@ export default function PayRecords() {
 
     return (
         <div className={classes.container}>
+            <NameSearch />
             <DefaultTable 
                 tableName={<MonthSelector onMonthChange={handleMonthChange} />} 
                 tableHeaders={tableHeaders} 
