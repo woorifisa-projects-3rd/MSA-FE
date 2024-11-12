@@ -5,16 +5,22 @@ import classes from "./page.module.css";
 import DefaultTable from '@/components/table/DefaultTable';
 import MonthSelector from "@/components/selector/selector";
 import { useState } from 'react';
-import NameSearch from "@/components/namesearch/NameSearch";
+import NameSearch from "@/components/namesearch/name-search";
+import Sorting from "@/components/sorting/Sorting";
 
 const buttonText = "확인";
 
 export default function PayRecords() {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [sortOption, setSortOption] = useState('latest');
 
     const handleMonthChange = (newDate) => {
         setSelectedDate(newDate);
+    };
+
+    const handleSortChange = (event) => {
+        setSortOption(event.target.value);
     };
 
     const [list, setList] = useState([
@@ -45,7 +51,13 @@ export default function PayRecords() {
 
     return (
         <div className={classes.container}>
-            <NameSearch />
+            <div className={classes.search}>
+                <NameSearch />
+                <Sorting 
+                onChange={handleSortChange} 
+                selectedOption={sortOption}
+            />
+            </div>
             <DefaultTable 
                 tableName={<MonthSelector onMonthChange={handleMonthChange} />} 
                 tableHeaders={tableHeaders} 

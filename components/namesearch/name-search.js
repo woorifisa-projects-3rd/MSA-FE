@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './NameSearch.module.css'
+import styles from './name-search.module.css'
 
 export default function NameSearch({ onChange }) {
     return (

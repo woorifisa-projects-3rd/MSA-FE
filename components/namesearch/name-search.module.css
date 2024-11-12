@@ -13,9 +13,6 @@
 }
 
 .searchInput {
-    border: none;
-    outline: none;
     background: transparent;
-    color: var(--gray);
     width: 100%;
 }
