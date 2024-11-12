@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Button from '@/components/button/button';
 import classes from "./page.module.css";
 import ModalContainer from '@/components/modal/modal-container';
-import WorkplaceModal from '@/components/modal/workplace-registraion.js/workplace-registration';
+import WorkplaceModal from '@/components/modal/workplace-registraion/workplace-registration';
 
 export default function SalesExpenses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
