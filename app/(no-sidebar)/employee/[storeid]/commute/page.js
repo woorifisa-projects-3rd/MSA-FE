@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 
-export default function AddressSearch() {
-    const API_KEY = "AIzaSyD85M6vyeKk6hnsbSRILhMT2Clco7mC9sY"
+export default function AttendancePage() {
     const [loading, setLoading] = useState(false)
+    const [email, setEmail] = useState('')
     const params = useParams()
     const storeId = params.storeid 
 
@@ -29,19 +29,21 @@ export default function AddressSearch() {
         })
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, type) => {
         e.preventDefault()
-        const formData = new FormData(e.target)
-        const email = formData.get('email')
+        if (!email) {
+            alert('이메일을 입력해주세요')
+            return
+        }
 
         try {
             setLoading(true)
             
-            // GPS로 현재 위치 가져오기
             const location = await getCurrentLocation()
             console.log('Current location:', location)
 
-            const serverResponse = await fetch(`http://localhost:8888/attendance/${storeId}/go-to-work`, {
+            const endpoint = type === 'go' ? 'go-to-work' : 'leave-work'
+            const serverResponse = await fetch(`http://localhost:8888/attendance/${storeId}/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,13 +57,14 @@ export default function AddressSearch() {
             
             const statusCode = serverResponse.status;
             if (statusCode === 200) {
-                alert('출근이 성공적으로 기록되었습니다.')
-            } else if (statusCode === 202) {
+                alert(type === 'go' ? '출근이 성공적으로 기록되었습니다.' : '퇴근이 성공적으로 기록되었습니다.')
+            } else if (statusCode === 202 && type === 'go') {
                 alert('출근이 성공적으로 되었으나 이전 퇴근을 찍지 않으셨습니다 사장님께 연락해주세요')
-            } else if (statusCode === 403){
+            } else if (statusCode === 400 && type === 'leave') {
+                alert('출근을 찍어주세요')
+            } else if (statusCode === 403) {
                 alert('위치가 다릅니다')
-            }
-            else {
+            } else {
                 throw new Error('Failed to send data to server')
             }
         } catch (error) {
@@ -73,20 +76,33 @@ export default function AddressSearch() {
 
     return (
         <div className="p-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <input
                     type="email"
-                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="이메일을 입력하세요"
                     required
-                    className="px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border rounded"
                 />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
-                >
-                    {loading ? 'Processing...' : '출근하기'}
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        type="button"
+                        onClick={(e) => handleSubmit(e, 'go')}
+                        disabled={loading}
+                        className="flex-1 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400 hover:bg-blue-600"
+                    >
+                        {loading ? 'Processing...' : '출근하기'}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={(e) => handleSubmit(e, 'leave')}
+                        disabled={loading}
+                        className="flex-1 px-4 py-2 bg-red-500 text-white rounded disabled:bg-gray-400 hover:bg-red-600"
+                    >
+                        {loading ? 'Processing...' : '퇴근하기'}
+                    </button>
+                </div>
             </form>
         </div>
     )
