@@ -1,64 +1,33 @@
-/* button.module.css */
-.button {
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
- }
-
-.button:hover {  /* style 속성이 있는 버튼(커스텀)에만 적용 */
-   opacity: 0.8;      /* 약간 투명하게 */
+.baseButton {
+   padding: 10px 20px;
+   font-size: 16px;
+   font-weight: 500;
+   border-radius: 8px;
+   border: none;
+   background-color: #4B71F4;
+   color: white;
+   cursor: pointer;
+   transition: all 0.2s ease;
 }
- 
- /* 타입별 스타일 */
- .btn-submit {
-    background-color: #4B71F4;
-    color: white;
+
+.baseButton:hover {
+   background-color: #3B5FE3;
+}
+
+.primaryButton {
+   padding: 8px 16px;
+   font-size: 14px;
+   font-weight: 500;
+   border-radius: 6px;
+   border: none;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   background-color: transparent;
+   border: 0.0625rem solid #4B71F4;
+   color: #4B71F4;
  }
  
- .btn-submit:hover {
-    background-color: #3B5FE3;
- }
- 
- .btn-cancel {
-    background-color: #FFFFFF;
-    color: #333333;
-    border: 0.0625rem solid #E5E7EB; 
- }
- 
- .btn-cancel:hover {
-    background-color: #F3F4F6;
- }
- 
- .btn-outline {
-    background-color: transparent;
-    border: 0.0625rem solid #4B71F4;
-    color: #4B71F4;
- }
- 
- .btn-outline:hover {
-    background-color: rgba(75, 113, 244, 0.1);
- }
- 
- .xlarge {
-    width: 31.26rem;    /* 500.16px */
-    height: 3.85rem;    /* 61.55px */
- }
- 
- .large {
-    width: 17.125rem;   /* 274px */
-    height: 2.75rem;    /* 44px */
- }
- 
- .small {
-    width: 7.46rem;     /* 119.33px */
-    height: 2.23rem;    /* 35.75px */
- }
- 
- .xsmall {
-    width: 4.6875rem;   /* 75px */
-    height: 1.875rem;   /* 30px */
+ .primaryButton:hover {
+   opacity: 0.8;
+   background-color: rgba(75, 113, 244, 0.1);
  }
