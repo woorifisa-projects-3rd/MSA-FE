@@ -1,5 +1,6 @@
 'use client';
 
+import PrimaryButton from '@/components/button/primary-button';
 import AttendanceModalBody from '@/components/modal/attendance-modal/attendance-modal-body';
 import ModalContainer from '@/components/modal/modal-container';
 import DefaultTable from '@/components/table/DefaultTable';
@@ -65,7 +66,18 @@ const list = [
   }
 ];
 
- 
+  const changedList = list.map((list)=>({
+   ...list,
+   edit:(
+    <PrimaryButton
+      text="편집"
+      onClick={() => {
+        setSelectedAttendance(list)
+        setEditModalOpen(true)
+      }}
+    />
+   )
+  }))
   return (
     <>
       <button onClick={() => setIsModalOpen(true)}>
@@ -78,7 +90,7 @@ const list = [
         onClose={()=>setIsModalOpen(false)}
         title="출퇴근 기록 추가하기"
       >
-        <AttendanceModalBody/>
+        <AttendanceModalBody />
       </ModalContainer>
 
       {/* 수정 모달 */}
@@ -91,7 +103,7 @@ const list = [
               <AttendanceModalBody mode='edit' attendanceData={selectedAttendance} />
       </ModalContainer>
 
-      <DefaultTable tableName="출퇴근 조회" tableHeaders={tableHeaders} list={list}/>
+      <DefaultTable tableName="출퇴근 조회" tableHeaders={tableHeaders} list={changedList}/>
    
     </>
   );

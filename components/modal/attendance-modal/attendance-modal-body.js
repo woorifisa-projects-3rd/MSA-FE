@@ -71,6 +71,8 @@ export default function AttendanceModalBody({
           }
         }
       }, [formData.startTime, formData.endTime]);
+
+    console.log(attendanceData)
     
 
     return (
@@ -100,6 +102,7 @@ export default function AttendanceModalBody({
                       onChange={handleChange}
                       className={styles.dateInput}
                      // attendance값이 있다면 default값 넣기 
+                    //  defaultValue={attendanceData?.date}
 
                   />
                 </div>
@@ -113,7 +116,9 @@ export default function AttendanceModalBody({
                             value={formData.startTime}
                             onChange={handleChange}
                             className={styles.timeInput}
-                            // attendance값이 있다면 default값 넣기 
+                            // attendance값이 있다면 default값 넣기
+                            defaultValue={attendanceData?.startTime}
+                            
 
                         />
                         <span className={styles.timeLabel} data-type="start">출근</span>
