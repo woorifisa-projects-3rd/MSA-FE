@@ -1,13 +1,33 @@
-.button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+.baseButton {
+   padding: 10px 20px;
+   font-size: 16px;
+   font-weight: 500;
+   border-radius: 8px;
+   border: none;
+   background-color: #4B71F4;
+   color: white;
+   cursor: pointer;
+   transition: all 0.2s ease;
 }
 
-.button:hover {
-    opacity: 0.8;
+.baseButton:hover {
+   background-color: #3B5FE3;
 }
+
+.primaryButton {
+   padding: 8px 16px;
+   font-size: 14px;
+   font-weight: 500;
+   border-radius: 6px;
+   border: none;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   background-color: transparent;
+   border: 0.0625rem solid #4B71F4;
+   color: #4B71F4;
+ }
+ 
+ .primaryButton:hover {
+   opacity: 0.8;
+   background-color: rgba(75, 113, 244, 0.1);
+ }
