@@ -72,6 +72,8 @@ export default function SalesExpenses() {
     return (
         <div className={classes.container}>
             <h1 className={classes.title}>직원 정보 조회/수정 페이지</h1>
+        
+            <Button text= "직원 추가" color={"var(--main-woori-blue)"}/>
             <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={list}/>
        
         </div>
