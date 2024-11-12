@@ -1,31 +1,36 @@
-/* DefaultTable.module.css */
 .workplaceTitle {
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .table {
     width: 100%;
+    border-collapse: collapse;
 }
 
 .tableHeader {
-    color: #93c5fd;  /* blue-300 */
-}
-
-.headerRow, .bodyRow {
-    border-bottom: 1px solid #e5e7eb;  /* gray-200 */
-}
-
-.headerCell, .cell {
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.centerAlign {
+    background-color: #f5f5f5;
     text-align: center;
 }
 
-.rightAlign {
-    text-align: right;
+.headerRow {
+    height: 50px;
+    border-bottom: 2px solid #ddd;
+}
+
+.headerCell {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--gray);
+}
+
+.bodyRow {
+    height: 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.cell {
+    padding: 10px;
+    text-align: center;
 }
