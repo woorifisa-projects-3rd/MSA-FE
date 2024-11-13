@@ -16,6 +16,7 @@
     z-index: 1000;
     width: 100%;
     height: var(--header-height);
+    background-color: var(--background);
 }
 .sidebar{
     grid-area: sidebar;

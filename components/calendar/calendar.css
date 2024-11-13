@@ -1,0 +1,98 @@
+.fc { /* FullCalendar의 root element */
+    max-width: 100%;
+    padding: 50px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+/* 기본 셀 높이 고정 */
+.fc .fc-daygrid-day {
+    height: 90px !important; 
+    max-height: 90px;
+}
+/* 셀 내부 프레임  */
+.fc .fc-daygrid-day-frame{
+    border:1px solid black;
+    height: 100% !important;
+    max-height: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+.fc .fc-daygrid-day-top{
+    padding: 0 5px;
+}
+
+/* 그리드로 2열 만든 버전  */
+
+.fc .fc-daygrid-day-events{
+    display: grid;
+    border:1px solid red;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: row;
+    gap: 2px;
+    padding: 5px;
+    /* 여기서부터 추가 */
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important; /* 넘치는 내용 숨김 */
+}
+.fc .fc-daygrid-day-events::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* 스크롤 동기화 관련 */
+/* .fc .fc-scrollgrid-sync-inner {
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: unset !important;
+} */
+
+/* 개별 이벤트 스타일 */
+.fc-daygrid-event {
+    /* 여기서부터 추가 */
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 1px 0 !important;
+    overflow: hidden !important; /* 넘치는 내용 숨김 */
+   
+}
+/* 이벤트 전체 내용을 한 줄로 제한 */
+.fc-event-main {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.fc-event-title {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* 말줄임표 표시 */
+    white-space: nowrap !important; /* 텍스트 줄바꿈 방지 */
+    width: 100% !important;
+}
+
+/* 또는 더 확실하게 */
+.fc-daygrid-day-frame .fc-scrollgrid-sync-inner {
+    display: none !important;
+}
+
+
+/* 더보기 (+more) 버튼 위치 조정 */
+.fc .fc-daygrid-more-link {
+    /* position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.9) !important; */
+}
+
+
+.fc-toolbar-title {
+    font-size: 1.5em !important;
+    font-weight: bold;
+}
+
+
+
+/* 버튼 색 */
