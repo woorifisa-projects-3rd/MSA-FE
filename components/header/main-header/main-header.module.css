@@ -4,8 +4,9 @@
     justify-content: space-between; 
     width: 100%;
     height: var(--header-height);
-    background-color: var(--background);
     border-bottom: 1px solid #e5e7eb;
+    z-index: 10000;
+    background: white;
 }
 
 .header_left{

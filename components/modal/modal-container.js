@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from './modal-container.module.css';  
 import Button from "../button/button";
+import PrimaryButton from "../button/primary-button";
+import BaseButton from "../button/base-button";
 
 export default function ModalContainer({isOpen, onClose,title, children, onConfirm}) {
     const [mounted, setMounted] = useState(false); 
@@ -44,7 +46,6 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
                 <button
                     className={styles.closeButton}
                     onClick={onClose}
-
                 >
                     X
                 </button>
@@ -58,8 +59,8 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
                 {/* 하단 취소/확인 버튼 */}
 
                 <div className={styles.buttonGroup}>
-                  <Button  text="취소" color="black" onClick={onClose}/>
-                  <Button text="확인" color="#007bff" onClick={onConfirm} />
+                  <BaseButton  text="취소"  backgroundColor="black" onClick={onClose}/>
+                  <BaseButton text="확인"  onClick={onConfirm} />
                 </div>
             </div>
         </div>

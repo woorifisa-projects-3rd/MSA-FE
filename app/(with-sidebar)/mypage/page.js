@@ -48,7 +48,6 @@ const tabs = [
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
-  
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:

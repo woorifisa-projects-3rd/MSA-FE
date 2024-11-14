@@ -1,5 +1,68 @@
 .container {
-    padding: 20px;
-    background-color: #f5f5f5;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
 
+  .selectContainer select {
+    padding: 5px;
+    font-size: 20px;
+    background: transparent;
+  }
+  
+  .summaryContainer {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    background-color: #1a1a3d;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon {
+    background-color: rgba(59, 130, 246, 0.2);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .textContainer h3 {
+    font-size: 20px;
+  }
+  
+  .chartContainer {
+    display: flex;
+    gap: 4rem;
+    margin-top: 3rem;
+  }
+  
+  .barChartContainer {
+    margin-top: 3rem;
+    width: 600px;
+  }
+  
+  .reportsContainer {
+    margin-top: 2rem;
+    display: flex;
+    gap: 2rem;
+  }
+  
