@@ -3,7 +3,16 @@ import classes from './DefaultTable.module.css';
 
 // 사용법: 테이블의 이름, 테이블 헤더, 각 테이블의 헤더에 맞는 데이터 리스트
 // 만약 각행에 버튼을 넣고 싶다면 헤더에 맞는 데이터 리스트가 없으면 자동으로 버튼 생성
-export default function DefaultTable({ tableName, tableHeaders, list}) {
+export default function DefaultTable({ tableName, tableHeaders, list }) {
+
+    // 데이터가 없을 경우
+    if (list.length === 0) {
+        return (
+            <div className={classes.noDataContainer}>
+                <p className = {classes.noDataText}>해당하는 데이터가 존재하지 않습니다.</p>
+            </div>
+        )
+    }
    return (
        <div>
            <h3 className={classes.workplaceTitle}>{tableName}</h3>
