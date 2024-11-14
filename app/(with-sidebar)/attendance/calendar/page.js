@@ -1,11 +1,10 @@
-import Button from '@/components/button/button';
+import Calendar from "@/components/calendar/calendar";
 import classes from "./page.module.css";
 
-export default function SalesExpenses() {
+export default function AttendanceCalendar() {
     return (
         <div className={classes.container}>
-            <h1 className={classes.title}>직원 출ㆍ퇴근 캘린더 페이지</h1>
-          
+            <Calendar />
         </div>
     );
 }
