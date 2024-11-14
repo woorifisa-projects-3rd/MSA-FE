@@ -14,6 +14,19 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
         return () => setMounted(false);
     }, []);
 
+    // 모달 열릴 때 body 스크롤 막기
+    useEffect(() => {
+      if (isOpen) {
+          document.body.style.overflow = 'hidden';
+      } else {
+          document.body.style.overflow = 'unset';
+      }
+
+      return () => {
+          document.body.style.overflow = 'unset';
+      };
+    }, [isOpen]);
+
 
     // esc키로 모달 닫기
     useEffect(() => {
