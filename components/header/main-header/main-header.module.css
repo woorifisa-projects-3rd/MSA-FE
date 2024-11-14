@@ -25,12 +25,11 @@
 .headerRight {
     width: calc(100% - var(--sidebar-width));
     height: 100%;
-    padding-right: 180px;
+    padding-right: 100px;
     display: flex;
     align-items: center; 
     justify-content: space-between;
     /* 좌우 여백 추가하기 */
-
 }
 .headerTitle{
     font-size: 20px; 

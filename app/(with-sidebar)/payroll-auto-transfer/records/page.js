@@ -7,6 +7,7 @@ import MonthSelector from "@/components/selector/selector";
 import { useState } from 'react';
 import NameSearch from "@/components/namesearch/name-search";
 import Sorting from "@/components/sorting/Sorting";
+import BaseButton from "@/components/button/base-button";
 
 const buttonText = "확인";
 
@@ -29,12 +30,12 @@ export default function PayRecords() {
     };
 
     const [list, setList] = useState([
-        { name: '정성윤', account: '110-123456-45687', amount: '266,000원', date: '2024/10/03', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
-        { name: '이현아', account: '213-151-1223165', amount: '309,210원', date: '2024/11/03', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
-        { name: '류혜리', account: '111-15795-246821', amount: '309,210원', date: '2024/09/03', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
-        { name: '임지혁', account: '258-1467-284567', amount: '309,210원', date: '2023/10/03', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
-        { name: '박준현', account: '258-1467-284567', amount: '309,210원', date: '2024/10/05', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
-        { name: '강세필', account: '258-1467-284567', amount: '309,210원', date: '2024/10/09', button: <Button text={buttonText} color="var(--main-woori-blue)" /> },
+        { name: '정성윤', account: '110-123456-45687', amount: '266,000원', date: '2024/10/03', button: <BaseButton text={buttonText}  /> },
+        { name: '이현아', account: '213-151-1223165', amount: '309,210원', date: '2024/11/03', button: <BaseButton text={buttonText}  /> },
+        { name: '류혜리', account: '111-15795-246821', amount: '309,210원', date: '2024/09/03', button:<BaseButton text={buttonText}  />},
+        { name: '임지혁', account: '258-1467-284567', amount: '309,210원', date: '2023/10/03', button: <BaseButton text={buttonText}  /> },
+        { name: '박준현', account: '258-1467-284567', amount: '309,210원', date: '2024/10/05', button:  <BaseButton text={buttonText}  />},
+        { name: '강세필', account: '258-1467-284567', amount: '309,210원', date: '2024/10/09', button: <BaseButton text={buttonText}  /> },
     ]);
 
     // 선택된 년, 월과 검색어에 맞는 데이터 필터링

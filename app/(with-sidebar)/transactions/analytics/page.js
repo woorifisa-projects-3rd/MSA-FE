@@ -105,6 +105,7 @@ const calculateCategoryTotals = (items) => {
   };
 
   return (
+    // 가장 바깥 컨테이너
     <div className={classes.container}>
       <div className={classes.selectContainer}>
         <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
@@ -122,54 +123,71 @@ const calculateCategoryTotals = (items) => {
             </option>
           ))}
         </select>
-    </div>
-
-      {/* 매출/지출 합계 표시 */}
-    <div className={classes.summaryContainer}>
-    <div className={classes.card}>
-        <div className={classes.icon}>
-        📈
-        </div>
-        <div className={classes.textContainer}>
-        <h3>매출</h3>
-        <p>{dummyData.총매출.toLocaleString()}원</p>
-        </div>
-    </div>
-    
-    <div className={classes.card}>
-        <div className={classes.icon}>
-        📉
-        </div>
-        <div className={classes.textContainer}>
-        <h3>지출</h3>
-        <p>{dummyData.총지출.toLocaleString()}원</p>
-        </div>
-    </div>
-    </div>
-
-
-      {/* 매출 및 지출 도넛형 차트 */}
-      <div className={classes.chartContainer}>
-        <div>
-          <h2>매출</h2>
-          <Doughnut data={salesData} options={options} />
-        </div>
-        <div>
-          <h2>지출</h2>
-          <Doughnut data={expensesData} options={options} />
-        </div>
       </div>
 
-      {/* 월별 매출 막대형 차트 */}
-      <div className={classes.barChartContainer}>
-        <h2>월별 매출</h2>
-        <Bar data={monthlySalesData} options={options} />
-      </div>
+      <div className={classes.gridContainer}>
 
-      {/* 서류 발급 버튼 */}
-      <div className={classes.reportsContainer}>
-        <BaseButton text="손익계산서 발급" />
-        <BaseButton text="간편장부 발급" />
+        {/* 왼쪽 섹션 */}
+        <div className={classes.leftSection}>
+     
+          {/* 매출/지출 합계 표시 */}
+          <div className={classes.summaryContainer}>
+          <div className={classes.card}>
+              <div className={classes.icon}>
+              📈
+              </div>
+              <div className={classes.textContainer}>
+              <h3>매출</h3>
+              <p>{dummyData.총매출.toLocaleString()}원</p>
+              </div>
+          </div>
+          
+          <div className={classes.card}>
+              <div className={classes.icon}>
+              📉
+              </div>
+              <div className={classes.textContainer}>
+              <h3>지출</h3>
+              <p>{dummyData.총지출.toLocaleString()}원</p>
+              </div>
+          </div>
+          </div>
+
+
+          {/* 매출 및 지출 도넛형 차트 */}
+          <div className={classes.chartContainer}>
+            <div>
+              <h2>매출</h2>
+              <Doughnut data={salesData} options={options} />
+            </div>
+            <div>
+              <h2>지출</h2>
+              <Doughnut data={expensesData} options={options} />
+            </div>
+          </div>
+
+          {/* 서류 발급 버튼 */}
+          <div className={classes.reportsContainer}>
+            <BaseButton text="손익계산서 발급" />
+            <BaseButton text="간편장부 발급" />
+          </div>
+        </div>
+
+   
+        {/* 오른쪽 섹션 */}
+        <div className={classes.rightSection}>
+        
+          <div>
+            월별 매출 막대형 차트
+          </div>
+          <div className={classes.barChartContainer}>
+            <h2 >월별 매출</h2>
+            <Bar className={classes.bar} data={monthlySalesData} options={options} />
+          </div>
+
+       
+        </div>
+     
       </div>
     </div>
   );

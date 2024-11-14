@@ -4,7 +4,7 @@
    font-weight: 500;
    border-radius: 8px;
    border: none;
-   background-color: #4B71F4;
+   background-color: var(--main-woori-blue);
    color: white;
    cursor: pointer;
    transition: all 0.2s ease;

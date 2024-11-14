@@ -3,6 +3,8 @@ import Button from '@/components/button/button';
 import classes from "./page.module.css";
 import DefaultTable from '@/components/table/DefaultTable';
 import ModalContainer from '@/components/modal/modal-container';
+import PrimaryButton from '@/components/button/primary-button';
+import BaseButton from '@/components/button/base-button';
 
 const edit = "수정";
 const del = "삭제";
@@ -62,7 +64,7 @@ export default function SalesExpenses() {
         <div className={classes.container}>
             <h1 className={classes.title}>직원 정보 조회/수정 페이지</h1>
         
-            <Button text= "직원 추가" color={"var(--main-woori-blue)"} />
+            <BaseButton text= "직원 추가" />
             <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={list} />
         </div>
     );
