@@ -36,14 +36,6 @@ export default function Calendar (){
           borderColor: '#8CD3C5'
       },
       {
-          id: '3',
-          title: '휴가',
-          start: '2024-11-25',
-          end: '2024-11-27',
-          backgroundColor: '#8CD3C5', // 초록색 (진행중)
-          borderColor: '#8CD3C5'
-      },
-      {
           id: '4',
           title: '정성윤',
           date: '2024-11-05',
@@ -95,8 +87,8 @@ export default function Calendar (){
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView='dayGridMonth'
               headerToolbar={{
-                  left: 'prev,next',
-                  center: 'title',
+                  left: '',
+                  center: 'prev title next',
                   right: ''
               }}
               editable={true}
@@ -104,7 +96,7 @@ export default function Calendar (){
               events={events}
               select={handleDateSelect}
               locale="ko"  // 한글화
-              dayMaxEvents={8}  
+              dayMaxEvents={6}  
           />
       </div>
   )

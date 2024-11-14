@@ -5,6 +5,8 @@
     width: 100%;
     height: var(--header-height);
     border-bottom: 1px solid #e5e7eb;
+    z-index: 10000;
+    background: white;
 }
 
 .header_left{
