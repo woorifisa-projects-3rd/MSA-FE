@@ -6,7 +6,7 @@ import Button from "../button/button";
 import PrimaryButton from "../button/primary-button";
 import BaseButton from "../button/base-button";
 
-export default function ModalContainer({isOpen, onClose,title, children, onConfirm}) {
+export default function ModalContainer({isOpen, onClose,title, children, onConfirm, confirmText = "확인"}) {
     const [mounted, setMounted] = useState(false); 
 
     useEffect(() => {  
@@ -73,7 +73,7 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
 
                 <div className={styles.buttonGroup}>
                   <BaseButton  text="취소"  backgroundColor="black" onClick={onClose}/>
-                  <BaseButton text="확인"  onClick={onConfirm} />
+                  <BaseButton text={confirmText}  onClick={onConfirm} />
                 </div>
             </div>
         </div>

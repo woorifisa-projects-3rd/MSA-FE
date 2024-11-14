@@ -1,11 +1,10 @@
 /* EmployeeForm.module.css에 추가 */
 .formContainer {
     max-width: 800px;
-    margin: 20px auto;
-    padding: 30px;
+    padding: 0px 10px;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
 .formSection {

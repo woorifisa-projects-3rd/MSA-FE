@@ -203,8 +203,6 @@ export default function EmployeeForm() {
                     <h3 className={styles.sectionTitle}>주소</h3>
                     <AddressSearch onAddressChange={handleAddressChange} />
                 </div>
-
-                <button type="submit" className={styles.submitButton}>직원 등록하기</button>
             </form>
         </div>
     );

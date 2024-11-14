@@ -80,7 +80,7 @@ export default function SalesExpenses() {
             <BaseButton text= "직원 추가" onClick={openModal}/>
             <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={list} />
             {isModalOpen && (
-                <ModalContainer isOpen={isModalOpen} onClose={closeModal} text="직원 추가">
+                <ModalContainer isOpen={isModalOpen} onClose={closeModal} confirmText="직원 추가하기">
                     <EmployeeForm />
                 </ModalContainer>
             )}
