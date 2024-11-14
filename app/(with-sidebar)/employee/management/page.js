@@ -1,15 +1,28 @@
 "use client"
-import Button from '@/components/button/button';
 import classes from "./page.module.css";
 import DefaultTable from '@/components/table/DefaultTable';
 import ModalContainer from '@/components/modal/modal-container';
 import PrimaryButton from '@/components/button/primary-button';
 import BaseButton from '@/components/button/base-button';
+import EmployeeForm from '@/components/modal/employee-add/employee-add'
+import { useState } from 'react';
 
 const edit = "수정";
 const del = "삭제";
 
 export default function SalesExpenses() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        console.log("modal 열어라!!");
+        
+        setIsModalOpen(true);
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
     const tableHeaders = {
         name: "직원 이름",
         phone: "전화번호",
@@ -64,8 +77,13 @@ export default function SalesExpenses() {
         <div className={classes.container}>
             <h1 className={classes.title}>직원 정보 조회/수정 페이지</h1>
         
-            <BaseButton text= "직원 추가" />
+            <BaseButton text= "직원 추가" onClick={openModal}/>
             <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={list} />
+            {isModalOpen && (
+                <ModalContainer isOpen={isModalOpen} onClose={closeModal} text="직원 추가">
+                    <EmployeeForm />
+                </ModalContainer>
+            )}
         </div>
     );
 }
