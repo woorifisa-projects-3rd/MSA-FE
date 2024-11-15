@@ -3,6 +3,7 @@
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { authApi } from '@/api/auth/auth'
+import { useState } from 'react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
