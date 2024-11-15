@@ -30,7 +30,19 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
         if (mode === 'edit' && initialData) {
-            setFormData({ ...initialData });
+            const { address, bankCode, accountNumber } = initialData;
+            
+            // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
+            const [postcodeAddress, ...detailParts] = address.split(', ');
+            const detailAddress = detailParts.join(', ');
+
+            setFormData({
+                ...initialData,
+                bankCode,
+                accountNumber,
+                postcodeAddress,
+                detailAddress,
+            });
         }
     }, [mode, initialData]);
 
@@ -96,10 +108,10 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         email: value => value.trim() ? '' : REQUIRED_ERROR,
         phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
         // bankCode: value => value ? '' : REQUIRED_ERROR,
-        accountNumber: value => value.trim() ? '' : REQUIRED_ERROR,
+        accountNumber: value => value ? '' : REQUIRED_ERROR,
         salary: value => value ? '' : REQUIRED_ERROR,
         paymentDate: value => {
-            if (!value.trim()) return REQUIRED_ERROR;
+            if (!value) return REQUIRED_ERROR;
             if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
             return '';
         },
@@ -215,14 +227,21 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
                 <div className={styles.formSection}>
                     <div className={styles.formRow}>
-                        <AccountInputForm onChange={handleAccountChange} error={formErrors.accountNumber}/>
+                        <AccountInputForm
+                            bankCode={formData.bankCode}
+                            accountNumber={formData.accountNumber}
+                            onChange={handleAccountChange}
+                            error={formErrors.accountNumber}/>
                     </div>
                 </div>
 
                 {/* 주소 섹션 추가 */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>주소</h3>
-                    <AddressSearch onAddressChange={handleAddressChange} />
+                    <AddressSearch
+                        initialPostcodeAddress={formData.postcodeAddress}
+                        initialDetailAddress={formData.detailAddress}
+                        onAddressChange={handleAddressChange} />
                     {(formErrors.postcodeAddress || formErrors.detailAddress) && (
                         <span className={styles.error}>{formErrors.postcodeAddress}</span>
                     )}

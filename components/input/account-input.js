@@ -5,10 +5,15 @@ import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 
-const AccountInputForm = ({ isPresident = false, onChange, error }) => {
+const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
-  const [selectedBank, setSelectedBank] = useState(isPresident ? wooriBank : bankCodeList[0]);
-  const [accountNumber, setAccountNumber] = useState('');
+  const [selectedBank, setSelectedBank] = useState(() => {
+    if (isPresident) return wooriBank;
+    if (bankCode) return bankCodeList.find(bank => bank.code === bankCode) || bankCodeList[0];
+    return bankCodeList[0];
+  });
+
+  const [accountNumberState, setAccountNumberState] = useState(accountNumber || '');
   const [showBankList, setShowBankList] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -32,6 +37,19 @@ const AccountInputForm = ({ isPresident = false, onChange, error }) => {
     };
   }, []);
 
+  // 초기값 설정
+  useEffect(() => {
+    if (bankCode) {
+      const foundBank = bankCodeList.find(bank => bank.code === bankCode);
+      if (foundBank) {
+        setSelectedBank(foundBank);
+      }
+    }
+    if (accountNumber) {
+      setAccountNumberState(accountNumber);
+    }
+  }, [bankCode, accountNumber]);
+
   // 은행 선택 핸들러
   const handleBankChange = (bank) => {
     setSelectedBank(bank);
@@ -40,7 +58,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error }) => {
       onChange({
         bankCode: bank.code,
         bankName: bank.name,
-        accountNumber
+        accountNumber: accountNumberState
       });
     }
   };
@@ -62,7 +80,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error }) => {
     console.log({
       bankCode: selectedBank.code,
       bankName: selectedBank.name,
-      accountNumber
+      accountNumber: accountNumberState
     });
   };
 
