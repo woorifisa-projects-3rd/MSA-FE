@@ -6,7 +6,7 @@ import DefaultTable from '@/components/table/DefaultTable';
 import MonthSelector from "@/components/selector/selector";
 import { useState } from 'react';
 import NameSearch from "@/components/namesearch/name-search";
-import Sorting from "@/components/sorting/Sorting";
+import Sorting from "@/components/sorting/sorting";
 import BaseButton from "@/components/button/base-button";
 
 const buttonText = "확인";

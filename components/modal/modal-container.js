@@ -6,13 +6,26 @@ import Button from "../button/button";
 import PrimaryButton from "../button/primary-button";
 import BaseButton from "../button/base-button";
 
-export default function ModalContainer({isOpen, onClose,title, children, onConfirm}) {
+export default function ModalContainer({isOpen, onClose,title, children, onConfirm, confirmText = "확인"}) {
     const [mounted, setMounted] = useState(false); 
 
     useEffect(() => {  
         setMounted(true);
         return () => setMounted(false);
     }, []);
+
+    // 모달 열릴 때 body 스크롤 막기
+    useEffect(() => {
+      if (isOpen) {
+          document.body.style.overflow = 'hidden';
+      } else {
+          document.body.style.overflow = 'unset';
+      }
+
+      return () => {
+          document.body.style.overflow = 'unset';
+      };
+    }, [isOpen]);
 
 
     // esc키로 모달 닫기
@@ -60,7 +73,7 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
 
                 <div className={styles.buttonGroup}>
                   <BaseButton  text="취소"  backgroundColor="black" onClick={onClose}/>
-                  <BaseButton text="확인"  onClick={onConfirm} />
+                  <BaseButton text={confirmText}  onClick={onConfirm} />
                 </div>
             </div>
         </div>
