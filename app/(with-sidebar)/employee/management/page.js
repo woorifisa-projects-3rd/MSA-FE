@@ -5,7 +5,7 @@ import ModalContainer from '@/components/modal/modal-container';
 import PrimaryButton from '@/components/button/primary-button';
 import BaseButton from '@/components/button/base-button';
 import EmployeeForm from '@/components/modal/employee-add/employee-add'
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const edit = "수정";
 const del = "삭제";
@@ -14,6 +14,7 @@ export default function SalesExpenses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
     const [selectedEmployee, setSelectedEmployee] = useState(null); // 선택된 직원 데이터
+    const employeeFormRef = useRef(null);
 
     // 모달 열기
     const openModal = (mode = "add", employee = null) => {
@@ -27,6 +28,12 @@ export default function SalesExpenses() {
         setIsModalOpen(false);
         setIsEditMode(false);
         setSelectedEmployee(null);
+    }
+
+    const handleFormSubmit = () => {
+        if (employeeFormRef.current) {
+            employeeFormRef.current.handleSubmit();
+        }
     }
 
 
@@ -51,7 +58,9 @@ export default function SalesExpenses() {
             bankCode: '001',
             accountNumber: '123-456-789012',
             salary: 10000,
-            paymentDate: 15
+            paymentDate: 15,
+            postcodeAddress: '서울시 반포구',
+            detailAddress: '래미안 11동 306호'
         },
         {
             name: "이현아",
@@ -126,8 +135,21 @@ export default function SalesExpenses() {
             <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
             <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={enrichedList} />
             {isModalOpen && (
-                <ModalContainer isOpen={isModalOpen} onClose={closeModal} confirmText={isEditMode ? "직원 수정하기" : "직원 등록하기"}>
-                    <EmployeeForm mode={isEditMode ? "edit" : "add"} initialData={selectedEmployee} />
+                <ModalContainer
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                    confirmText={isEditMode ? "직원 수정하기" : "직원 등록하기"}
+                    onConfirm={handleFormSubmit}
+                >
+                    <EmployeeForm
+                        mode={isEditMode ? "edit" : "add"}
+                        initialData={selectedEmployee}
+                        onSubmit={data => {
+                            console.log("Form Submitted: ", data);
+                            closeModal();                
+                        }}
+                        ref={employeeFormRef}
+                         />
                 </ModalContainer>
             )}
         </div>

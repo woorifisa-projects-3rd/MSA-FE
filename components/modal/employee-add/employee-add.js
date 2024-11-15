@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
@@ -9,7 +9,7 @@ const REQUIRED_ERROR = "필수 항목입니다.";
 const DATE_ERROR = "잘못된 날짜입니다.";
 const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
-export default function EmployeeForm({ mode, initialData }) {
+const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -17,11 +17,12 @@ export default function EmployeeForm({ mode, initialData }) {
         sex: true,
         phoneNumber: '',
         employmentType: true,
-        bankCode: '',
+        bankCode: 20,
         accountNumber: '',
         salary: '',
         paymentDate: '',
-        address:'',
+        postcodeAddress: '',
+        detailAddress: '',
     });
 
     const [formErrors, setFormErrors] = useState({});
@@ -34,10 +35,18 @@ export default function EmployeeForm({ mode, initialData }) {
     }, [mode, initialData]);
 
     const handleAddressChange = (postcodeAddress, detailAddress) => {
-        const fullAddress = `${postcodeAddress} ${detailAddress}`
         setFormData(prev => ({
             ...prev,
-            address: fullAddress
+            postcodeAddress,
+            detailAddress,
+        }));
+    };
+
+    const handleAccountChange = ({ bankCode, accountNumber }) => {
+        setFormData(prev => ({
+            ...prev,
+            bankCode,
+            accountNumber,
         }));
     };
 
@@ -56,7 +65,7 @@ export default function EmployeeForm({ mode, initialData }) {
 
     // 제출 버튼 클릭시 유효성 검사 실행 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
     
         // 유효성 검사 수행
         const errors = validateForm(formData);
@@ -64,20 +73,30 @@ export default function EmployeeForm({ mode, initialData }) {
         
         // 오류가 없으면 제출
         if (Object.keys(errors).length === 0) {
-            const fullAddress = `${formData.baseAddress} ${formData.detailAddress}`;
-            const { baseAddress, detailAddress, ...rest } = formData;
-            const updatedFormData = { ...rest, address: fullAddress };
+            const { postcodeAddress, detailAddress, ...rest } = formData;
+            const updatedFormData = {
+                ...rest,
+                address: `${postcodeAddress} ${detailAddress}`,  // address로 결합해서 제출
+            };
             console.log(updatedFormData);
+            if (onSubmit) onSubmit(updatedFormData);
+            
         } else {
             console.log("유효성 검사 실패 !!!");
+            console.log(errors);
+            
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        handleSubmit,
+    }));
     
     const validateRules = {
         name: value => value.trim() ? '' : REQUIRED_ERROR,
         email: value => value.trim() ? '' : REQUIRED_ERROR,
         phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-        bankCode: value => value.trim() ? '' : REQUIRED_ERROR,
+        // bankCode: value => value ? '' : REQUIRED_ERROR,
         accountNumber: value => value.trim() ? '' : REQUIRED_ERROR,
         salary: value => value ? '' : REQUIRED_ERROR,
         paymentDate: value => {
@@ -90,7 +109,9 @@ export default function EmployeeForm({ mode, initialData }) {
             const inputDate = new Date(value);
             const today = new Date();
             if (inputDate >= today) return DATE_ERROR;
-        }
+        },
+        postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
     };
     
    
@@ -198,8 +219,8 @@ export default function EmployeeForm({ mode, initialData }) {
 
                 <div className={styles.formSection}>
                     <div className={styles.formRow}>
-                    
-                        <AccountInputForm />
+                        <AccountInputForm onChange={handleAccountChange}/>
+                        {formErrors.accountNumber && <span className={styles.error}>{formErrors.accountNumber}</span>}
                     </div>
                 </div>
 
@@ -207,9 +228,14 @@ export default function EmployeeForm({ mode, initialData }) {
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>주소</h3>
                     <AddressSearch onAddressChange={handleAddressChange} />
+                    {(formErrors.postcodeAddress || formErrors.detailAddress) && (
+                        <span className={styles.error}>{formErrors.postcodeAddress}</span>
+                    )}
                 </div>
                 {/* <button type="submit" className={styles.submitButton}>직원 등록하기</button> */}
             </form>
         </div>
     );
-}
+});
+
+export default EmployeeForm;

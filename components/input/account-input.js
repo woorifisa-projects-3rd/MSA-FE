@@ -5,7 +5,7 @@ import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 
-const AccountInputForm = ({ isPresident = false }) => {
+const AccountInputForm = ({ isPresident = false, onChange }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
   const [selectedBank, setSelectedBank] = useState(isPresident ? wooriBank : bankCodeList[0]);
   const [accountNumber, setAccountNumber] = useState('');
@@ -31,6 +31,32 @@ const AccountInputForm = ({ isPresident = false }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // 은행 선택 핸들러
+  const handleBankChange = (bank) => {
+    setSelectedBank(bank);
+    setShowBankList(false);
+    if (onChange) {
+      onChange({
+        bankCode: bank.code,
+        bankName: bank.name,
+        accountNumber
+      });
+    }
+  };
+
+  // 계좌번호 변경 핸들러
+  const handleAccountNumberChange = (e) => {
+    const value = e.target.value;
+    setAccountNumber(value);
+    if (onChange) {
+      onChange({
+        bankCode: selectedBank.code,
+        bankName: selectedBank.name,
+        accountNumber: value
+      });
+    }
+  };
 
   const handleSubmit = () => {
     console.log({
@@ -65,6 +91,7 @@ const AccountInputForm = ({ isPresident = false }) => {
   return (
     <div className={styles.form}>
       {/* <h2 className="text-lg mb-4">계좌 등록</h2> */}
+      <div className={styles.formGroup}>
       <div className="flex gap-2 items-center relative">
         {BankSelector}
 
@@ -77,8 +104,7 @@ const AccountInputForm = ({ isPresident = false }) => {
               <div
                 key={bank.code}
                 onClick={() => {
-                  setSelectedBank(bank);
-                  setShowBankList(false);
+                  handleBankChange(bank)
                 }}
                 className={styles.dropdownItem}
               >
@@ -96,7 +122,7 @@ const AccountInputForm = ({ isPresident = false }) => {
           type="text"
           placeholder="계좌번호"
           value={accountNumber}
-          onChange={(e) => setAccountNumber(e.target.value)}
+          onChange={handleAccountNumberChange}
           className={styles.input}
         />
 
@@ -107,6 +133,7 @@ const AccountInputForm = ({ isPresident = false }) => {
           onClick={handleSubmit}
         />
      
+      </div>
       </div>
 
       {isPresident && (
