@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
@@ -9,7 +9,7 @@ const REQUIRED_ERROR = "필수 항목입니다.";
 const DATE_ERROR = "잘못된 날짜입니다.";
 const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
-export default function EmployeeForm() {
+export default function EmployeeForm({ mode, initialData }) {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -21,8 +21,17 @@ export default function EmployeeForm() {
         accountNumber: '',
         salary: '',
         paymentDate: '',
-        address:''
+        address:'',
     });
+
+    const [formErrors, setFormErrors] = useState({});
+
+    // initialData가 변경될 때 formData를 업데이트 (수정 모드)
+    useEffect(() => {
+        if (mode === 'edit' && initialData) {
+            setFormData({ ...initialData });
+        }
+    }, [mode, initialData]);
 
     const handleAddressChange = (postcodeAddress, detailAddress) => {
         const fullAddress = `${postcodeAddress} ${detailAddress}`
@@ -31,10 +40,6 @@ export default function EmployeeForm() {
             address: fullAddress
         }));
     };
-
-    console.log(formData.address);
-
-    const [formErrors, setFormErrors] = useState({});
 
      // 유효성 검사 함수
      const validateForm = (data) => {
@@ -93,7 +98,7 @@ export default function EmployeeForm() {
 
     return (
         <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>직원 추가</h2>
+            <h2 className={styles.formTitle}>{mode === 'edit' ? '직원 수정' : '직원 추가'}</h2>
             <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                     <label>직원 이름</label>
@@ -203,6 +208,7 @@ export default function EmployeeForm() {
                     <h3 className={styles.sectionTitle}>주소</h3>
                     <AddressSearch onAddressChange={handleAddressChange} />
                 </div>
+                {/* <button type="submit" className={styles.submitButton}>직원 등록하기</button> */}
             </form>
         </div>
     );
