@@ -38,5 +38,18 @@ export const authApi = {
             localStorage.removeItem('token');
             throw error;
         }
+    },
+
+    // ID 찾기 함수
+    findId: async (name, phoneNumber) => {
+        try {
+            const response = await apiClient.post('/user/president/id-find', {
+                name,
+                phone_number: phoneNumber
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     }
 };
