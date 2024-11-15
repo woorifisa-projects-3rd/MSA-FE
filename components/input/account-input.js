@@ -5,7 +5,7 @@ import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 
-const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber }) => {
+const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber: propAccountNumber }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
   const [selectedBank, setSelectedBank] = useState(() => {
     if (isPresident) return wooriBank;
@@ -13,9 +13,22 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     return bankCodeList[0];
   });
 
-  const [accountNumberState, setAccountNumberState] = useState(accountNumber || '');
+  const [accountNumber, setAccountNumber] = useState(propAccountNumber || '');
   const [showBankList, setShowBankList] = useState(false);
   const dropdownRef = useRef(null);
+
+  // 초기값 설정
+  useEffect(() => {
+    if (isPresident) {
+      setSelectedBank(wooriBank);
+    } else if (bankCode) {
+      const bank = bankCodeList.find(bank => bank.code === bankCode.toString());
+      if (bank) setSelectedBank(bank);
+    }
+    if (propAccountNumber) {
+      setAccountNumber(propAccountNumber);
+    }
+  }, [isPresident, bankCode, propAccountNumber, wooriBank]);
 
   useEffect(() => {
     if (isPresident && selectedBank.code !== '020') {
@@ -37,19 +50,6 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     };
   }, []);
 
-  // 초기값 설정
-  useEffect(() => {
-    if (bankCode) {
-      const foundBank = bankCodeList.find(bank => bank.code === bankCode);
-      if (foundBank) {
-        setSelectedBank(foundBank);
-      }
-    }
-    if (accountNumber) {
-      setAccountNumberState(accountNumber);
-    }
-  }, [bankCode, accountNumber]);
-
   // 은행 선택 핸들러
   const handleBankChange = (bank) => {
     setSelectedBank(bank);
@@ -58,7 +58,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
       onChange({
         bankCode: bank.code,
         bankName: bank.name,
-        accountNumber: accountNumberState
+        accountNumber
       });
     }
   };
@@ -80,7 +80,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     console.log({
       bankCode: selectedBank.code,
       bankName: selectedBank.name,
-      accountNumber: accountNumberState
+      accountNumber
     });
   };
 

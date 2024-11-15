@@ -55,7 +55,7 @@ export default function SalesExpenses() {
             email: "apple@gmail.com",
             sex: true,
             employmentType: true,
-            bankCode: '001',
+            bankCode: '003',
             accountNumber: '123-456-789012',
             salary: 10000,
             paymentDate: 15,
@@ -68,7 +68,7 @@ export default function SalesExpenses() {
             email: "apple@gmail.com",
             sex: false,
             employmentType: false,
-            bankCode: '001',
+            bankCode: '002',
             accountNumber: '123-456-789012',
             salary: 3000000,
             paymentDate: 15
