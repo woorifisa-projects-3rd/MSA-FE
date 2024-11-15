@@ -51,7 +51,7 @@ export default function SalesExpenses() {
             name: "정성윤",
             phoneNumber: "(225) 555-0118",
             birthDate: "2000-06-20",
-            address: "서울 반포 반포자이",
+            address: "서울시 반포구 반포자이, 11동 306호",
             email: "apple@gmail.com",
             sex: true,
             employmentType: true,
@@ -59,14 +59,12 @@ export default function SalesExpenses() {
             accountNumber: '123-456-789012',
             salary: 10000,
             paymentDate: 15,
-            postcodeAddress: '서울시 반포구',
-            detailAddress: '래미안 11동 306호'
         },
         {
             name: "이현아",
             phoneNumber: "(225) 555-0118",
             birthDate: "2000-06-20",
-            address: "성수동 트리마제",
+            address: "성수동 트리마제, 11동",
             email: "apple@gmail.com",
             sex: false,
             employmentType: false,
@@ -145,7 +143,7 @@ export default function SalesExpenses() {
                         mode={isEditMode ? "edit" : "add"}
                         initialData={selectedEmployee}
                         onSubmit={data => {
-                            console.log("Form Submitted: ", data);
+                            console.log("제출된 데이터: ", data);
                             closeModal();                
                         }}
                         ref={employeeFormRef}

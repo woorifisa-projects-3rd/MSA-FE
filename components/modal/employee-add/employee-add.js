@@ -76,9 +76,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             const { postcodeAddress, detailAddress, ...rest } = formData;
             const updatedFormData = {
                 ...rest,
-                address: `${postcodeAddress} ${detailAddress}`,  // address로 결합해서 제출
+                address: `${postcodeAddress}, ${detailAddress}`,  // address로 결합해서 제출
             };
-            console.log(updatedFormData);
             if (onSubmit) onSubmit(updatedFormData);
             
         } else {
@@ -113,9 +112,6 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
         detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
     };
-    
-   
-
 
     return (
         <div className={styles.formContainer}>
@@ -219,8 +215,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
                 <div className={styles.formSection}>
                     <div className={styles.formRow}>
-                        <AccountInputForm onChange={handleAccountChange}/>
-                        {formErrors.accountNumber && <span className={styles.error}>{formErrors.accountNumber}</span>}
+                        <AccountInputForm onChange={handleAccountChange} error={formErrors.accountNumber}/>
                     </div>
                 </div>
 

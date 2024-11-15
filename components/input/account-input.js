@@ -5,7 +5,7 @@ import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 
-const AccountInputForm = ({ isPresident = false, onChange }) => {
+const AccountInputForm = ({ isPresident = false, onChange, error }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
   const [selectedBank, setSelectedBank] = useState(isPresident ? wooriBank : bankCodeList[0]);
   const [accountNumber, setAccountNumber] = useState('');
@@ -134,6 +134,7 @@ const AccountInputForm = ({ isPresident = false, onChange }) => {
         />
      
       </div>
+      {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
       </div>
 
       {isPresident && (
