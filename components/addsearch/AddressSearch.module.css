@@ -1,0 +1,56 @@
+/* AddressSearch.module.css */
+.address {
+    /* 기존 스타일 */
+  }
+
+.AddressSearch_address-input__fTbp2 {
+  margin-bottom: 0; /* margin-bottom을 제거하거나 0으로 설정 */
+}
+
+.address-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0; /* 우편번호 필드와 버튼 간 간격 */
+}
+
+.zip-code-field {
+  flex-grow: 0.25;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  pointer-events: none;
+  margin-right: 8px;
+  margin-bottom: 8px; /* 우편번호 입력 필드의 세로 간격 통일 */
+}
+
+.zip-code-button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 8px; /* 버튼의 세로 간격 통일 */
+}
+
+.address-field {
+  width: 100%; /* 주소 필드의 가로 크기 유지 */
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 8px;
+  margin-bottom: 8px; /* 주소 입력 필드의 세로 간격 통일 */
+}
+
+.detailed-address-input {
+  margin-top: 8px;
+}
+
+.detailed-address-field {
+  width: 100%; /* 상세 주소 필드의 가로 크기 유지 */
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px; /* 상세 주소 입력 필드의 세로 간격 통일 */
+}
+  

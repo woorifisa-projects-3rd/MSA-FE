@@ -1,0 +1,61 @@
+/* ProfileDetail.module.css */
+.container {
+    width: 100%;
+}
+
+.headerSection {
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.email {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.otherComponent {
+    margin: 2rem 0;
+}
+
+.addButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.addButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #9ca3af;  /* gray-400 */
+    transition: color 0.2s;
+}
+
+.addButton:hover {
+    color: #4b5563;  /* gray-600 */
+}
+
+.iconContainer {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    border: 2px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.addButtonText {
+    font-size: 1.125rem;
+}

@@ -1,0 +1,51 @@
+.workplaceTitle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableHeader {
+    text-align: center;
+}
+
+.headerRow {
+    height: 50px;
+    border-bottom: 2px solid #ddd;
+}
+
+.headerCell {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--gray);
+}
+
+.bodyRow {
+    height: 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.cell {
+    padding: 10px;
+    text-align: center;
+}
+
+.noDataContainer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.noDataText {
+    color: var(--gray);
+}
+
+
+

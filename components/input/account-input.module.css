@@ -1,0 +1,138 @@
+.form {
+  width: 100%;
+  max-width: 48rem;
+ }
+ 
+ .title {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+ }
+ 
+ .inputContainer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  position: relative;
+  min-height: 2.75rem; /* 줄임 */
+ }
+ 
+ .bankButton,
+.bankSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem; /* 좌우 패딩 줄임 */
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  min-width: 8rem; /* 최소 너비 줄임 */
+  font-size: 1rem;
+  height: 2.75rem;
+}
+ 
+ .bankButton {
+  cursor: pointer;
+ }
+ 
+ .bankButton:hover {
+  background-color: #f9fafb;
+ }
+ 
+ .bankIcon {
+  width: 1.5rem; /* 줄임 */
+  height: 1.5rem;
+  overflow: hidden;
+ }
+ 
+ .bankIcon svg {
+  width: 100%;
+  height: 100%;
+ }
+ 
+ .dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  width: 18rem;
+  height: 20rem;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+ }
+ 
+ .dropdownHeader {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+ }
+ 
+ .dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+ }
+ 
+ .dropdownItem:hover {
+  background-color: #f9fafb;
+ }
+ 
+ .input {
+  flex: 1;
+  padding: 0.625rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  min-width: 16rem; /* 24rem에서 16rem으로 줄임 */
+  font-size: 1rem;
+  height: 2.75rem;
+ }
+ 
+ .input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+ }
+ 
+ .submitButton {
+  padding: 0.625rem 1.25rem;  /* 패딩 줄임 */
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+  font-size: 1rem;
+  height: 2.75rem;
+  min-width: 6rem;  /* 최소 너비 줄임 */
+  cursor: pointer;
+ }
+ 
+ .submitButton:hover {
+  background-color: #2563eb;
+ }
+ 
+ .bankLink {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+ }
+ 
+ .bankLinkText {
+  color: #3b82f6;
+  text-decoration: none;
+ }
+ 
+ .bankLinkText:hover {
+  text-decoration: underline;
+ }
+ 
+ .dropdownItem .bankIcon {
+  width: 1.25rem; /* 드롭다운 아이콘도 줄임 */
+  height: 1.25rem;
+ }
