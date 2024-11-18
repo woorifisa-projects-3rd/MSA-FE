@@ -8,10 +8,19 @@ import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
+import { authApi } from "@/api/auth/auth";
 
 
 export default function Navigation(){
     const [activeIndex, setActiveIndex] = useState();
+
+    const handleLogout = async() => {
+        try{
+            await authApi.logout();
+        }catch (error) {
+            console.error('로그아웃 실패:', error);
+        }
+    }
 
 
     return (
@@ -54,10 +63,13 @@ export default function Navigation(){
             </div>
 
             {/* 로그아웃 섹션 */}
-            <div className={classes.logout}>
+            <button 
+                onClick={handleLogout}
+                className={classes.logout}
+            >
                 <div>로그아웃</div>
                 <div><BsBoxArrowRight /></div>
-            </div>
+            </button>
         </nav>
     )
 }

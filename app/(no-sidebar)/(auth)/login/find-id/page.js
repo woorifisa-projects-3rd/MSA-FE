@@ -15,7 +15,7 @@ export default function FindIdPage() {
         e.preventDefault();
         try {
             const response = await authApi.findId(name, phoneNumber);
-            setResult('이메일을 찾았습니다.');
+            setResult(`이메일을 찾았습니다. ${response.email}`);
             setError('');
         } catch (error) {
             console.error('Email 찾기 실패:', error);
