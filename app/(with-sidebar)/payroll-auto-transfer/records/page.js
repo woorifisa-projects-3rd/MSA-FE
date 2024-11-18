@@ -10,7 +10,6 @@ import Sorting from "@/components/sorting/sorting";
 import BaseButton from "@/components/button/base-button";
 import { bankCodeList } from "@/constants/bankCodeList";
 
-const buttonText = "확인";
 
 export default function PayRecords() {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,12 +29,12 @@ export default function PayRecords() {
     };
 
     const [list, setList] = useState([
-        { name: '정성윤', account: '110-123456-45687', code: '020', amount: '266,000원', date: '2024/10/03', button: <BaseButton text={buttonText} /> },
-        { name: '이현아', account: '213-151-1223165', code: '003', amount: '309,210원', date: '2024/11/03', button: <BaseButton text={buttonText} /> },
-        { name: '류혜리', account: '111-15795-246821', code: '081', amount: '309,210원', date: '2024/09/03', button: <BaseButton text={buttonText} /> },
-        { name: '임지혁', account: '258-1467-284567', code: '088', amount: '309,210원', date: '2023/10/03', button: <BaseButton text={buttonText} /> },
-        { name: '박준현', account: '258-1467-284567', code: '045', amount: '309,210원', date: '2024/10/05', button: <BaseButton text={buttonText} /> },
-        { name: '강세필', account: '258-1467-284567', code: '090', amount: '309,210원', date: '2024/10/09', button: <BaseButton text={buttonText} /> },
+        { name: '정성윤', account: '110-123456-45687', code: '020', amount: '266,000원', date: '2024/10/03' },
+        { name: '이현아', account: '213-151-1223165', code: '003', amount: '309,210원', date: '2024/11/03' },
+        { name: '류혜리', account: '111-15795-246821', code: '081', amount: '309,210원', date: '2024/09/03' },
+        { name: '임지혁', account: '258-1467-284567', code: '088', amount: '309,210원', date: '2023/10/03' },
+        { name: '박준현', account: '258-1467-284567', code: '045', amount: '309,210원', date: '2024/10/05' },
+        { name: '강세필', account: '258-1467-284567', code: '090', amount: '309,210원', date: '2024/10/09' },
     ]);
 
     // 선택된 년, 월과 검색어에 맞는 데이터 필터링
