@@ -22,9 +22,17 @@
 }
 
 .bankIcon {
-    width: 20px; /* SVG 아이콘의 너비 */
-    height: 20px; /* SVG 아이콘의 높이 */
-    display: inline-block; /* 계좌번호와 같은 줄에 오게 설정 */
-    margin-right: 3px; /* 계좌번호와 아이콘 사이에 간격 추가 */
-    vertical-align: middle; /* 텍스트와 수직으로 정렬 */
+    width: 20px; /* 아이콘 너비 */
+    height: 20px; /* 아이콘 높이 */
+    display: inline-block;
+    vertical-align: middle; /* 세로 정렬 */
 }
+
+/* 테이블 셀 스타일 */
+.table td,
+.table th {
+    text-align: center; /* 수평 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+    padding: 10px;
+}
+

@@ -64,13 +64,14 @@ export default function PayRecords() {
     const updatedList = sortedList.map(item => {
         const bank = bankCodeList.find(bank => bank.code === item.code); // 코드로 은행 찾기
         const updatedAccount = bank ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div
-                    className={classes.bankIcon} // SVG에 스타일 추가
-                    dangerouslySetInnerHTML={{ __html: bank.logoUrl }} // SVG 삽입
-                />
-                <span>{item.account}</span> {/* 계좌번호 표시 */}
-            </span>
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+    <div
+        className={classes.bankIcon} // SVG 스타일 추가
+        dangerouslySetInnerHTML={{ __html: bank.logoUrl }} // SVG 삽입
+    />
+    <span style={{ textAlign: 'center' }}>{item.account}</span> {/* 계좌번호 표시 */}
+</span>
+
         ) : (
             <span>{item.account}</span> /* 매칭되지 않은 경우 계좌번호만 반환 */
         );
