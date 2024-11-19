@@ -30,17 +30,17 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
     })
   }
 
-  // 보호된 페이지 접근 시 토큰 체크
+  // 인증되지 않은 사용자가 보호된 페이지 접근 시 로그인 페이지로 리다이렉트
   if (!token && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // 이미 로그인된 사용자가 로그인 페이지 접근 시
+  // 이미 로그인된 사용자가 로그인 페이지 접근 시 마이페이지로 리다이렉트
   if (token && isAuthPage) {
     return NextResponse.redirect(new URL('/mypage', request.url))
   }
   
- 
+  // 그 외의 경우 그냥 통과
   return NextResponse.next()
 }
 

@@ -4,13 +4,27 @@ import { useAuth } from '@/utils/AuthProvider'
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation' 
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');  // 에러 메시지를 위한 상태 추가
+    const [emailError, setEmailError] = useState('')
+    const [error, setError] = useState('')  
+    const [isLoading, setIsLoading] = useState(false) 
 
+    const router = useRouter()
     const { login, fetchWithToken } = useAuth()
+
+    const validateEmail = (email) => {
+        if (!email.includes('@')) {
+            setEmailError('유효한 이메일을 입력하세요')
+            return false
+        } else {
+            setEmailError('')
+            return true
+        }
+    }
  
     const getData = async () => {
      try {
@@ -23,28 +37,33 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData(e.target)
+        setError('')  // 이전 에러 메시지 초기화
+
+        if (!validateEmail(email)) {
+            return  // 유효하지 않은 이메일이면 여기서 중단
+        }
+
+        setIsLoading(true)
         
-        if (await login(formData.get('email'), formData.get('password'))) {
-         console.log("로그인 성공")
-         // router.push('/dashboard') // 로그인 성공 후 리다이렉트하고 싶다면 주석 해제
-        } else {
-            alert('로그인 실패')
+        try {
+            const success = await login(email, password)
+            
+            if (success) {
+                console.log("로그인 성공")
+                router.push('/mypage')
+            } else {
+                setError('이메일 또는 비밀번호가 올바르지 않습니다.')
+            }
+        } catch (error) {
+            console.error('로그인 중 오류 발생:', error)
+            setError('로그인 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.')
+        } finally {
+            setIsLoading(false)  // 로딩 종료
         }
     }
 
    
- 
-//     const handleLogin = async (e) => {
-//         e.preventDefault();
-//         try{
-//             await authApi.login(email, password);
-//             // 로그인 성공 시 리다이렉트 (예: 대시보드)
-//            window.location.href = '/dashboard';  // 또는 원하는 페이
-//         } catch(error){
-//             console.error('로그인 실패:', error);
-//         }
-//     }
+
     return (
         <div className={styles.container}>
             <div className={styles.leftSection}>
@@ -62,9 +81,12 @@ export default function LoginPage() {
                     <div className={styles.inputGroup}>
                         <input 
                             type="email" 
-                            placeholder="ID" 
+                            placeholder="Email" 
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                validateEmail(e.target.value)
+                            }}
                             required
                         />
                     </div>
@@ -77,17 +99,24 @@ export default function LoginPage() {
                             required
                         />
                     </div>
+                    {emailError && <div className={styles.errorMessage}>{emailError}</div>}
                     {error && <div className={styles.errorMessage}>{error}</div>}
-                    <BaseButton 
-                        text="로그인"
-                        type="submit"
-                    />
+                    <BaseButton
+                       text={isLoading ? "로그인 중..." : "로그인"}
+                       type="submit"
+                       disabled={isLoading || !!emailError}  // 로딩 중이거나 이메일 에러가 있으면 버튼 비활성화
+                   />
                 </form>
                 <div className={styles.links}>
-                    <a href="login/find-id">ID/PW 찾기</a>
-                    <a href="signup">회원이 아니신가요?</a>
+                    <a href="/login/find-id">ID/PW 찾기</a>
+                    <a href="/signup">회원이 아니신가요?</a>
                 </div>
-                <button type="button" onClick={getData}>버튼</button>
+                <BaseButton 
+                    text='버튼'
+                    type='button'
+                    onClick={getData}
+                    disabled={isLoading}
+               />
             </div>
         </div>
     )
