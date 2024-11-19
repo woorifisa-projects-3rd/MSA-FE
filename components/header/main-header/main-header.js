@@ -6,9 +6,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
+import AlarmModal from "@/components/modal/alarm-modal/alarm-modal";
+import { useState, useEffect, useRef } from "react";
 
 
 export default function MainHeader () {
+    const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+    const bellRef = useRef();
+    const modalRef = useRef();
     const logoWidth = 250;
     const pathname = usePathname();
 
@@ -23,6 +28,40 @@ export default function MainHeader () {
         }
         return ""; // 기본값
     };
+
+    const handleBellClick = () => {
+        setIsAlarmOpen(prev => !prev);
+    };
+
+    // 모달 외부를 클릭했을 때 모달을 닫는다
+    const handleClickOutside = (event) => {
+        if (
+            bellRef.current &&
+            !bellRef.current.contains(event.target) &&
+            modalRef.current &&
+            !modalRef.current.contains(event.target)
+        ) {
+            setIsAlarmOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    // 모달이 열려 있을 때 외부 스크롤 막기
+    /*
+    useEffect(() => {
+        if (isAlarmOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }, [isAlarmOpen]);
+    */
     
     return (
         <header className={classes.header_container}>
@@ -37,7 +76,16 @@ export default function MainHeader () {
                 
                 <div className={classes.headerMenu}>
                     <button className={classes.profile_button}>내 정보</button>
-                    <FiBell size={45} className={classes.bell_icon} />
+                    <div ref={bellRef} className={classes.bellContainer}>
+                        <FiBell
+                            size={45}
+                            className={classes.bell_icon}
+                            onClick={handleBellClick}
+                        />
+                        {isAlarmOpen && (
+                            <AlarmModal modalRef={modalRef} />
+                        )}
+                    </div>
                 </div>
                 
             </div>
