@@ -6,6 +6,7 @@ import WorkplaceModal from '@/components/modal/workplace-registration.js/workpla
 import ModalContainer from '@/components/modal/modal-container';
 import { useState } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
+import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
 
 //테스트 데이터
 const tableName='보유하신 사업장'
@@ -44,7 +45,10 @@ export default function ProfileDetail({content}) {
         actions: (
             <PrimaryButton
                 text="삭제"
-                onClick={() => console.log("삭제")}
+                onClick={() => {
+                    setSelectedWorkplace(workplace);
+                    setDeleteModalOpen(true);
+                }}
             />
         )
 
@@ -107,6 +111,14 @@ export default function ProfileDetail({content}) {
             </ModalContainer>
 
             {/* 삭제 모달 추가  */}
+            <ModalContainer
+                isOpen={isDeleteModalOpen}
+                onClose={()=>setDeleteModalOpen(false)}
+                onConfirm={()=>console.log("삭제 !!!")}
+            >
+                <DeleteConfirmModal/>
+            </ModalContainer>
+
        </div>
    );
 }
