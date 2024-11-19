@@ -58,8 +58,9 @@ export function AuthProvider({ children }) {
   // 쿠키 삭제는 '/api/auth/session'으로 DELETE 요청 -> NEXT Server 이용
   const logout = async () => {
     try {
+      // 서버에서 쿠키 삭제 
       await fetch('/api/auth/session', { method: 'DELETE' })
-      setAccessToken(null) // 사용자 token state도 null로 update
+      setAccessToken(null) // 사용자 상태 업데이트
     } catch (error) {
       console.error('로그아웃 실패:', error)
     }
