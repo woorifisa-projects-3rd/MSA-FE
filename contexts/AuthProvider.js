@@ -1,6 +1,7 @@
 // 클라이언트 상태관리
 'use client'
 import { createContext, useContext, useEffect, useState } from 'react'
+import apiClient from '@/lib/apiClient'
 
 const AuthContext = createContext() // context 생성 -> 전역 상태 관리
 

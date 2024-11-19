@@ -9,8 +9,8 @@ import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/utils/AuthProvider';
-import { authApi } from "@/api/auth/auth";
+import { useAuth } from '@/contexts/AuthProvider';
+import { authApi } from "@/lib/auth";
 
 export default function Navigation(){
     const router = useRouter();

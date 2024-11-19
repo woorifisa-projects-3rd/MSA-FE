@@ -6,7 +6,7 @@ import WorkplaceModal from '@/components/modal/workplace-registration.js/workpla
 import ModalContainer from '@/components/modal/modal-container';
 import { useState, useEffect } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
-import { mypageApi } from '@/api/mypage/mypage';
+import { mypageApi } from '@/lib/mypage';
 
 
 //테스트 데이터

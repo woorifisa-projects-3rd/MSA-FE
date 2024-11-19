@@ -1,20 +1,41 @@
 'use client'
 
-import { useAuth } from '@/utils/AuthProvider'
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation' 
+import apiRouteClient from '@/lib/apiClient';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('')
     const [error, setError] = useState('')  
-    const [isLoading, setIsLoading] = useState(false) 
-
     const router = useRouter()
-    const { login, fetchWithToken } = useAuth()
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        if (!validateEmail(email)) {
+            return  // 유효하지 않은 이메일이면 여기서 중단
+        }
+
+        try {
+            // Axios를 통해 API Route로 요청
+            const response = await apiRouteClient.post('/auth/login', {
+                email,
+                password,
+            });
+        
+            if (response.data.success) {
+                // 성공 시 마이페이지로 이동
+                router.push('/mypage');
+            } else {
+                throw new Error(response.data.error || '로그인 실패');
+            }
+        } catch (error) {
+            setError(error.response?.data?.error || error.message);
+        }
+    };
 
     const validateEmail = (email) => {
         if (!email.includes('@')) {
@@ -24,45 +45,8 @@ export default function LoginPage() {
             setEmailError('')
             return true
         }
-    }
- 
-    const getData = async () => {
-     try {
-       const data = await fetchWithToken()
-       console.log(data)
-     } catch (error) {
-       console.error('데이터 가져오기 실패:', error)
-     }
-    }
+    };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        setError('')  // 이전 에러 메시지 초기화
-
-        if (!validateEmail(email)) {
-            return  // 유효하지 않은 이메일이면 여기서 중단
-        }
-
-        setIsLoading(true)
-        
-        try {
-            const success = await login(email, password)
-            
-            if (success) {
-                console.log("로그인 성공")
-                router.push('/mypage')
-            } else {
-                setError('이메일 또는 비밀번호가 올바르지 않습니다.')
-            }
-        } catch (error) {
-            console.error('로그인 중 오류 발생:', error)
-            setError('로그인 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.')
-        } finally {
-            setIsLoading(false)  // 로딩 종료
-        }
-    }
-
-   
 
     return (
         <div className={styles.container}>
@@ -77,7 +61,7 @@ export default function LoginPage() {
             <div className={styles.rightSection}>
                 <h3>로그인</h3>
 
-                <form className={styles.loginForm} onSubmit={handleSubmit}>
+                <form className={styles.loginForm} onSubmit={handleLogin}>
                     <div className={styles.inputGroup}>
                         <input 
                             type="email" 
@@ -102,21 +86,20 @@ export default function LoginPage() {
                     {emailError && <div className={styles.errorMessage}>{emailError}</div>}
                     {error && <div className={styles.errorMessage}>{error}</div>}
                     <BaseButton
-                       text={isLoading ? "로그인 중..." : "로그인"}
+                       text= "로그인"
                        type="submit"
-                       disabled={isLoading || !!emailError}  // 로딩 중이거나 이메일 에러가 있으면 버튼 비활성화
                    />
                 </form>
                 <div className={styles.links}>
                     <a href="/login/find-id">ID/PW 찾기</a>
                     <a href="/signup">회원이 아니신가요?</a>
                 </div>
-                <BaseButton 
+                {/* <BaseButton 
                     text='버튼'
                     type='button'
                     onClick={getData}
                     disabled={isLoading}
-               />
+               /> */}
             </div>
         </div>
     )
