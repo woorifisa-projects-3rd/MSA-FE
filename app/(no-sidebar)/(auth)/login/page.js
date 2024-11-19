@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/lib/AuthProvider'
+import { useAuth } from '@/utils/AuthProvider'
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
