@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
 import { mypageApi } from '@/api/mypage/mypage';
 
+
 //테스트 데이터
 const tableName='보유하신 사업장'
 const tableHeaders = {
@@ -53,20 +54,20 @@ export default function ProfileDetail({content}) {
     }))
 
 
-    const loadMyInfo = async () => {
-        try {
-            const data = await mypageApi.getMyInfo();
-            setUserData(data);
-            console.log(userData);
-        } catch (error) {
-            console.error('마이페이지 정보 로드 실패:', error);
-        }
-    };
-
     useEffect(() => {
-        loadMyInfo();
+        const loadMyPageData = async () => {
+           
+            try {
+                const data = await mypageApi.getMyInfo(); 
+                setUserData(data);
+                console.log('userdata', data)
+            } catch (error) {
+                console.error('마이페이지 로드 에러:', error);
+            }
+        };
+    
+        loadMyPageData();
     }, []);
-
    
     
    return (
