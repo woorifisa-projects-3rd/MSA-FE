@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react';
 import styles from './alarm-modal.module.css';
 
 const notifications = [
