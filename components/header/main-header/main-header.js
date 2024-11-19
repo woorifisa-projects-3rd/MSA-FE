@@ -9,21 +9,24 @@ import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import AlarmModal from "@/components/modal/alarm-modal/alarm-modal";
 import { useState, useEffect, useRef } from "react";
 
-const notifications = [
+const initialNotifications = [
     { id: 1, location: "빽다방 상암점", time: "오전 08:50", message: "정성윤 님이 출근하셨습니다." },
     { id: 2, location: "짜글짜글 대치점", time: "오전 08:45", message: "이현아 님이 출근하셨습니다." },
     { id: 3, location: "짜글짜글 대치점", time: "오전 07:30", message: "이현아 님 외 10명 자동이체 되었습니다." },
     { id: 4, location: "메머드커피 신사점", time: "오전 09:15", message: "류혜리 님이 출근하셨습니다." },
-    { id: 5, location: "마마된장 상암점", time: "오전 09:00", message: "강세필 님이 괴로워 하십니다." },
+    { id: 5, location: "마마된장 상암점", time: "오전 09:00", message: "정성윤 바보" },
 ];
 
 export default function MainHeader () {
     const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+    const [notifications, setNotifications] = useState(initialNotifications);
     const bellRef = useRef();
     const modalRef = useRef();
     const logoWidth = 250;
     const pathname = usePathname();
-    const notificationCnt = notifications.length;
+    
+    // 읽지 않은 알림의 개수
+    const unreadNotificationCount = notifications.filter(notification => !notification.read).length;
 
     // 현재 경로에 해당하는 타이틀을 찾는 함수
     const getCurrentPagetTile = () => {
@@ -39,6 +42,18 @@ export default function MainHeader () {
 
     const handleBellClick = () => {
         setIsAlarmOpen(prev => !prev);
+
+        // 알람 모달을 열면 1.5초 뒤에 알림을 읽음으로 표시
+        if (!isAlarmOpen) {
+            setTimeout(() => {
+                setNotifications(prevNotifications => 
+                    prevNotifications.map(notification => ({
+                        ...notification,
+                        read: true
+                    }))
+                );
+            }, 1500);
+        }
     };
 
     // 모달 외부를 클릭했을 때 모달을 닫는다
@@ -90,13 +105,13 @@ export default function MainHeader () {
                             className={classes.bell_icon}
                             onClick={handleBellClick}
                         />
-                        {notificationCnt > 0 && (
+                        {unreadNotificationCount > 0 && (
                             <span className={classes.notificationCnt}>
-                                {notificationCnt}
+                                {unreadNotificationCount}
                             </span>
                         )}
                         {isAlarmOpen && (
-                            <AlarmModal modalRef={modalRef} />
+                            <AlarmModal modalRef={modalRef} notifications={notifications} />
                         )}
                     </div>
                 </div>

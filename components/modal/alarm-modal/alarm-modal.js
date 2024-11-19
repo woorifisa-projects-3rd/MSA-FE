@@ -1,14 +1,6 @@
 import styles from './alarm-modal.module.css';
 
-const notifications = [
-    { id: 1, location: "빽다방 상암점", time: "오전 08:50", message: "정성윤 님이 출근하셨습니다." },
-    { id: 2, location: "짜글짜글 대치점", time: "오전 08:45", message: "이현아 님이 출근하셨습니다." },
-    { id: 3, location: "짜글짜글 대치점", time: "오전 07:30", message: "이현아 님 외 10명 자동이체 되었습니다." },
-    { id: 4, location: "메머드커피 신사점", time: "오전 09:15", message: "류혜리 님이 출근하셨습니다." },
-    { id: 5, location: "마마된장 상암점", time: "오전 09:00", message: "강세필 님이 괴로워 하십니다." },
-];
-
-export default function AlarmModal({ modalRef }) {
+export default function AlarmModal({ modalRef, notifications }) {
 
   return (
     <div ref={modalRef} id="notification-modal" className={styles.notificationModal}>
