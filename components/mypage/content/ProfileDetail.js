@@ -4,8 +4,9 @@ import DefaultTable from '@/components/table/DefaultTable';
 import classes from './ProfileDetail.module.css';
 import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
 import ModalContainer from '@/components/modal/modal-container';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
+import { mypageApi } from '@/api/mypage/mypage';
 
 //테스트 데이터
 const tableName='보유하신 사업장'
@@ -23,6 +24,7 @@ export default function ProfileDetail({content}) {
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     const name =content.name;
     const email =content.email;
@@ -49,6 +51,23 @@ export default function ProfileDetail({content}) {
         )
 
     }))
+
+
+    const loadMyInfo = async () => {
+        try {
+            const data = await mypageApi.getMyInfo();
+            setUserData(data);
+            console.log(userData);
+        } catch (error) {
+            console.error('마이페이지 정보 로드 실패:', error);
+        }
+    };
+
+    useEffect(() => {
+        loadMyInfo();
+    }, []);
+
+   
     
    return (
        <div className={classes.container}>
