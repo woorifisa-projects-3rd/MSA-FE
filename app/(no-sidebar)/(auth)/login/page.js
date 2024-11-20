@@ -1,50 +1,43 @@
 'use client'
 
-import { useAuth } from '@/lib/AuthProvider'
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation' 
+import { nextClient } from '@/lib/nextClient';
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');  // 에러 메시지를 위한 상태 추가
+    const [error, setError] = useState('')  
+    const router = useRouter()
 
-    const { login, fetchWithToken } = useAuth()
- 
-    const getData = async () => {
-     try {
-       const data = await fetchWithToken()
-       console.log(data)
-     } catch (error) {
-       console.error('데이터 가져오기 실패:', error)
-     }
-    }
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const formData = new FormData(e.target)
+
+        try {
+            // Axios를 통해 API Route로 요청
+            const response = await nextClient.post('/auth/login', {
+                email,
+                password,
+            });
         
-        if (await login(formData.get('email'), formData.get('password'))) {
-         console.log("로그인 성공")
-         // router.push('/dashboard') // 로그인 성공 후 리다이렉트하고 싶다면 주석 해제
-        } else {
-            alert('로그인 실패')
+            if (response.data.success) {
+                // 성공 시 마이페이지로 이동
+                router.push('/mypage');
+            } else {
+                throw new Error(response.data.error || '로그인 실패');
+            }
+        } catch (error) {
+            setError(error.response?.data?.error || error.message);
         }
-    }
+    };
 
-   
- 
-//     const handleLogin = async (e) => {
-//         e.preventDefault();
-//         try{
-//             await authApi.login(email, password);
-//             // 로그인 성공 시 리다이렉트 (예: 대시보드)
-//            window.location.href = '/dashboard';  // 또는 원하는 페이
-//         } catch(error){
-//             console.error('로그인 실패:', error);
-//         }
-//     }
+  
+
+
     return (
         <div className={styles.container}>
             <div className={styles.leftSection}>
@@ -58,13 +51,15 @@ export default function LoginPage() {
             <div className={styles.rightSection}>
                 <h3>로그인</h3>
 
-                <form className={styles.loginForm} onSubmit={handleSubmit}>
+                <form className={styles.loginForm} onSubmit={handleLogin}>
                     <div className={styles.inputGroup}>
                         <input 
                             type="email" 
-                            placeholder="ID" 
+                            placeholder="Email" 
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                            }}
                             required
                         />
                     </div>
@@ -77,17 +72,21 @@ export default function LoginPage() {
                             required
                         />
                     </div>
-                    {error && <div className={styles.errorMessage}>{error}</div>}
-                    <BaseButton 
-                        text="로그인"
-                        type="submit"
-                    />
+                    <BaseButton
+                       text= "로그인"
+                       type="submit"
+                   />
                 </form>
                 <div className={styles.links}>
-                    <a href="login/find-id">ID/PW 찾기</a>
-                    <a href="signup">회원이 아니신가요?</a>
+                    <a href="/login/find-id">ID/PW 찾기</a>
+                    <a href="/signup">회원이 아니신가요?</a>
                 </div>
-                <button type="button" onClick={getData}>버튼</button>
+                {/* <BaseButton 
+                    text='버튼'
+                    type='button'
+                    onClick={getData}
+                    disabled={isLoading}
+               /> */}
             </div>
         </div>
     )

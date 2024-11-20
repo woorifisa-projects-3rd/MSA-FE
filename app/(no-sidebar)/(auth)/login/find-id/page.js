@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { authApi } from '@/api/auth/auth'
+import { authApi } from '@/lib/auth'
 import styles from './findId.module.css'
 
 export default function FindIdPage() {

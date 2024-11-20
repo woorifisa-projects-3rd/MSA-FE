@@ -4,7 +4,6 @@ import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
 import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import classes from "./page.module.css";
-import DefaultTable from "@/components/table/DefaultTable";
 
 const tabs = [
   { 
