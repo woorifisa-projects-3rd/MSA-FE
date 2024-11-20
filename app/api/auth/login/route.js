@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import springClient from '@/lib/apiClient';
+import springClient from '@/lib/springClient';
 
 export async function POST(request) {
     try {

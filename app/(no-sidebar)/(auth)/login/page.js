@@ -16,9 +16,6 @@ export default function LoginPage() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        if (!validateEmail(email)) {
-            return  // 유효하지 않은 이메일이면 여기서 중단
-        }
 
         try {
             // Axios를 통해 API Route로 요청
@@ -38,15 +35,7 @@ export default function LoginPage() {
         }
     };
 
-    const validateEmail = (email) => {
-        if (!email.includes('@')) {
-            setEmailError('유효한 이메일을 입력하세요')
-            return false
-        } else {
-            setEmailError('')
-            return true
-        }
-    };
+  
 
 
     return (
@@ -70,7 +59,6 @@ export default function LoginPage() {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value)
-                                validateEmail(e.target.value)
                             }}
                             required
                         />
