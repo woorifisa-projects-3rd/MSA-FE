@@ -132,7 +132,17 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     
     const validateRules = {
         name: value => value.trim() ? '' : REQUIRED_ERROR,
-        email: value => value.trim() ? '' : REQUIRED_ERROR,
+        email: value => {
+            if (!value.trim()) {
+                return REQUIRED_ERROR;
+            }
+            // 이메일 형식 유효성 검사
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                return "올바른 이메일 형식이 아닙니다.";
+            }
+            return '';
+        },
         phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
         // bankCode: value => value ? '' : REQUIRED_ERROR,
         accountNumber: value => value ? '' : REQUIRED_ERROR,
