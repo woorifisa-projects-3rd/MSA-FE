@@ -4,7 +4,7 @@ import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation' 
-import apiRouteClient from '@/lib/apiClient';
+import nextClient from '@/lib/apiClient';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -21,7 +21,7 @@ export default function LoginPage() {
 
         try {
             // Axios를 통해 API Route로 요청
-            const response = await apiRouteClient.post('/auth/login', {
+            const response = await nextClient.post('/auth/login', {
                 email,
                 password,
             });
