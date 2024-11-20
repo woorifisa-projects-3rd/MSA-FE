@@ -20,7 +20,7 @@ export default function MainHeader () {
                     return sub.text;
                 }
             }
-        }
+        } 
         return ""; // 기본값
     };
     
