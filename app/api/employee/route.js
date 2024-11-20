@@ -58,3 +58,44 @@ export async function POST(request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
+
+  export async function PUT(request) {
+    try {
+      const {
+        name,
+        email,
+        birthDate,
+        sex,
+        phoneNumber,
+        employmentType,
+        bankCode,
+        accountNumber,
+        salary,
+        paymentDate,
+        address,
+        seid
+        } = await request.json();
+  
+      const response = await springClient.put(`/user/employee`, {
+        name,
+        email,
+        birthDate,
+        sex,
+        phoneNumber,
+        employmentType,
+        bankCode,
+        accountNumber,
+        salary,
+        paymentDate,
+        address
+       }, {
+        params: { seid : seid },
+       });
+  
+      // 성공 응답 반환
+      return NextResponse.json({ success: response.data});
+    } catch (error) {
+      console.error('Spring Boot 직원 수정 실패:', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  }

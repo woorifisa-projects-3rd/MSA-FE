@@ -52,9 +52,11 @@ export default function SalesExpenses() {
         setSelectedEmployee(null);
     }
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         if (employeeFormRef.current) {
-            employeeFormRef.current.handleSubmit();
+            await employeeFormRef.current.handleSubmit();
+            closeModal();
+            fetchEmployees();
         }
     }
 
@@ -125,7 +127,6 @@ export default function SalesExpenses() {
                         initialData={selectedEmployee}
                         onSubmit={data => {
                             console.log("제출된 데이터: ", data);
-                            closeModal();                
                         }}
                         ref={employeeFormRef}
                          />

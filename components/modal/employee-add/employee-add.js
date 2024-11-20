@@ -104,13 +104,22 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             };
 
             try {
+                let response;
                 // Axios 통해 API 요청
-                // storeid 변경 필요
-                const response = await nextClient.post('/employee', updatedFormData);
-
+                if (mode === 'edit') {
+                    // 수정 요청
+                    response = await nextClient.put('/employee', {
+                        ...updatedFormData,
+                        seid: initialData.id, // 수정 대상 ID 전달
+                    });
+                    alert('직원 정보가 수정되었습니다.');
+                } else {
+                    // 추가 요청
+                    response = await nextClient.post('/employee', updatedFormData);
+                    alert('직원이 추가되었습니다.');
+                }
                 if (response.data.success) {
                     // 성공 시 직원 관리 페이지로
-                    alert('직원이 추가되었습니다.');
                     if (onSubmit) onSubmit(updatedFormData);
                     Router.push('/employee/management');
                 } else {
