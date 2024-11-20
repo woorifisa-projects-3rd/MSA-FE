@@ -123,7 +123,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     if (onSubmit) onSubmit(updatedFormData);
                     Router.push('/employee/management');
                 } else {
-                    throw new Error(response.data.error || '직원 추가 실패');
+                    throw new Error(response.data.error || '요청 처리 실패');
                 }
             } catch (error) {
                 setError(error.response?.data?.error || error.message);
@@ -131,7 +131,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             
         } else {
             console.log("유효성 검사 실패 !!!");
-            
+            console.log(errors);
         }
     };
 
