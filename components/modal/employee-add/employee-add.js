@@ -4,6 +4,7 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
+import { nextClient } from '@/lib/nextClient';
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 const DATE_ERROR = "잘못된 날짜입니다.";
@@ -26,6 +27,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     });
 
     const [formErrors, setFormErrors] = useState({});
+    const [error, setError] = useState('');
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
@@ -60,11 +62,21 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             bankCode,
             accountNumber,
         }));
+        setFormErrors(prev => ({
+            ...prev,
+            accountNumber: bankCode && accountNumber ? '' : REQUIRED_ERROR,
+        }));
     };
 
      // 유효성 검사 함수
      const validateForm = (data) => {
         const errors = {};
+
+        // 주소 필드 유효성 검사
+        if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+            errors.postcodeAddress = REQUIRED_ERROR;
+            errors.detailAddress = REQUIRED_ERROR;
+        }
     
         // 각 필드에 대해 유효성 검사 수행
         Object.keys(validateRules).forEach(field => {
@@ -76,7 +88,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     };
 
     // 제출 버튼 클릭시 유효성 검사 실행 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         if (e) e.preventDefault();
     
         // 유효성 검사 수행
@@ -90,11 +102,26 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 ...rest,
                 address: `${postcodeAddress}, ${detailAddress}`,  // address로 결합해서 제출
             };
-            if (onSubmit) onSubmit(updatedFormData);
+
+            try {
+                // Axios 통해 API 요청
+                // storeid 변경 필요
+                const response = await nextClient.post('/employee', updatedFormData);
+
+                if (response.data.success) {
+                    // 성공 시 직원 관리 페이지로
+                    alert('직원이 추가되었습니다.');
+                    if (onSubmit) onSubmit(updatedFormData);
+                    Router.push('/employee/management');
+                } else {
+                    throw new Error(response.data.error || '직원 추가 실패');
+                }
+            } catch (error) {
+                setError(error.response?.data?.error || error.message);
+            }
             
         } else {
             console.log("유효성 검사 실패 !!!");
-            console.log(errors);
             
         }
     };
@@ -125,6 +152,12 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
     };
 
+    // 입력 시 오류 제거
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormErrors(prev => ({ ...prev, [field]: '' })); // 입력 시 오류 제거
+    };
+
     return (
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>{mode === 'edit' ? '직원 수정' : '직원 추가'}</h2>
@@ -135,7 +168,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="text"
                         placeholder="ex) 홍길동"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
                     />
                     {formErrors.name && <span className={styles.error}>{formErrors.name}</span>}
                 </div>
@@ -146,7 +179,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="email"
                         placeholder="example@email.com"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
                     />
                     {formErrors.email && <span className={styles.error}>{formErrors.email}</span>}
                 </div>
@@ -157,7 +190,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="tel"
                         placeholder="010-1111-1111"
                         value={formData.phoneNumber}
-                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                        onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                     />
                     {formErrors.phoneNumber && <span className={styles.error}>{formErrors.phoneNumber}</span>}
                 </div>
@@ -167,7 +200,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         <label>성별</label>
                         <select
                             value={formData.sex}
-                            onChange={(e) => setFormData({...formData, sex: e.target.value})}
+                            onChange={(e) => handleInputChange('sex', e.target.value)}
                         >
                             <option value="true">남자</option>
                             <option value="false">여자</option>
@@ -179,7 +212,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         <input
                             type="date"
                             value={formData.birthDate}
-                            onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
+                            onChange={(e) => handleInputChange('birthDate', e.target.value)}
                         />
                         {formErrors.birthDate && <span className={styles.error}>{formErrors.birthDate}</span>}
                     </div>
@@ -203,7 +236,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => setFormData({ ...formData, salary: parseInt(e.target.value) })}
+                                onChange={(e) => handleInputChange('salary', e.target.value)}
                             />
                             <span>원</span>
                         </div>
@@ -218,7 +251,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             value={formData.paymentDate}
 
                             onChange={(e) => {
-                                setFormData({ ...formData, paymentDate: e.target.value });
+                                handleInputChange('paymentDate', e.target.value);
                             }}
                         />
                         {formErrors.paymentDate && <span className={styles.error}>{formErrors.paymentDate}</span>}
@@ -251,5 +284,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         </div>
     );
 });
+
+EmployeeForm.displayName = "EmployeeForm";
 
 export default EmployeeForm;
