@@ -1,21 +1,23 @@
 'use client'
 import styles from './PasswordChange.module.css';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { nextClient } from '@/lib/nextClient';
 
 export default function PasswordChange() {
     const [passwords, setPasswords] = useState({
-        current: '',
-        new: '',
+        beforePassword: '',
+        newPassword: '',
         confirm: ''
     });
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [isFormValid, setIsFormValid] = useState(false);
 
     useEffect(() => {
-        const isValid = passwords.current.trim() !== '' && 
-                       passwords.new.trim() !== '' && 
+        const isValid = passwords.beforePassword.trim() !== '' && 
+                       passwords.newPassword.trim() !== '' && 
                        passwords.confirm.trim() !== '' &&
-                       passwords.new === passwords.confirm;
+                       passwords.newPassword === passwords.confirm;
         setIsFormValid(isValid);
     }, [passwords]);
 
@@ -26,14 +28,36 @@ export default function PasswordChange() {
             [name]: value
         }));
 
-        if (name === 'confirm' || name === 'new') {
-            if (name === 'new') {
+        if (name === 'confirm' || name === 'newPassword') {
+            if (name === 'newPassword') {
                 setPasswordMatch(value === passwords.confirm);
             } else {
-                setPasswordMatch(value === passwords.new);
+                setPasswordMatch(value === passwords.newPassword);
             }
         }
     };
+
+    //axios 
+    const handleSubmit = async () => {
+        try {
+            const response = await nextClient.put('/president/changepassword', {
+                beforePassword: passwords.beforePassword,
+                newPassword: passwords.newPassword
+            });
+
+            console.log("리스폰스 반환값 : !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" ,response)
+
+            if (response.status === 200) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+            } else {
+                alert('비밀번호 변경에 실패했습니다. 다시 시도해 주세요.');
+            }
+        } catch (error) {
+            console.error('비밀번호 변경 요청 중 오류 발생:', error);
+            alert('서버와 통신 중 문제가 발생했습니다.');
+        }
+    };
+
 
     return (
         <div className={styles.container}>
@@ -43,10 +67,10 @@ export default function PasswordChange() {
                 <label className={styles.label}>현재 비밀번호</label>
                 <input 
                     type="password" 
-                    name="current"
+                    name="beforePassword"
                     placeholder="********"
                     className={styles.input}
-                    value={passwords.current}
+                    value={passwords.beforePassword}
                     onChange={handlePasswordChange}
                 />
             </div>
@@ -55,10 +79,10 @@ export default function PasswordChange() {
                 <label className={styles.label}>새로운 비밀번호</label>
                 <input 
                     type="password" 
-                    name="new"
+                    name="newPassword"
                     placeholder="********"
                     className={styles.input}
-                    value={passwords.new}
+                    value={passwords.newPassword}
                     onChange={handlePasswordChange}
                 />
             </div>
@@ -83,6 +107,8 @@ export default function PasswordChange() {
             <button 
                 className={`${styles.button} ${!isFormValid ? styles.buttonDisabled : ''}`}
                 disabled={!isFormValid}
+                onClick={handleSubmit}
+                // onclick 하면 그 넥스트 서버로 요청하는 함수 실행하게함
             >
                 저장
             </button>
