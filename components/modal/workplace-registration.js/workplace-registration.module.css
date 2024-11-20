@@ -67,7 +67,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
   margin-bottom: 40px;
 }
 .link {
@@ -85,3 +84,13 @@
 .buttonGroup button {
   flex: 1;
 }
+ 
+ .bankLinkText {
+  color: #3b82f6;
+  font-size: 0.875rem;
+  text-decoration: none;
+ }
+ 
+ .bankLinkText:hover {
+  text-decoration: underline;
+ }
