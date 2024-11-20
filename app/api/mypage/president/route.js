@@ -10,9 +10,20 @@ export async function GET(request) {
         
         return NextResponse.json(response.data);
     } catch (error) {
+        console.error('Spring Boot 서버 에러:', {
+            status: error.response?.status,
+            message: error.response?.data?.message,
+            error: error.message,
+            fullError: error.response?.data
+        });
+      
         return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
+            { 
+                error: error.response?.data?.message || error.message 
+            },
+            { 
+                status: error.response?.status || 500 
+            }
         );
     }
 }
