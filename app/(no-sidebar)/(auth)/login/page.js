@@ -4,7 +4,7 @@ import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation' 
-import { nextClient } from '@/lib/apiClient';
+import { nextClient } from '@/lib/nextClient';
 
 
 export default function LoginPage() {
