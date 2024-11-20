@@ -42,3 +42,19 @@ export async function POST(request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
+
+  export async function DELETE(request) {
+    try {
+      const { seid } = await request.json();
+
+      const response = await springClient.delete(`/user/employee`, {
+        params: { seid : seid },
+       });
+  
+      // 성공 응답 반환
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Spring Boot 직원 삭제 실패:', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  }

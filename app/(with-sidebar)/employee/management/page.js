@@ -73,6 +73,23 @@ export default function SalesExpenses() {
         openModal("edit", employee);
     };
 
+    // 삭제 버튼 클릭 시
+    const handleDeleteClick = async (employee) => {
+        try {
+            const response = await nextClient.delete('/employee', {
+                data: {seid: employee.id },
+            });
+            if (response.data.success) {
+                alert('직원이 삭제되었습니다.');
+                fetchEmployees();
+            } else {
+                throw new Error(response.data.error || '직원 삭제 실패');
+            }
+        } catch (error) {
+            setError(error.response?.data?.error || error.message);
+        }
+    }
+
     const enrichedList = employees.map(employee => ({
         ...employee,
         edit: (
