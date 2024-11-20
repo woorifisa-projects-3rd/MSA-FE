@@ -4,7 +4,8 @@ import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation' 
-import nextClient from '@/lib/apiClient';
+import { nextClient } from '@/lib/apiClient';
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -83,8 +84,6 @@ export default function LoginPage() {
                             required
                         />
                     </div>
-                    {emailError && <div className={styles.errorMessage}>{emailError}</div>}
-                    {error && <div className={styles.errorMessage}>{error}</div>}
                     <BaseButton
                        text= "로그인"
                        type="submit"
