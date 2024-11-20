@@ -36,7 +36,11 @@ export default function MainHeader () {
                 <div className={classes.headerTitle}>{getCurrentPagetTile()}</div>
                 
                 <div className={classes.headerMenu}>
-                    <button className={classes.profile_button}>내 정보</button>
+                    <Link href="/mypage">
+                        <button className={classes.profile_button}>
+                            내 정보
+                        </button>
+                    </Link>
                     <FiBell size={45} className={classes.bell_icon} />
                 </div>
                 

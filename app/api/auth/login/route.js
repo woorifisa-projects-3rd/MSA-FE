@@ -1,6 +1,6 @@
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import springClient from '@/lib/springClient';
+import { setAccessToken } from '@/utils/auth';
 
 export async function POST(request) {
     try {
@@ -11,19 +11,23 @@ export async function POST(request) {
       const response = await springClient.post('/user/president/login', { email, password });
   
       const { accessToken } = response.data; // Spring Boot에서 받은 토큰
-  
-      // HTTP-Only 쿠키에 토큰 저장
-      cookies().set('accessToken', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS 환경에서만 사용
-        sameSite: 'strict',
-        maxAge: 3600, // 1시간
-      });
-  
+    
+     
+      setAccessToken(accessToken);
+
       // 성공 응답 반환
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error('Spring Boot 로그인 요청 실패:', error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error.response) {
+       
+        return NextResponse.json(
+          { message: error.response.data.message },
+          { status: error.response.status }  // 400, 404 등 Spring Boot에서 온 상태 코드 유지
+        );
+      }
+      return NextResponse.json(
+        { message: '서버와 통신 중 오류가 발생했습니다.' },
+        { status: 500 }  // 서버 에러 상태 코드
+      );
     }
-  }
+}

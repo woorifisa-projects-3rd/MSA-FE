@@ -10,7 +10,6 @@ import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthProvider';
-import { authApi } from "@/lib/auth";
 
 export default function Navigation(){
     const router = useRouter();
@@ -20,8 +19,7 @@ export default function Navigation(){
 
     const handleLogout = async() => {
         try{
-            // await authApi.logout(); // 스프링 서버에 로그아웃 알림
-            await logout();   //next.js 서버를 통해 브라우저에 저장된 쿠키 삭제 &  클라이언트 상태 초기화 
+            // next 서버로 로그아웃
             router.push('/login'); // 로그인 페이지로 리다이렉트 
         }catch (error) {
             console.error('로그아웃 실패:', error);
@@ -70,7 +68,6 @@ export default function Navigation(){
 
             {/* 로그아웃 섹션 */}
             <button 
-                onClick={handleLogout}
                 className={classes.logout}
             >
                 <div>로그아웃</div>
