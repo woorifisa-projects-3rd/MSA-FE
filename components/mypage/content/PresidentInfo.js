@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styles from './PresidentInfo.module.css';
 import BaseButton from '@/components/button/base-button';
 import { nextClient } from '@/lib/nextClient';
+import PrimaryButton from '@/components/button/primary-button';
 
 const PresidentInfo = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [birthDate, setBirthDate] = useState('1999년 10월 20일');
-  const [phoneNumber, setPhoneNumber] = useState('010-7611-4338');
+  const [birthDate, setBirthDate] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isEditingBirth, setIsEditingBirth] = useState(false);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -80,50 +81,56 @@ const PresidentInfo = () => {
             <h2 className={styles.title}> {name} 사장님</h2>
             <div className={styles.email}>{email}</div>
         </div>
-        <div className={styles.fieldGroup}>
-          <div className={styles.inputWrapper}>
-            <label className={styles.label}>생년월일</label>
-            {isEditingBirth ? (
-              <input
-                type="text"
-                value={birthDate.replace(/[년월일\s]/g, '')}
-                onChange={(e) => setBirthDate(formatBirthDate(e.target.value))}
-                className={styles.input}
-                placeholder="YYYYMMDD"
+        <div className={styles.changeSection}>
+          <div className={styles.fieldGroup}>
+            <div className={styles.inputWrapper}>
+              <label className={styles.label}>생년월일</label>
+              <div className={styles.inputChange}>
+              {isEditingBirth ? (
+                <input
+                  type="text"
+                  value={birthDate.replace(/[년월일\s]/g, '')}
+                  onChange={(e) => setBirthDate(formatBirthDate(e.target.value))}
+                  className={styles.input}
+                  placeholder="YYYYMMDD"
+                />
+              ) : (
+                <div className={styles.displayText}>{birthDate}</div>
+              )}
+              <BaseButton
+                text={isEditingBirth ? '확인' : '생년월일 변경'}
+                onClick={() => setIsEditingBirth(!isEditingBirth)}
               />
-            ) : (
-              <div className={styles.displayText}>{birthDate}</div>
-            )}
+              </div>
+            </div>
           </div>
-          <BaseButton
-              text={isEditingBirth ? '저장' : '생년월일 변경'}
-              onClick={() => setIsEditingBirth(!isEditingBirth)}
-              className={styles.button}
-          />
-        </div>
 
-        <div className={styles.fieldGroup}>
-          <div className={styles.inputWrapper}>
-            <label className={styles.label}>전화번호</label>
-            {isEditingPhone ? (
-              <input
-                type="tel"
-                value={phoneNumber.replace(/-/g, '')}
-                onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
-                className={styles.input}
-                placeholder="01012345678"
+          <div className={styles.fieldGroup}>
+            <div className={styles.inputWrapper}>
+              <label className={styles.label}>전화번호</label>
+              <div className={styles.inputChange}>
+              {isEditingPhone ? (
+                <input
+                  type="tel"
+                  value={phoneNumber.replace(/-/g, '')}
+                  onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
+                  className={styles.input}
+                  placeholder="01012345678"
+                />
+              ) : (
+                <div className={styles.displayText}>{phoneNumber}</div>
+              )}
+              <BaseButton
+                  text={isEditingPhone ? '확인' : '전화번호 변경'}
+                  onClick={() => setIsEditingPhone(!isEditingPhone)}
               />
-            ) : (
-              <div className={styles.displayText}>{phoneNumber}</div>
-            )}
+              </div>
+            </div>
           </div>
-          <BaseButton
-              text={isEditingPhone ? '저장' : '전화번호 변경'}
-              onClick={() => setIsEditingPhone(!isEditingPhone)}
-              className={styles.button}
-          />
-          
         </div>
+        <PrimaryButton
+          text="변경 사항 저장"
+        />
     </div>
   );
 };
