@@ -37,6 +37,7 @@ export default function Home() {
             storeName: store.storeName,
             businessNumber: store.businessNumber,
             accountNumber: store.accountNumber,
+            bankCode: store.bankCode,
         }));
         setStores(transformedStores);
     } catch (error) {
@@ -67,7 +68,10 @@ export default function Home() {
   return (
       <div className={classes.container}>
           <div className={classes.content}>
-              <div>
+            {loading && <p>로딩 중입니다...</p>}
+            {error && <p className={classes.errorMessage}>에러: {error}</p>}
+            {!loading && !error && (
+                <>
                   <div className={classes.tabNavigation}>
                       <nav className={classes.tabList}>
                           {tabs.map((tab, index) => (
@@ -88,9 +92,10 @@ export default function Home() {
                   <div className={classes.tabContent}>
                       {renderTabContent()}
                   </div>
-              </div>
-          </div>
-      </div>
+                  </>
+            )}
+            </div>
+        </div>
   );
 }
 

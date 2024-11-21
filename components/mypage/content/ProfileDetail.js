@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
 import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
 import PresidentInfo from './PresidentInfo';
+import { bankCodeList } from '@/constants/bankCodeList';
 
 
 //테스트 데이터
@@ -20,17 +21,36 @@ const tableHeaders = {
     actions: "삭제"
 };
 
+const getBankLogo = (code) => {
+    const bank = bankCodeList.find(bank => bank.code === code);
+    return bank ? bank.logoUrl : null;
+};
+
 export default function ProfileDetail({content}) {
     const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
-    const [userData, setUserData] = useState(null);
 
     const workplaceInfo = content; // 사업장 정보(버튼 미포함)
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
+        accountNumber: (
+            <div className={classes.accountContainer}>
+                {workplace.bankCode && (
+                    <span
+                        className={classes.bankLogo}
+                        style={{
+                            backgroundImage: `url('data:image/svg+xml;utf8,${encodeURIComponent(getBankLogo(workplace.bankCode))}')`,
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                    ></span>
+                )}
+                <span>{workplace.accountNumber}</span>
+            </div>
+        ),
         // edit와 actions에 대한 컴포넌트를 직접 할당
         edit:(
             <PrimaryButton
