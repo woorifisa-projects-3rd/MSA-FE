@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import springClient from '@/lib/springClient';
-import { setAccessToken } from '@/utils/auth';
-import { cookies } from 'next/headers';
+import { setAccessToken, setRefreshToken } from '@/utils/auth';
 
 export async function POST(request) {
     try {
@@ -13,17 +12,10 @@ export async function POST(request) {
       console.log("auth/login server response:", response.data)
   
       const { accessToken, refreshToken } = response.data; // Spring Boot에서 받은 토큰
-
-      cookies().set('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        // refresh token은 더 긴 유효기간 설정
-        maxAge: 7 * 24 * 60 * 60 // 7일
-      });
-    
+   
      
       setAccessToken(accessToken);
+      setRefreshToken(refreshToken)
 
       // 성공 응답 반환
       return NextResponse.json({ success: true });
