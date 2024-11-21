@@ -2,11 +2,11 @@ import AddressSearch from "@/components/addsearch/AddressSearch";
 import styles from "./workplace-registration.module.css"
 import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
-const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit }, ref) => {
+const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
   
   const [formData, setFormData] = useState({
     storeName: workplaceData?.storeName || '',
@@ -14,10 +14,30 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
     accountNumber: workplaceData?.accountNumber || '',
     bankCode: workplaceData?.bankCode || 20,
     postcodeAddress: workplaceData?.postcodeAddress || '',
+    detailAddress: workplaceData?.detailAddress || '',
   });
+
+  useEffect(() => {
+    if (mode === 'edit' && workplaceData) {
+        const { location, bankCode, accountNumber } = workplaceData;
+        console.log(workplaceData);
+        
+        // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
+        // const [postcodeAddress, ...detailParts] = address.split(', ');
+        // const detailAddress = detailParts.join(', ');
+
+        setFormData({
+            ...workplaceData,
+            bankCode,
+            accountNumber,
+            postcodeAddress: location,
+        });
+    }
+}, [mode, workplaceData]);
 
   const formRef = useRef();
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const geocodeAddress = async (address) => {
     try {
@@ -51,6 +71,11 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
       ...prevData,
       [name]: value,
     }));
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: value.trim() ? '' : REQUIRED_ERROR, // 입력값이 있으면 오류 제거
+    }));
   };
 
   const handleAddressChange = (postcodeAddress, detailAddress) => {
@@ -59,11 +84,45 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
           postcodeAddress,
           detailAddress,
       }));
+
+      if (isSubmitted) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          address:
+            postcodeAddress.trim() && detailAddress.trim()
+              ? ''
+              : REQUIRED_ERROR, // 둘 중 하나라도 비어 있으면 오류 메시지
+        }));
+      }
   };
+
+  const handleAccountChange = ({bankCode, accountNumber}) => {
+    const wooriCode = 20;
+    setFormData(prev => ({
+        ...prev,
+        bankCode: wooriCode,
+        accountNumber: accountNumber,
+    }));
+
+    setFormErrors(prevErrors => ({
+      ...prevErrors,
+      accountNumber: accountNumber?.trim() ? '' : REQUIRED_ERROR,
+    }));
+};
 
   // 유효성 검사 함수
   const validateForm = (data) => {
     const errors = {};
+
+    // 계좌 필드 유효성 검사
+    if (data.accountNumber === '') {
+      errors.accountNumber = REQUIRED_ERROR;
+    }
+
+    // 주소 필드 유효성 검사
+    if (!data.postcodeAddress || !data.detailAddress) {
+        errors.address = REQUIRED_ERROR;
+    }
 
     // 각 필드에 대해 유효성 검사 수행
     Object.keys(validateRules).forEach(field => {
@@ -77,9 +136,13 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
+    setIsSubmitted(true);
+
     // 유효성 검사 수행
     const errors = validateForm(formData);
     setFormErrors(errors);
+    console.log(formData);
+    
 
     // 오류가 없으면 제출
     if (Object.keys(errors).length === 0) {
@@ -91,7 +154,7 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
         if (onSubmit) {
           const processedData = {
             ...rest,
-            accountNumber: formData.accountNumber.accountNumber,
+            accountNumber: formData.accountNumber,
             location: postcodeAddress,
             latitude: location.lat,
             longitude: location.lng,
@@ -117,9 +180,6 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
   const validateRules = {
       storeName: value => value.trim() ? '' : REQUIRED_ERROR,
       businessNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-      accountNumber: value => value ? '' : REQUIRED_ERROR,
-      postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-      detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
   };
       
   return (
@@ -159,7 +219,9 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
           <AccountInputForm
               isPresident={true}
               error={formErrors.accountNumber}
-              onChange={(value) => setFormData((prevData) => ({ ...prevData, accountNumber: value }))}
+              onChange={handleAccountChange}
+              bankCode={formData.bankCode}
+              accountNumber={formData.accountNumber}
           />
         </div>
         {/* 주소 섹션 추가 */}
@@ -169,8 +231,8 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
               initialPostcodeAddress={formData.postcodeAddress}
               initialDetailAddress={formData.detailAddress}
               onAddressChange={handleAddressChange} />
-          {(formErrors.postcodeAddress || formErrors.detailAddress) && (
-              <span className={styles.error}>{formErrors.detailAddress}</span>
+          {formErrors.address && (
+              <span className={styles.error}>{formErrors.address}</span>
           )}
       </div>
       </form>

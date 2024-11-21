@@ -38,7 +38,9 @@ export default function Home() {
             businessNumber: store.businessNumber,
             accountNumber: store.accountNumber,
             bankCode: store.bankCode,
+            location: store.location,
         }));
+        
         setStores(transformedStores);
     } catch (error) {
         console.error("가게 데이터를 가져오는데 실패했습니다.");
