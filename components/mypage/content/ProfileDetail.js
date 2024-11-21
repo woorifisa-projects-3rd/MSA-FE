@@ -53,24 +53,7 @@ export default function ProfileDetail({content}) {
         )
 
     }))
-
-
-    useEffect(() => {
-        const loadMyPageData = async () => {
-           
-            try {
-                const data = await mypageApi.getMyInfo(); 
-                setUserData(data);
-                console.log('userdata', data)
-            } catch (error) {
-                console.error('마이페이지 로드 에러:', error);
-            }
-        };
-    
-        loadMyPageData();
-    }, []);
    
-    
    return (
        <div className={classes.container}>
         
