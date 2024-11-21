@@ -50,9 +50,7 @@ export default function PasswordChange() {
             if (response.status === 200) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
             } 
-           
             } catch (error) {
-            console.error('비밀번호 변경 요청 중 오류 발생:', error);
             alert('비밀번호 변경에 실패했습니다. 다시 시도해 주세요.');
         }
     };
