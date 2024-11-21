@@ -16,7 +16,6 @@ const tableHeaders = {
     storeName: "사업장 상호명",
     businessNumber: "사업자 번호",
     accountNumber: "계좌번호",
-    count: "직원 수",
     edit: "편집",
     actions: "삭제"
 };
@@ -28,7 +27,7 @@ export default function ProfileDetail({content}) {
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
     const [userData, setUserData] = useState(null);
 
-    const workplaceInfo =content.workplaceInfo; // 사업장 정보(버튼 미포함)
+    const workplaceInfo = content; // 사업장 정보(버튼 미포함)
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
