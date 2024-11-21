@@ -1,9 +1,9 @@
-// components/input/AccountInputForm.jsx
 'use client'
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
+import { nextClient } from '@/lib/nextClient';
 
 const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber: propAccountNumber }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
@@ -15,6 +15,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
 
   const [accountNumber, setAccountNumber] = useState(propAccountNumber || '');
   const [showBankList, setShowBankList] = useState(false);
+  const [validationMessage, setValidationMessage] = useState(''); // 유효성 메시지 상태 추가
   const dropdownRef = useRef(null);
 
   // 초기값 설정
@@ -76,13 +77,29 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     }
   };
 
-  const handleSubmit = () => {
-    console.log({
-      bankCode: selectedBank.code,
-      bankName: selectedBank.name,
-      accountNumber
-    });
+  // POST 요청 처리 함수 추가 (사장계좌확인 코드)
+  const handleSubmit = async () => {
+    try {
+      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
+      
+      const response = await nextClient.post('/user/account-check', {
+        bankCode: selectedBank.code,
+        accountNumber
+      });
+
+      console.log("반환값",response.data);
+      // 응답 처리
+      if (response.data.success === true) {
+        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
+      } else {
+        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
+      }
+    } catch (error) {
+      console.error('Error checking account:', error); // 에러 출력
+      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
+    }
   };
+  // (사장계좌확인 코드)
 
   const BankSelector = isPresident ? (
     <div className={styles.bankSelector}>
@@ -108,52 +125,53 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
 
   return (
     <div className={styles.form}>
-      {/* <h2 className="text-lg mb-4">계좌 등록</h2> */}
       <div className={styles.formGroup}>
-      <div className="flex gap-2 items-center relative">
-        {BankSelector}
+        <div className="flex gap-2 items-center relative">
+          {BankSelector}
 
-        {!isPresident && showBankList && (
-          <div ref={dropdownRef} className={styles.dropdown}>
-            <div className={styles.dropdownHeader}>
-              은행 선택
-            </div>
-            {bankCodeList.map((bank) => (
-              <div
-                key={bank.code}
-                onClick={() => {
-                  handleBankChange(bank)
-                }}
-                className={styles.dropdownItem}
-              >
-                <div 
-                  className={styles.bankIcon}
-                  dangerouslySetInnerHTML={{ __html: bank.logoUrl }}
-                />
-                <span>{bank.name}</span>
+          {!isPresident && showBankList && (
+            <div ref={dropdownRef} className={styles.dropdown}>
+              <div className={styles.dropdownHeader}>
+                은행 선택
               </div>
-            ))}
-          </div>
-        )}
+              {bankCodeList.map((bank) => (
+                <div
+                  key={bank.code}
+                  onClick={() => handleBankChange(bank)}
+                  className={styles.dropdownItem}
+                >
+                  <div 
+                    className={styles.bankIcon}
+                    dangerouslySetInnerHTML={{ __html: bank.logoUrl }}
+                  />
+                  <span>{bank.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
-        <input
-          type="text"
-          placeholder="계좌번호"
-          value={accountNumber}
-          onChange={handleAccountNumberChange}
-          className={styles.input}
-        />
+          <input
+            type="text"
+            placeholder="계좌번호"
+            value={accountNumber}
+            onChange={handleAccountNumberChange}
+            className={styles.input}
+          />
 
-
-        <BaseButton 
-          text="계좌 확인"
-          type="button"
-          onClick={handleSubmit}
-        />
-     
+          <BaseButton 
+            text="계좌 확인"
+            type="button"
+            onClick={handleSubmit} // 버튼 클릭 시 handleSubmit 호출
+          />
+        </div>
+        {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
       </div>
-      {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
-      </div>
+
+      {validationMessage && (
+        <div className={styles.validationMessage}>
+          {validationMessage} {/* 유효성 메시지 출력 */}
+        </div>
+      )}
 
       {isPresident && (
         <div className={styles.bankLink}>
