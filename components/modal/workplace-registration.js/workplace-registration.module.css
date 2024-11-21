@@ -95,3 +95,17 @@
  .bankLinkText:hover {
   text-decoration: underline;
  }
+
+ .formSection {
+  margin: 24px 0;
+  padding: 20px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+}

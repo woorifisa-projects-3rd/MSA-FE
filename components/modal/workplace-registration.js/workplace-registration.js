@@ -1,3 +1,4 @@
+import AddressSearch from "@/components/addsearch/AddressSearch";
 import styles from "./workplace-registration.module.css"
 import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
@@ -10,12 +11,36 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
     businessNumber: workplaceData?.businessNumber || '',
     accountNumber: workplaceData?.accountNumber || '',
     bankCode: workplaceData?.bankCode || 20,
-    // location: workplaceData?.location || '"서울시 강동구 명일동"',
-    // latitude: workplaceData?.latitude || 37.499564,
-    // longitude: workplaceData?.longitude || 127.0315094,
+    postcodeAddress: workplaceData?.postcodeAddress || '',
   });
 
   const formRef = useRef();
+
+  const geocodeAddress = async (address) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Geocoding API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon),
+        };
+      } else {
+        throw new Error("해당 주소에 대응되는 위도, 경도 결과를 찾지 못함");
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      throw error;
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,21 +50,38 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
     }));
   };
 
-  const handleSubmit = (e) => {
-    if (e) e.preventDefault();
-    console.log('handleSubmit 호출!');
-    
+  const handleAddressChange = (postcodeAddress, detailAddress) => {
+      setFormData(prev => ({
+          ...prev,
+          postcodeAddress,
+          detailAddress,
+      }));
+  };
 
-    if (onSubmit) {
-      const processedData = {
-        ...formData,
-        accountNumber: formData.accountNumber.accountNumber,
-      };
-      console.log('제출 데이터: ', processedData);
-      
-      onSubmit(formData);
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
+
+    try {
+      const { postcodeAddress, detailAddress, ...rest } = formData;
+
+      const location = await geocodeAddress(postcodeAddress);
+
+      if (onSubmit) {
+        const processedData = {
+          ...rest,
+          accountNumber: formData.accountNumber.accountNumber,
+          location: postcodeAddress,
+          latitude: location.lat,
+          longitude: location.lng,
+        };
+
+        console.log("제출 데이터:", processedData);
+        onSubmit(processedData);
+      }
+    } catch (error) {
+      alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
     }
-};
+  };
 
   useImperativeHandle(ref, () => ({
       handleSubmit,
@@ -83,6 +125,17 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
               onChange={(value) => setFormData((prevData) => ({ ...prevData, accountNumber: value }))}
           />
         </div>
+        {/* 주소 섹션 추가 */}
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>주소</h3>
+          <AddressSearch
+              initialPostcodeAddress={formData.postcodeAddress}
+              initialDetailAddress={formData.detailAddress}
+              onAddressChange={handleAddressChange} />
+          {/* {(formErrors.postcodeAddress || formErrors.detailAddress) && (
+              <span className={styles.error}>{formErrors.postcodeAddress}</span>
+          )} */}
+      </div>
       </form>
     </div>
   );
