@@ -19,7 +19,7 @@ const PresidentInfo = () => {
       try {
         const response = await nextClient.get('/mypage/president');
         const data = response.data;
-
+        
         setName(data.name);
         setEmail(data.email);
         setBirthDate(data.birthDate);
@@ -49,17 +49,22 @@ const PresidentInfo = () => {
   };
 
 
-  const handleSave = async () => {
+  const handleSave = async () => {    
     try {
-      await nextClient.put('/user/president/modify', {
-        phoneNumber: phoneNumber.replace(/-/g, ''),
-        birthDate: birthDate.replace(/[년월일\s]/g, '')
+      // birthDate 값을 yyyy-mm-dd 형식으로 변환
+      const formattedBirthDate = birthDate.replace(/[년월일\s]/g, '').replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+      const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
+
+      await nextClient.put('/mypage/president/modify', {
+        phoneNumber: formattedPhoneNumber,
+        birthDate: formattedBirthDate,
       });
       setIsEditing(false);
       setOriginalData({
         birthDate,
         phoneNumber
       });
+      alert("변경 사항이 저장되었습니다.");
     } catch (error) {
       console.error('정보 수정 에러:', error.message);
       // 에러 발생 시 원래 데이터로 되돌리기
@@ -67,6 +72,7 @@ const PresidentInfo = () => {
       setPhoneNumber(originalData.phoneNumber);
     }
   };
+
   const formatPhoneNumber = (input) => {
     const numbers = input.replace(/[^0-9]/g, '');
     if (numbers.length >= 10) {
@@ -130,6 +136,7 @@ const PresidentInfo = () => {
         </div>
         <PrimaryButton
           text="변경 사항 저장"
+          onClick={handleSave}
         />
     </div>
   );
