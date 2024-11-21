@@ -109,3 +109,10 @@
   color: #2d3748;
   margin-bottom: 20px;
 }
+
+.error {
+  color: red;
+  font-size: 0.7rem;
+  margin-top: 5px;
+  font-weight: bold;
+}

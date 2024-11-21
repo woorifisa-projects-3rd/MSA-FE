@@ -4,6 +4,8 @@ import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
+const REQUIRED_ERROR = "필수 항목입니다.";
+
 const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit }, ref) => {
   
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
   });
 
   const formRef = useRef();
+  const [formErrors, setFormErrors] = useState({});
 
   const geocodeAddress = async (address) => {
     try {
@@ -58,36 +61,67 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
       }));
   };
 
+  // 유효성 검사 함수
+  const validateForm = (data) => {
+    const errors = {};
+
+    // 각 필드에 대해 유효성 검사 수행
+    Object.keys(validateRules).forEach(field => {
+        const error = validateRules[field](data[field]);
+        if (error) errors[field] = error;
+    });
+
+      return errors;
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
-    try {
-      const { postcodeAddress, detailAddress, ...rest } = formData;
+    // 유효성 검사 수행
+    const errors = validateForm(formData);
+    setFormErrors(errors);
 
-      const location = await geocodeAddress(postcodeAddress);
+    // 오류가 없으면 제출
+    if (Object.keys(errors).length === 0) {
+      try {
+        const { postcodeAddress, detailAddress, ...rest } = formData;
 
-      if (onSubmit) {
-        const processedData = {
-          ...rest,
-          accountNumber: formData.accountNumber.accountNumber,
-          location: postcodeAddress,
-          latitude: location.lat,
-          longitude: location.lng,
-        };
+        const location = await geocodeAddress(postcodeAddress);
 
-        console.log("제출 데이터:", processedData);
-        onSubmit(processedData);
+        if (onSubmit) {
+          const processedData = {
+            ...rest,
+            accountNumber: formData.accountNumber.accountNumber,
+            location: postcodeAddress,
+            latitude: location.lat,
+            longitude: location.lng,
+          };
+
+          console.log("제출 데이터:", processedData);
+          onSubmit(processedData);
+        }
+      } catch (error) {
+        alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
       }
-    } catch (error) {
-      alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
+    } else {
+      console.log('유효성 검사 실패!!!');
+      console.log(errors);
+      
     }
   };
 
   useImperativeHandle(ref, () => ({
       handleSubmit,
   }));
-      
 
+  const validateRules = {
+      storeName: value => value.trim() ? '' : REQUIRED_ERROR,
+      businessNumber: value => value.trim() ? '' : REQUIRED_ERROR,
+      accountNumber: value => value ? '' : REQUIRED_ERROR,
+      postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+      detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+  };
+      
   return (
     <div className={styles.formContainer}>
       <form ref={formRef} className={styles.form} onSubmit={handleSubmit}>
@@ -102,6 +136,7 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
               onChange={handleInputChange}
             />
           </div>
+          {formErrors.storeName && <span className={styles.error}>{formErrors.storeName}</span>}
         </div>
 
         <div className={styles.formGroup}>
@@ -116,12 +151,14 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
               disabled={mode === 'edit'} // edit 모드면 비활성화
             />
           </div>
+          {formErrors.businessNumber && <span className={styles.error}>{formErrors.businessNumber}</span>}
         </div>
 
         <div className={styles.formGroup}>
           <label>계좌 등록</label>
           <AccountInputForm
               isPresident={true}
+              error={formErrors.accountNumber}
               onChange={(value) => setFormData((prevData) => ({ ...prevData, accountNumber: value }))}
           />
         </div>
@@ -132,9 +169,9 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
               initialPostcodeAddress={formData.postcodeAddress}
               initialDetailAddress={formData.detailAddress}
               onAddressChange={handleAddressChange} />
-          {/* {(formErrors.postcodeAddress || formErrors.detailAddress) && (
-              <span className={styles.error}>{formErrors.postcodeAddress}</span>
-          )} */}
+          {(formErrors.postcodeAddress || formErrors.detailAddress) && (
+              <span className={styles.error}>{formErrors.detailAddress}</span>
+          )}
       </div>
       </form>
     </div>
