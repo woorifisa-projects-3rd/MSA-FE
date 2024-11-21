@@ -127,8 +127,7 @@ export default function ProfileDetail({content}) {
                 <WorkplaceModal
                     ref={workplaceModalRef}
                     onSubmit={(formData) => {
-                        // console.log('폼 제출 데이터:', formData);
-                        
+                        setRegistrationModalOpen(false);
                     }}
                 />
             </ModalContainer>
@@ -138,9 +137,16 @@ export default function ProfileDetail({content}) {
                 title="사업장 수정"
                 isOpen={isEditModalOpen}
                 onClose={()=>setEditModalOpen(false)}
-                onConfirm={()=>console.log("나중에 submit 할 것")}
+                onConfirm={handleFormSubmit}
             >
-                <WorkplaceModal mode='edit' workplaceData={selectedWorkplace} />
+                <WorkplaceModal
+                    mode='edit'
+                    workplaceData={selectedWorkplace}
+                    ref={workplaceModalRef}
+                    onSubmit={(formData) => {
+                        setEditModalOpen(false);
+                    }}
+                    />
             </ModalContainer>
 
             {/* 삭제 모달 추가  */}

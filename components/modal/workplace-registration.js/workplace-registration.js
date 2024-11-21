@@ -31,7 +31,12 @@ const WorkplaceModal = forwardRef(({ mode = "create", workplaceData, onSubmit },
     
 
     if (onSubmit) {
-      console.log("폼 제출 데이터:", formData); // 콘솔로 확인
+      const processedData = {
+        ...formData,
+        accountNumber: formData.accountNumber.accountNumber,
+      };
+      console.log('제출 데이터: ', processedData);
+      
       onSubmit(formData);
     }
 };
