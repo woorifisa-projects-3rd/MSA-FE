@@ -20,15 +20,15 @@ export default function MainHeader () {
                     return sub.text;
                 }
             }
-        }
+        } 
         return ""; // 기본값
     };
     
     return (
         <header className={classes.header_container}>
             <div className={classes.header_left}>
-                <Link href="/onboarding">
-                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26}/>
+                <Link href="/onboarding" style={{zIndex:100000}}>
+                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26} priority />
                 </Link>
             </div>
             <div className={classes.headerRight}>
