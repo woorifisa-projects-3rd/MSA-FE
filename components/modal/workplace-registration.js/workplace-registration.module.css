@@ -1,6 +1,7 @@
 .formContainer{
   width: 600px;  /* max-width 대신 width로 고정 */
   min-width: 600px;  /* 최소 너비 추가 */
+  padding-bottom: 40px;
 }
  /* 반응형을 고려할 경우  */
  /* .formContainer {

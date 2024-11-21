@@ -4,7 +4,7 @@ import DefaultTable from '@/components/table/DefaultTable';
 import classes from './ProfileDetail.module.css';
 import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
 import ModalContainer from '@/components/modal/modal-container';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
 import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
 import PresidentInfo from './PresidentInfo';
@@ -31,6 +31,16 @@ export default function ProfileDetail({content}) {
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
+    const workplaceModalRef = useRef(null);
+
+    const handleFormSubmit = () => {
+        if (workplaceModalRef.current) {
+            // console.log("handleSubmit 호출 준비 완료");
+            workplaceModalRef.current.handleSubmit();
+          } else {
+            console.error("workplaceModalRef 초기화되지 않음");
+          }
+    }
 
     const workplaceInfo = content; // 사업장 정보(버튼 미포함)
 
@@ -76,8 +86,6 @@ export default function ProfileDetail({content}) {
    return (
        <div className={classes.container}>
         
-                
-            {/* 다른 컴포넌트 적용해야함 */}
            <div className={classes.otherComponent}>
                 <PresidentInfo />
                 
@@ -114,9 +122,15 @@ export default function ProfileDetail({content}) {
                 title="사업장 등록"
                 isOpen={isRegistrationModalOpen}
                 onClose={()=>setRegistrationModalOpen(false)}
-                onConfirm={()=>console.log("submit 완료")}
+                onConfirm={handleFormSubmit}
             >
-                <WorkplaceModal />
+                <WorkplaceModal
+                    ref={workplaceModalRef}
+                    onSubmit={(formData) => {
+                        // console.log('폼 제출 데이터:', formData);
+                        
+                    }}
+                />
             </ModalContainer>
 
             {/* 편집 모달 */}
