@@ -64,3 +64,14 @@
   border-radius: 10px;
   color: gray;
 }
+
+.saveButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.8rem;
+}
