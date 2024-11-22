@@ -29,6 +29,7 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   const fetchStores = async () => {
+    
     setLoading(true);
     setError(null);
     try {

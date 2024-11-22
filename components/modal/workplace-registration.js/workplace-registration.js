@@ -8,12 +8,13 @@ import { nextClient } from "@/lib/nextClient";
 const REQUIRED_ERROR = "필수 항목입니다.";
 
 const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStores }, ref) => {
-  
+    
   const [formData, setFormData] = useState({
+    storeId: workplaceData?.storeId || '',
     storeName: workplaceData?.storeName || '',
     businessNumber: workplaceData?.businessNumber || '',
     accountNumber: workplaceData?.accountNumber || '',
-    bankCode: workplaceData?.bankCode || '020',
+    bankCode: '020',
     postcodeAddress: workplaceData?.postcodeAddress || '',
     detailAddress: workplaceData?.detailAddress || '',
   });
@@ -100,7 +101,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
   };
 
   const handleAccountChange = ({bankCode, accountNumber}) => {
-    const wooriCode = 20;
+    const wooriCode = '020';
     setFormData(prev => ({
         ...prev,
         bankCode: wooriCode,
@@ -163,15 +164,25 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
       };
 
       try {
-        const response = await nextClient.post('/mypage/store', processedData);
-
-        if (response.data.success) {
-          alert('가게가 추가 되었습니다.');
-          console.log("제출 데이터:", processedData);
-          if (onSubmit) onSubmit(processedData);
-          refreshStores();
+        let response;
+        if (mode === 'edit') {          
+          response = await nextClient.put(`/mypage/store`, {
+            ...processedData,
+            storeid: workplaceData.storeId,
+          });
+          alert('가게가 수정 되었습니다.');
         } else {
-          throw new Error(response.data.error || '가게 추가 실패');
+          response = await nextClient.post('/mypage/store', processedData);
+          alert('가게가 추가 되었습니다.');
+        }
+        
+        if (response.data.success) {
+          if (onSubmit) onSubmit(processedData);
+          console.log("제출 데이터:", processedData);          
+          // refreshStores();
+          window.location.reload();
+        } else {
+          throw new Error(response.data.error || '가게 업데이트 실패');
         }
       } catch (error) {
         setError(error.response?.data?.error || error.message);

@@ -37,7 +37,6 @@ export default function ProfileDetail({content, refreshStores}) {
 
     const handleFormSubmit = () => {
         if (workplaceModalRef.current) {
-            // console.log("handleSubmit 호출 준비 완료");
             workplaceModalRef.current.handleSubmit();
           } else {
             console.error("workplaceModalRef 초기화되지 않음");

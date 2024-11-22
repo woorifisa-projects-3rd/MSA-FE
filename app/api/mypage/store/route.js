@@ -47,3 +47,36 @@ export async function POST(request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
+
+  export async function PUT(request) {
+    try {
+      const {
+        storeName,
+        businessNumber,
+        accountNumber,
+        bankCode,
+        location,
+        latitude,
+        longitude,
+        storeid,
+        } = await request.json();
+
+      const response = await springClient.put(`/user/store`, {
+        storeName,
+        businessNumber,
+        accountNumber,
+        bankCode,
+        location,
+        latitude,
+        longitude,
+       }, {
+        params: { storeid : storeid },
+       });
+
+      // 성공 응답 반환
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Spring Boot 직원 수정 실패:', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  }
