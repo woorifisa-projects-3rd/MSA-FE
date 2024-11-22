@@ -13,28 +13,7 @@ export default function WorkplaceModal({
   //   return <div>데이터를 불러올 수 없습니다.</div>;
   // }
 
-  // POST 요청 처리 함수 추가 (사장계좌확인 코드)
-  const handleSubmit = async () => {
-    try {
-      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
-      
-      const response = await nextClient.post('/user/account-check', {
-        bankCode: selectedBank.code,
-        accountNumber
-      });
 
-      console.log("반환값",response.data);
-      // 응답 처리
-      if (response.data.success === true) {
-        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
-      } else {
-        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
-      }
-    } catch (error) {
-      console.error('Error checking account:', error); // 에러 출력
-      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
-    }
-  };
 
 
   
@@ -73,17 +52,12 @@ export default function WorkplaceModal({
           />
         </div>
 
+        
         {mode === 'create' ? (  // create 모드에서만 보이도록
           <div className={styles.linkGroup}>
           </div>
         ):(
           <div className={styles.linkGroup}>
-            <a 
-              href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131" 
-              className={styles.bankLinkText}
-            >
-              우리은행 계좌 추가 개설을 원하시나요?
-            </a>
           </div>
         )}
       </form>
