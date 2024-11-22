@@ -8,7 +8,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const storeid = searchParams.get('storeid');
 
-    if (!storeId) {
+    if (!storeid) {
       return NextResponse.json(
         { message: 'Missing required parameter: storeid' },
         { status: 400 }
