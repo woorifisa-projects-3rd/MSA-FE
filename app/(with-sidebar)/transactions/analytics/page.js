@@ -22,7 +22,7 @@ export default function SalesExpenses() {
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
       try {
-        const response = await nextClient.get('/bank/list', {
+        const response = await nextClient.get('/finance/analytics/transactionchart', {
           params: {
             storeid: 3, // 고정된 스토어 ID
             year: selectedYear, // 선택된 연도
@@ -101,6 +101,18 @@ export default function SalesExpenses() {
 
     loadTransactionAnalyticsPageData();
   }, [selectedYear, selectedMonth]);
+
+
+  // 손익계산서 부분
+  // useEffect(() => {
+  //   const loaedTransactionAnalyticsPDFPageData = async () => {
+  //     try {
+  //       const response = await nextClient.post('/finance/analytics/transactionpdf', {
+
+  //       })
+  //     }
+  //   }
+  // })
 
   // 차트 옵션
   const options = {
