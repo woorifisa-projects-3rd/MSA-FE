@@ -66,6 +66,12 @@
     font-size: 1rem;
 }
 
+/* 로딩 중 input 스타일 추가 */
+.inputGroup input:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
 .loginButton {
     width: 100%;
     padding: 1rem;
@@ -91,3 +97,17 @@
     text-decoration: none;
     font-size: 0.9rem;
 }
+
+/* 에러 메시지 스타일 추가 */
+.errorMessage {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #dc2626;  /* 빨간색 */
+    background-color: #fee2e2;  /* 연한 빨간색 배경 */
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+

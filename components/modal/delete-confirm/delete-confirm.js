@@ -1,21 +1,28 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './delete-confirm.module.css';
 import Button from '@/components/button/button';
 
 const realPassword = "1234"; // 사장님 비밀번호를 임의로 설정해둠
 
 
-export default function DeleteConfirmModal({ isOpen, onClose }) {
+export default function DeleteConfirmModal() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  if (!isOpen) return null;
+  // 비밀번호와 확인 비밀번호가 일치하는지 확인
+  useEffect(() => {
+    const isValid = password.trim() !== '' && confirmPassword.trim() !== '' && password === confirmPassword;
+    setIsFormValid(isValid);
+    setPasswordMatch(password === confirmPassword);
+  }, [password, confirmPassword]);
 
   const handleDeleteClick = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (!passwordMatch) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
@@ -25,7 +32,7 @@ export default function DeleteConfirmModal({ isOpen, onClose }) {
     }
     setError('');
     console.log('삭제 처리'); // 비밀번호 일치하면 삭제 처리
-  }
+  };
 
   return (
     <div className={styles.overlay}>
@@ -41,12 +48,11 @@ export default function DeleteConfirmModal({ isOpen, onClose }) {
           <div className={styles.formGroup}>
             <label>비밀번호 확인</label>
               <input type="password" placeholder="비밀번호 확인" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
-              {error && <p className={styles.error}>{error}</p>}
-          </div>
-
-          <div className={styles.buttonGroup}>
-            <Button text="돌아가기" color="var(--gray)" onClick={onClose} />
-            <Button text="삭제하기" color="var(--red)" onClick={handleDeleteClick}/>
+              <div className={styles.errorContainer}>
+              {!passwordMatch && confirmPassword && (
+                <p className={styles.error}>비밀번호가 일치하지 않습니다.</p>
+              )}
+              </div>
           </div>
         </form>
       </div>

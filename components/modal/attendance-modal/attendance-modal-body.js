@@ -1,79 +1,67 @@
 'use client';
+import { nextClient } from "@/lib/nextClient";
 import styles from "./attendance-modal-body.module.css";
 import { useState, useEffect } from "react";
 
-const employees = [
-    {
-      "storeemployeeId": 1,
-      "name": "정성윤"
-    },
-    {
-      "storeemployeeId": 2,
-      "name": "박준현"
-    },
-    {
-      "storeemployeeId": 3,
-      "name": "임지혁"
-    }
-  ];
-
 export default function AttendanceModalBody({
     mode="create",
-    attendanceData
+    attendanceData={},
+    onChange 
 }){
-    const [formData, setFormData] = useState({
+      const [formData, setFormData] = useState({
         storeemployeeId: '',
         date: '',
         startTime: '',
-        endTime: '',
-        workTime: '00:00:00'
+        endTime: ''
       });
 
-      const [workHours, setWorkHours] = useState('총 근무시간: ');
+      const [employees, setEmployees] = useState([]);
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-          ...prev,
-          [name]: value
-        }));
-      };
+      // const [workHours, setWorkHours] = useState('총 근무시간: ');
+
+      useEffect(() => {
+        // Fetch employees data from API
+        const fetchEmployees = async () => {
+            try {
+                const response = await nextClient.get(`/employee/details?storeid=1`);
+                const data = await response.data;
+
+                console.log("storeid별 직원 정보 조회 응답",response.data)
+                // Map the response to only include storeemployeeId and name
+                const mappedEmployees = data.map((employee) => ({
+                    storeemployeeId: employee.id,
+                    name: employee.name,
+                }));
+
+                setEmployees(mappedEmployees); // Update the employees state
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+            }
+        };
+
+        fetchEmployees();
+      }, []); // Fetch employees only once when the component is mounted
 
 
       useEffect(() => {
-        if (formData.startTime && formData.endTime) {
-          const start = new Date(`2024-01-01T${formData.startTime}:00`);
-          let end = new Date(`2024-01-01T${formData.endTime}:00`);
-          
-          if (end < start) {
-            end = new Date(`2024-01-02T${formData.endTime}:00`);
-          }
-          
-          const diff = end - start;
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          
-          const formattedHours = hours.toString().padStart(2, '0');
-          const formattedMinutes = minutes.toString().padStart(2, '0');
-          const timeFormat = `${formattedHours}:${formattedMinutes}:00`;
-          
-          setFormData(prev => ({
-            ...prev,
-            workTime: timeFormat
-          }));
-          
-          if (hours === 0) {
-            setWorkHours(`총 근무시간: ${minutes}분`);
-          } else if (minutes === 0) {
-            setWorkHours(`총 근무시간: ${hours}시간`);
-          } else {
-            setWorkHours(`총 근무시간: ${hours}시간 ${minutes}분`);
-          }
+        if (mode === "edit" && attendanceData) {
+          setFormData(attendanceData);
         }
-      }, [formData.startTime, formData.endTime]);
+      }, [mode, attendanceData]);
 
-    console.log(attendanceData)
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        const updatedData = { ...formData, [name]: value };
+
+        setFormData(updatedData);
+
+        // console.log("attendance-modal-body에서 updatedData:", updatedData);
     
+        if (onChange && JSON.stringify(formData) !== JSON.stringify(updatedData)) {
+          onChange(updatedData);
+        }
+      };
+
 
     return (
         <div className={styles.container}>
@@ -138,11 +126,11 @@ export default function AttendanceModalBody({
                   </div>
                 </div>
     
-                <div className={styles.formGroup}>
+                {/* <div className={styles.formGroup}>
                   <div className={styles.workHoursText}>
                       {workHours}
                   </div>
-                </div>
+                </div> */}
                 
             </form>
         </div>

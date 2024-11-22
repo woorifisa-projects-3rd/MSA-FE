@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import styles from '@/components/addsearch/AddressSearch.module.css'
 
-const AddressSearch = ({ onAddressChange }) => {
+const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailAddress }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [zipCode, setZipCode] = useState('');
-  const [postcodeAddress, setPostcodeAddress] = useState('');
-  const [detailAddress, setDetailAddress] = useState('');
+  const [postcodeAddress, setPostcodeAddress] = useState(initialPostcodeAddress || '');
+  const [detailAddress, setDetailAddress] = useState(initialDetailAddress || '');
 
   // Daum 우편번호 검색 완료 후 처리 함수
   const handleComplete = (data) => {
@@ -28,10 +28,20 @@ const AddressSearch = ({ onAddressChange }) => {
     setIsOpen(!isOpen);
   };
 
-
+  // 주소 변경 시 부모 컴포넌트로 변경된 값 전달
   useEffect(()=>{
     onAddressChange(postcodeAddress, detailAddress);
   }, [postcodeAddress, detailAddress]);
+
+  // 초기값 설정
+  useEffect(() => {
+    if (initialPostcodeAddress) {
+      setPostcodeAddress(initialPostcodeAddress);
+    }
+    if (initialDetailAddress) {
+      setDetailAddress(initialDetailAddress);
+    }
+  }, [initialPostcodeAddress, initialDetailAddress]);
 
   return (
     <div className={styles.address}>

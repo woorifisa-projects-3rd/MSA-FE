@@ -36,7 +36,7 @@ export default function MainHeader () {
                     return sub.text;
                 }
             }
-        }
+        } 
         return ""; // 기본값
     };
 
@@ -89,8 +89,8 @@ export default function MainHeader () {
     return (
         <header className={classes.header_container}>
             <div className={classes.header_left}>
-                <Link href="/onboarding">
-                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26}/>
+                <Link href="/onboarding" style={{zIndex:100000}}>
+                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26} priority />
                 </Link>
             </div>
             <div className={classes.headerRight}>
@@ -114,6 +114,12 @@ export default function MainHeader () {
                             <AlarmModal modalRef={modalRef} notifications={notifications} />
                         )}
                     </div>
+                    <Link href="/mypage">
+                        <button className={classes.profile_button}>
+                            내 정보
+                        </button>
+                    </Link>
+                    <FiBell size={45} className={classes.bell_icon} />
                 </div>
                 
             </div>

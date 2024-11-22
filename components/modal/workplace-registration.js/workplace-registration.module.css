@@ -1,6 +1,7 @@
 .formContainer{
   width: 600px;  /* max-width 대신 width로 고정 */
   min-width: 600px;  /* 최소 너비 추가 */
+  padding-bottom: 40px;
 }
  /* 반응형을 고려할 경우  */
  /* .formContainer {
@@ -67,7 +68,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
   margin-bottom: 40px;
 }
 .link {
@@ -84,4 +84,35 @@
 }
 .buttonGroup button {
   flex: 1;
+}
+ 
+ .bankLinkText {
+  color: #3b82f6;
+  font-size: 0.875rem;
+  text-decoration: none;
+ }
+ 
+ .bankLinkText:hover {
+  text-decoration: underline;
+ }
+
+ .formSection {
+  margin: 24px 0;
+  padding: 20px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+  font-size: 0.7rem;
+  margin-top: 5px;
+  font-weight: bold;
 }
