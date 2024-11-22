@@ -9,192 +9,257 @@ import { useSearchParams } from 'next/navigation';
 import { nextClient } from '@/lib/nextClient';
 
 export default function Form() {
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [selectedAttendance, setSelectedAttendance] = useState(null);
-  const searchParams = useSearchParams();
-  const selectedDate = searchParams.get('date'); // 쿼리 파라미터에서 날짜 추출
-  const [isLoading, setIsLoading] = useState(false);
+ const [isModalOpen, setIsModalOpen] = useState(false); 
+ const [isEditModalOpen, setEditModalOpen] = useState(false);
+ const [selectedAttendance, setSelectedAttendance] = useState(null);
+ const [totalWorkHours, setTotalWorkHours] = useState(''); 
+ const searchParams = useSearchParams();
+ const selectedDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
+ const [isLoading, setIsLoading] = useState(false);
+ const [formError, setFormError] = useState(''); 
+ const [formData, setFormData] = useState({});
 
+ const tableHeaders = {
+   no: "No.",
+   name: "직원이름",
+   startTime: "출근시간",
+   endTime: "퇴근시간", 
+   totalHours: "총 근무시간",
+   salary: "급여금액",
+   edit: "수정",
+   delete: "삭제"
+ };
+
+ const [attendanceList, setAttendanceList] = useState([]);
+
+ const fetchDailyAttendance = async () => {
+   try {
+     const response = await nextClient.get(
+       `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
+     );
+     
+     const formattedList = response.data.map((item, index) => ({
+       no: (index + 1).toString().padStart(2, '0'),
+       name: item.name,
+       startTime: item.startTime.substring(11, 16),
+       endTime: item.endTime ? item.endTime.substring(11, 16) : "미퇴근",
+       totalHours: item.totalHours,
+       salary: `${item.salary}원`,
+     }));
+     
+     setAttendanceList(formattedList);
+   } catch (error) {
+     console.error('Error fetching daily attendance:', error);
+   }
+ };
+
+ useEffect(() => {
+   if (selectedDate) {
+     fetchDailyAttendance();
+   }
+ }, [selectedDate]);
+
+ const calculateWorkHours = (startTime, endTime, date) => {
+   if (!startTime || !endTime || !date) return '';
+
+    // 시간을 24시간 형식의 분으로 변환하는 helper 함수
+    const timeToMinutes = (time) => {
+      let [hours, minutes] = time.split(':').map(Number);
+      // 오전 12시는 24시로 변환
+      if (hours === 0) hours = 24;
+      return hours * 60 + minutes;
+    };
+
+  const startMinutes = timeToMinutes(startTime);
+  const endMinutes = timeToMinutes(endTime);
+
+  // 퇴근시간이 출근시간보다 작으면 invalid 반환
+  if (endMinutes < startMinutes) {
+    return 'invalid';
+  }
+
+  // 시간 차이 계산
+  const diffInMinutes = endMinutes - startMinutes;
+  const hours = Math.floor(diffInMinutes / 60);
+  const minutes = diffInMinutes % 60;
+
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+ };
+
+ const isDateValid = (date) => {
+  const today = new Date();
+  const selectedDate = new Date(date);
+
+  today.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
   
-
-  const tableHeaders = {
-    no: "No.",
-    name: "직원이름",
-    startTime: "출근시간",
-    endTime: "퇴근시간", 
-    totalHours: "총 근무시간",
-    salary: "급여금액",
-    edit: "수정",
-    delete: "삭제"
+  // Date 객체를 timestamp로 변환하여 비교
+  return selectedDate.getTime() <= today.getTime();
 };
 
-// api 요청시 받아올 데이터 - 현재는 더미데이터
-  // const list = [
-  //   {
-  //       no: "01",
-  //       name: "정성윤",
-  //       startTime: "14:00",
-  //       endTime: "18:04",
-  //       totalHours: "04:04",
-  //       salary: "38000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   }
-  // ];
+ const validateForm = (data) => {
+   // 직원 선택 검사
+   if (!data.storeemployeeId) {
+     setFormError('직원을 선택해주세요');
+     return false;
+   }
 
-
-  // const changedList = list.map((list)=>({
-  //  ...list,
-  //  edit:(
-  //   <PrimaryButton
-  //     text="편집"
-  //     onClick={() => {
-  //       setSelectedAttendance(list)
-  //       setEditModalOpen(true)
-  //     }}
-  //   />
-  //  )
-  // }))
-  // 일별로 출퇴근한 데이터 조회 관련 state 및 함수
-  const [attendanceList, setAttendanceList] = useState([]);
-
-  const fetchDailyAttendance = async () => {
-    try {
-      const response = await nextClient.get(
-        `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
-      );
-
-      console.log("client가 next-servr로부터 받은 data",response)
-      
-      // 받아온 데이터를 테이블 형식에 맞게 변환
-      const formattedList = response.data.map((item, index) => ({
-        no: (index + 1).toString().padStart(2, '0'),
-        name: item.name,
-        startTime: item.startTime.substring(11, 16), // "2024-11-20T14:00:00" -> "14:00"
-        endTime: item.endTime.substring(11, 16),
-        totalHours: item.totalHours,
-        salary: `${item.salary}원`,
-      }));
-
-      
-      setAttendanceList(formattedList);
-    } catch (error) {
-      console.error('Error fetching daily attendance:', error);
-    }
-  };
-
-  // 선택된 날짜가 변경될 때마다 데이터 새로 조회
-  useEffect(() => {
-    if (selectedDate) {
-      fetchDailyAttendance();
-    }
-  }, [selectedDate]);
-
-
-  // 출퇴근 기록 추가 POST 요청 관련 state 및 함수 
-  const [formData, setFormData] = useState({});
-
-
-  const handleFormChange = (updatedData) => {
-    setFormData(updatedData);
-  };
-
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-
-     // 날짜와 시간을 조합하여 ISO 문자열 형식으로 변환
-     const formattedStartTime = `${formData.date}T${formData.startTime}:00`;
-     const formattedEndTime = `${formData.date}T${formData.endTime}:00`;
-
-     const requestData = {
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
-      commuteDate: formData.date
-    };
- 
-    try {
-      console.log("api/attendance/commute next server로 보내는 데이터:", requestData)
-      
-      const response = await nextClient.post(`/attendance/commute?seid=${formData.storeemployeeId}`, requestData);
-
-      console.log("등록 성공:", response.data);
-      
-      setIsModalOpen(false);
-      setFormData({});
-
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-
- 
-
-  return (
-    <>
-      <button onClick={() => setIsModalOpen(true)}>
-        출퇴근 기록 추가 모달 오픈
-      </button>
-      <div>
-        오늘 날짜 : {selectedDate}
-      </div>
-
-      {/*등록 모달*/}
-      <ModalContainer
-        isOpen={isModalOpen}
-        onClose={()=>setIsModalOpen(false)}
-        title="출퇴근 기록 추가하기"
-        onConfirm={handleSubmit}
-      >
-        <AttendanceModalBody mode="create" onChange={handleFormChange} />
-      </ModalContainer>
-
-      {/* 수정 모달 */}
-      <ModalContainer
-                title="출퇴근 기록 수정하기"
-                isOpen={isEditModalOpen}
-                onClose={()=>setEditModalOpen(false)}
-                onConfirm={()=>console.log("나중에 submit 할 것")}
-            >
-              <AttendanceModalBody mode='edit' attendanceData={selectedAttendance} />
-      </ModalContainer>
-
-      <DefaultTable tableName="출퇴근 조회" tableHeaders={tableHeaders} list={attendanceList}/>
+   // 날짜 검사
+   if (!data.date) {
+     setFormError('날짜를 선택해주세요');
+     return false;
+   } 
    
-    </>
-  );
+   if (!isDateValid(data.date)) {
+     setFormError('오늘 이후의 날짜는 선택할 수 없습니다');
+     return false;
+   }
+
+   // 출근시간 검사
+   if (!data.startTime) {
+     setFormError('출근시간을 입력해주세요');
+     return false;
+   }
+
+   // 퇴근시간이 있는 경우 유효성 검사
+   if (data.endTime) {
+     const workHours = calculateWorkHours(
+       data.startTime,
+       data.endTime,
+       data.date
+     );
+     if (workHours === 'invalid') {
+       setFormError('퇴근시간은 출근시간보다 빠를 수 없습니다');
+       return false;
+     }
+   }
+
+   setFormError('');  // 모든 검증 통과
+   return true;
+ };
+
+ const handleFormChange = (updatedData) => {
+   setFormData(updatedData);
+
+   if (
+    (updatedData.storeemployeeId && formError === '직원을 선택해주세요') ||
+    (updatedData.date && (formError === '날짜를 선택해주세요' || formError === '오늘 이후의 날짜는 선택할 수 없습니다')) ||
+    (updatedData.startTime && formError === '출근시간을 입력해주세요') ||
+    (updatedData.endTime && formError === '퇴근시간은 출근시간보다 빠를 수 없습니다')
+    ) {
+    setFormError('');
+    }
+
+    setFormData(updatedData);
+
+   // 근무시간 계산 (퇴근시간이 있는 경우만)
+   if (updatedData.startTime && updatedData.endTime && updatedData.date) {
+     const workHours = calculateWorkHours(
+       updatedData.startTime,
+       updatedData.endTime,
+       updatedData.date
+     );
+     if (workHours !== 'invalid') {
+       setTotalWorkHours(workHours);
+     } else {
+       setTotalWorkHours('');
+     }
+   } else {
+     setTotalWorkHours('');
+   }
+ };
+
+ const handleSubmit = async () => {
+   // 유효성 검사 실행
+   if (!validateForm(formData)) {
+     return; // 유효성 검사 실패시 여기서 중단
+   }
+
+   setIsLoading(true);
+
+   const formattedStartTime = `${formData.date}T${formData.startTime}:00`;
+   const formattedEndTime = formData.endTime 
+     ? `${formData.date}T${formData.endTime}:00` 
+     : null;
+
+   const requestData = {
+     startTime: formattedStartTime,
+     endTime: formattedEndTime,
+     commuteDate: formData.date
+   };
+
+   try {
+     console.log("api/attendance/commute next server로 보내는 데이터:", requestData)
+     
+     const response = await nextClient.post(
+       `/attendance/commute?seid=${formData.storeemployeeId}`, 
+       requestData
+     );
+
+     console.log("등록 성공:", response.data);
+     
+     setIsModalOpen(false);
+     setFormData({});
+     setFormError('');
+     window.location.reload();
+
+   } catch (error) {
+     console.error("Error submitting data:", error);
+   } finally {
+     setIsLoading(false);
+   }
+ };
+
+ return (
+   <>
+     <button onClick={() => setIsModalOpen(true)}>
+       출퇴근 기록 추가 모달 오픈
+     </button>
+     <div>
+       오늘 날짜 : {selectedDate}
+     </div>
+
+     <ModalContainer
+       isOpen={isModalOpen}
+       onClose={() => {
+         setIsModalOpen(false);
+         setFormError('');
+         setFormData({});
+       }}
+       title="출퇴근 기록 추가하기"
+       onConfirm={handleSubmit}
+     >
+       <AttendanceModalBody 
+         mode="create" 
+         onChange={handleFormChange}
+         maxDate={new Date().toISOString().split('T')[0]}
+       />
+       {totalWorkHours && (
+         <div className="mt-4 text-sm">
+           총 근무시간: {totalWorkHours}
+         </div>
+       )}
+       {formError && (
+         <div className="mt-4 text-sm text-red-500">
+           {formError}
+         </div>
+       )}
+     </ModalContainer>
+
+     <ModalContainer
+       title="출퇴근 기록 수정하기"
+       isOpen={isEditModalOpen}
+       onClose={()=>setEditModalOpen(false)}
+       onConfirm={()=>console.log("나중에 submit 할 것")}
+     >
+       <AttendanceModalBody mode='edit' attendanceData={selectedAttendance} />
+     </ModalContainer>
+
+     <DefaultTable 
+       tableName="출퇴근 조회" 
+       tableHeaders={tableHeaders} 
+       list={attendanceList}
+     />
+   </>
+ );
 }
