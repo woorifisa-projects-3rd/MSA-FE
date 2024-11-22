@@ -1,0 +1,109 @@
+  .notificationModal {
+    position: absolute;
+    top: 70px;
+    right: 30px;
+    width: 300px;
+    height: 250px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .notificationList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px; /* 알림 목록의 최대 높이 설정 */
+    overflow-y: auto;
+  }
+  
+  .notificationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    font-weight: bold;
+    /* border-bottom: 1px solid #e0e0e0; */
+    background: #f5f5f5;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 20px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(14px);
+  }
+  
+  .notificationList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f5f5f5;
+  }
+  
+  .notificationItem {
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    border-radius: 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .storeName {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .notificationItem p {
+    font-size: 14px;
+  }
+
+  .notificationItem:last-child {
+    border-bottom: none;
+  }
+  
+  .time {
+    float: right;
+    color: #757575;
+    font-size: 12px;
+  }
+  
