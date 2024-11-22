@@ -23,14 +23,15 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
         console.log(workplaceData);
         
         // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
-        // const [postcodeAddress, ...detailParts] = address.split(', ');
-        // const detailAddress = detailParts.join(', ');
+        const [postcodeAddress, ...detailParts] = location.split(', ');
+        const detailAddress = detailParts.join(', ');
 
         setFormData({
             ...workplaceData,
             bankCode,
             accountNumber,
-            postcodeAddress: location,
+            postcodeAddress,
+            detailAddress,
         });
     }
 }, [mode, workplaceData]);
@@ -149,15 +150,16 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
       try {
         const { postcodeAddress, detailAddress, ...rest } = formData;
 
-        const location = await geocodeAddress(postcodeAddress);
+        const geoLocation = await geocodeAddress(postcodeAddress);
+        const location = `${postcodeAddress}, ${detailAddress}`;
 
         if (onSubmit) {
           const processedData = {
             ...rest,
             accountNumber: formData.accountNumber,
-            location: postcodeAddress,
-            latitude: location.lat,
-            longitude: location.lng,
+            location,
+            latitude: geoLocation.lat,
+            longitude: geoLocation.lng,
           };
 
           console.log("제출 데이터:", processedData);
