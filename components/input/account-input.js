@@ -161,7 +161,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
             href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131" 
             className={styles.bankLinkText}
           >
-            우리은행 사업자 계좌가 없으신가요?
+            우리은행 계좌 추가 개설을 원하시나요?
           </a>
         </div>
       )}

@@ -1,29 +1,202 @@
+import AddressSearch from "@/components/addsearch/AddressSearch";
 import styles from "./workplace-registration.module.css"
 import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
 
-export default function WorkplaceModal({
-  mode="create", // 기본값
-  workplaceData
-}) {
-  // mode가 edit인데 workplaceData가 없으면 에러 처리
-  // if (mode === 'edit' && !workplaceData) {
-  //   console.error('Edit mode requires workplace data');
-  //   return <div>데이터를 불러올 수 없습니다.</div>;
-  // }
+const REQUIRED_ERROR = "필수 항목입니다.";
+
+const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
+  
+  const [formData, setFormData] = useState({
+    storeName: workplaceData?.storeName || '',
+    businessNumber: workplaceData?.businessNumber || '',
+    accountNumber: workplaceData?.accountNumber || '',
+    bankCode: workplaceData?.bankCode || 20,
+    postcodeAddress: workplaceData?.postcodeAddress || '',
+    detailAddress: workplaceData?.detailAddress || '',
+  });
+
+  useEffect(() => {
+    if (mode === 'edit' && workplaceData) {
+        const { location, bankCode, accountNumber } = workplaceData;
+        console.log(workplaceData);
+        
+        // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
+        // const [postcodeAddress, ...detailParts] = address.split(', ');
+        // const detailAddress = detailParts.join(', ');
+
+        setFormData({
+            ...workplaceData,
+            bankCode,
+            accountNumber,
+            postcodeAddress: location,
+        });
+    }
+}, [mode, workplaceData]);
+
+  const formRef = useRef();
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const geocodeAddress = async (address) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Geocoding API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon),
+        };
+      } else {
+        throw new Error("해당 주소에 대응되는 위도, 경도 결과를 찾지 못함");
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      throw error;
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: value.trim() ? '' : REQUIRED_ERROR, // 입력값이 있으면 오류 제거
+    }));
+  };
+
+  const handleAddressChange = (postcodeAddress, detailAddress) => {
+      setFormData(prev => ({
+          ...prev,
+          postcodeAddress,
+          detailAddress,
+      }));
+
+      if (isSubmitted) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          address:
+            postcodeAddress.trim() && detailAddress.trim()
+              ? ''
+              : REQUIRED_ERROR, // 둘 중 하나라도 비어 있으면 오류 메시지
+        }));
+      }
+  };
+
+  const handleAccountChange = ({bankCode, accountNumber}) => {
+    const wooriCode = 20;
+    setFormData(prev => ({
+        ...prev,
+        bankCode: wooriCode,
+        accountNumber: accountNumber,
+    }));
+
+    setFormErrors(prevErrors => ({
+      ...prevErrors,
+      accountNumber: accountNumber?.trim() ? '' : REQUIRED_ERROR,
+    }));
+};
+
+  // 유효성 검사 함수
+  const validateForm = (data) => {
+    const errors = {};
+
+    // 계좌 필드 유효성 검사
+    if (data.accountNumber === '') {
+      errors.accountNumber = REQUIRED_ERROR;
+    }
+
+    // 주소 필드 유효성 검사
+    if (!data.postcodeAddress || !data.detailAddress) {
+        errors.address = REQUIRED_ERROR;
+    }
+
+    // 각 필드에 대해 유효성 검사 수행
+    Object.keys(validateRules).forEach(field => {
+        const error = validateRules[field](data[field]);
+        if (error) errors[field] = error;
+    });
+
+      return errors;
+  };
+
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
+
+    setIsSubmitted(true);
+
+    // 유효성 검사 수행
+    const errors = validateForm(formData);
+    setFormErrors(errors);
+    console.log(formData);
+    
+
+    // 오류가 없으면 제출
+    if (Object.keys(errors).length === 0) {
+      try {
+        const { postcodeAddress, detailAddress, ...rest } = formData;
+
+        const location = await geocodeAddress(postcodeAddress);
+
+        if (onSubmit) {
+          const processedData = {
+            ...rest,
+            accountNumber: formData.accountNumber,
+            location: postcodeAddress,
+            latitude: location.lat,
+            longitude: location.lng,
+          };
+
+          console.log("제출 데이터:", processedData);
+          onSubmit(processedData);
+        }
+      } catch (error) {
+        alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
+      }
+    } else {
+      console.log('유효성 검사 실패!!!');
+      console.log(errors);
+      
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+      handleSubmit,
+  }));
+
+  const validateRules = {
+      storeName: value => value.trim() ? '' : REQUIRED_ERROR,
+      businessNumber: value => value.trim() ? '' : REQUIRED_ERROR,
+  };
+      
   return (
     <div className={styles.formContainer}>
-      <form className={styles.form}>
+      <form ref={formRef} className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label>사업장 상호명</label>
           <div className={styles.inputGroup}>
             <input 
-              type="text" 
+              type="text"
+              name="storeName"
               placeholder="상호명을 입력하세요" 
-              defaultValue={workplaceData?.storeName}
+              value={formData.storeName}
+              onChange={handleInputChange}
             />
           </div>
+          {formErrors.storeName && <span className={styles.error}>{formErrors.storeName}</span>}
         </div>
 
         <div className={styles.formGroup}>
@@ -31,34 +204,40 @@ export default function WorkplaceModal({
           <div className={styles.inputGroup}>
             <input 
               type="text" 
+              name="businessNumber"
               placeholder="사업자 번호를 입력하세요" 
-              defaultValue={workplaceData?.businessNumber}
-              disabled={mode === 'edit'}  // edit 모드면 비활성화
+              value={formData.businessNumber}
+              onChange={handleInputChange}
+              disabled={mode === 'edit'} // edit 모드면 비활성화
             />
           </div>
+          {formErrors.businessNumber && <span className={styles.error}>{formErrors.businessNumber}</span>}
         </div>
 
         <div className={styles.formGroup}>
           <label>계좌 등록</label>
-          <AccountInputForm 
-              isPresident={mode === 'create'}  // create 모드일 때만 true
+          <AccountInputForm
+              isPresident={true}
+              error={formErrors.accountNumber}
+              onChange={handleAccountChange}
+              bankCode={formData.bankCode}
+              accountNumber={formData.accountNumber}
           />
         </div>
-
-        {mode === 'create' ? (  // create 모드에서만 보이도록
-          <div className={styles.linkGroup}>
-          </div>
-        ):(
-          <div className={styles.linkGroup}>
-            <a 
-              href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131" 
-              className={styles.bankLinkText}
-            >
-              우리은행 계좌 추가 개설을 원하시나요?
-            </a>
-          </div>
-        )}
+        {/* 주소 섹션 추가 */}
+        <div className={styles.formSection}>
+          <h3 className={styles.sectionTitle}>주소</h3>
+          <AddressSearch
+              initialPostcodeAddress={formData.postcodeAddress}
+              initialDetailAddress={formData.detailAddress}
+              onAddressChange={handleAddressChange} />
+          {formErrors.address && (
+              <span className={styles.error}>{formErrors.address}</span>
+          )}
+      </div>
       </form>
     </div>
   );
-}
+});
+
+export default WorkplaceModal;

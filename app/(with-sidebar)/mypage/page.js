@@ -1,38 +1,15 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
 import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import classes from "./page.module.css";
+import { nextClient } from "@/lib/nextClient";
 
 const tabs = [
   { 
       name: '프로필 편집',
       email: 'alexarawles@gmail.com',
-      
-      workplaceInfo:[
-        {
-            storeName: '빅디빅',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 3,
-        },
-        {
-            storeName: '설명탕',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 2,
-        },
-        {
-            storeName: '먹투이',
-            businessNumber: '#12548796',
-            accountNumber: '1002-850-391601',
-            bankCode:"020",
-            count: 1,
-        }
-      ]
   },
   { 
       name: '알림 설정',
@@ -47,10 +24,40 @@ const tabs = [
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchStores = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+        const response = await nextClient.get('/mypage/store/storelist');
+        const transformedStores = response.data.map(store => ({
+            storeName: store.storeName,
+            businessNumber: store.businessNumber,
+            accountNumber: store.accountNumber,
+            bankCode: store.bankCode,
+            location: store.location,
+        }));
+        
+        setStores(transformedStores);
+    } catch (error) {
+        console.error("가게 데이터를 가져오는데 실패했습니다.");
+        setError(error.response?.data?.error || error.message);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStores();
+  }, []);
+
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={tabs[selectedTab]} />;
+              return <ProfileDetail content={stores} />;
           case 1:
               return <AlarmSetting content={tabs[selectedTab]} />;
           case 2:
@@ -63,7 +70,10 @@ export default function Home() {
   return (
       <div className={classes.container}>
           <div className={classes.content}>
-              <div>
+            {loading && <p>로딩 중입니다...</p>}
+            {error && <p className={classes.errorMessage}>에러: {error}</p>}
+            {!loading && !error && (
+                <>
                   <div className={classes.tabNavigation}>
                       <nav className={classes.tabList}>
                           {tabs.map((tab, index) => (
@@ -84,9 +94,10 @@ export default function Home() {
                   <div className={classes.tabContent}>
                       {renderTabContent()}
                   </div>
-              </div>
-          </div>
-      </div>
+                  </>
+            )}
+            </div>
+        </div>
   );
 }
 

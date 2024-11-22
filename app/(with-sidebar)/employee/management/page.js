@@ -5,7 +5,8 @@ import ModalContainer from '@/components/modal/modal-container';
 import PrimaryButton from '@/components/button/primary-button';
 import BaseButton from '@/components/button/base-button';
 import EmployeeForm from '@/components/modal/employee-add/employee-add'
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { nextClient } from "@/lib/nextClient";
 
 const edit = "수정";
 const del = "삭제";
@@ -14,7 +15,28 @@ export default function SalesExpenses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
     const [selectedEmployee, setSelectedEmployee] = useState(null); // 선택된 직원 데이터
+    const [employees, setEmployees] = useState([]); // 직원 리스트
+    const [loading, setLoading] = useState(true); // 로딩 상태
+    const [error, setError] = useState(null);
     const employeeFormRef = useRef(null);
+
+    const fetchEmployees = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await nextClient.get('/employee/details');
+            setEmployees(response.data);
+        } catch (error) {
+            console.error("직원 데이터를 가져오는데 실패했습니다.", error);
+            setError(error.response?.data?.error || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchEmployees();
+    }, []);
 
     // 모달 열기
     const openModal = (mode = "add", employee = null) => {
@@ -30,9 +52,10 @@ export default function SalesExpenses() {
         setSelectedEmployee(null);
     }
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         if (employeeFormRef.current) {
-            employeeFormRef.current.handleSubmit();
+            await employeeFormRef.current.handleSubmit();
+            fetchEmployees(); // 직원 리스트 갱신
         }
     }
 
@@ -46,70 +69,29 @@ export default function SalesExpenses() {
         delete: "삭제"
     };
 
-    const list = [
-        {
-            name: "정성윤",
-            phoneNumber: "(225) 555-0118",
-            birthDate: "2000-06-20",
-            address: "서울시 반포구 반포자이, 11동 306호",
-            email: "apple@gmail.com",
-            sex: true,
-            employmentType: true,
-            bankCode: '003',
-            accountNumber: '123-456-789012',
-            salary: 10000,
-            paymentDate: 15,
-        },
-        {
-            name: "이현아",
-            phoneNumber: "(225) 555-0118",
-            birthDate: "2000-06-20",
-            address: "성수동 트리마제, 11동",
-            email: "apple@gmail.com",
-            sex: false,
-            employmentType: false,
-            bankCode: '002',
-            accountNumber: '123-456-789012',
-            salary: 3000000,
-            paymentDate: 15
-        },
-        {
-            name: "류혜리",
-            phoneNumber: "(225) 555-0118",
-            birthDate: "2000-06-20",
-            address: "한남동 나인원한남",
-            email: "apple@gmail.com"
-        },
-        {
-            name: "임지혁",
-            phoneNumber: "(225) 555-0118",
-            birthDate: "2000-06-20",
-            address: "두꺼비집",
-            email: "apple@gmail.com"
-        },
-        {
-            name: "박준현",
-            phoneNumber: "(823) 555-0129",
-            birthDate: "2000-06-20",
-            address: "소나무 까치집",
-            email: "apple@gmail.com"
-        },
-        {
-            name: "강세필",
-            phoneNumber: "(225) 555-0118",
-            birthDate: "2000-06-20",
-            address: "홍대 개미집",
-            email: "apple@gmail.com"
-            
-        }
-    ];
-
     // 편집 버튼 클릭 시
     const handleEditClick = (employee) => {
         openModal("edit", employee);
     };
 
-    const enrichedList = list.map(employee => ({
+    // 삭제 버튼 클릭 시
+    const handleDeleteClick = async (employee) => {
+        try {
+            const response = await nextClient.delete('/employee', {
+                data: {seid: employee.id },
+            });
+            if (response.data.success) {
+                alert('직원이 삭제되었습니다.');
+                fetchEmployees();
+            } else {
+                throw new Error(response.data.error || '직원 삭제 실패');
+            }
+        } catch (error) {
+            setError(error.response?.data?.error || error.message);
+        }
+    }
+
+    const enrichedList = employees.map(employee => ({
         ...employee,
         edit: (
             <PrimaryButton
@@ -144,7 +126,7 @@ export default function SalesExpenses() {
                         initialData={selectedEmployee}
                         onSubmit={data => {
                             console.log("제출된 데이터: ", data);
-                            closeModal();                
+                            closeModal();
                         }}
                         ref={employeeFormRef}
                          />
