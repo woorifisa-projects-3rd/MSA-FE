@@ -298,7 +298,6 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         <span className={styles.error}>{formErrors.postcodeAddress}</span>
                     )}
                 </div>
-                {/* <button type="submit" className={styles.submitButton}>직원 등록하기</button> */}
             </form>
         </div>
     );

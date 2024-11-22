@@ -29,11 +29,13 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   const fetchStores = async () => {
+    
     setLoading(true);
     setError(null);
     try {
         const response = await nextClient.get('/mypage/store/storelist');
         const transformedStores = response.data.map(store => ({
+            storeId: store.id,
             storeName: store.storeName,
             businessNumber: store.businessNumber,
             accountNumber: store.accountNumber,
@@ -57,7 +59,7 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} />;
+              return <ProfileDetail content={stores} refreshStores={fetchStores}/>;
           case 1:
               return <AlarmSetting content={tabs[selectedTab]} />;
           case 2:
