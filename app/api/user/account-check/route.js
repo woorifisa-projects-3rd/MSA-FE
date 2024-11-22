@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import springClient from '@/lib/springClient';
 
-//(사장계좌확인 코드)
+//사장계좌확인 코드
 export async function POST(request) {
   try {
     // 클라이언트에서 보낸 데이터 받기
@@ -29,7 +29,6 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-//(사장계좌확인 코드)
 
 
 

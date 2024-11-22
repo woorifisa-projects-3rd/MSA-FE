@@ -25,6 +25,9 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         detailAddress: '',
     });
 
+    // name이 변경되면 AccountInputForm으로 name 값을 보내줄거임 
+
+
     const [formErrors, setFormErrors] = useState({});
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
@@ -228,10 +231,13 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 <div className={styles.formSection}>
                     <div className={styles.formRow}>
                         <AccountInputForm
+                            name={formData.name}
                             bankCode={formData.bankCode}
                             accountNumber={formData.accountNumber}
                             onChange={handleAccountChange}
-                            error={formErrors.accountNumber}/>
+                            error={formErrors.accountNumber}
+                            />
+                            
                     </div>
                 </div>
 

@@ -5,7 +5,7 @@ import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 import { nextClient } from '@/lib/nextClient';
 
-const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber: propAccountNumber }) => {
+const AccountInputForm = ({ isPresident = false, onChange, error, name, bankCode, accountNumber: propAccountNumber }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
   const [selectedBank, setSelectedBank] = useState(() => {
     if (isPresident) return wooriBank;
@@ -77,30 +77,6 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     }
   };
 
-  // POST 요청 처리 함수 추가 (사장계좌확인 코드)
-  const handleSubmit = async () => {
-    try {
-      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
-      
-      const response = await nextClient.post('/user/account-check', {
-        bankCode: selectedBank.code,
-        accountNumber
-      });
-
-      console.log("반환값",response.data);
-      // 응답 처리
-      if (response.data.success === true) {
-        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
-      } else {
-        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
-      }
-    } catch (error) {
-      console.error('Error checking account:', error); // 에러 출력
-      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
-    }
-  };
-  // (사장계좌확인 코드)
-
   const BankSelector = isPresident ? (
     <div className={styles.bankSelector}>
       <div 
@@ -122,6 +98,30 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
       <span>{selectedBank.name}</span>
     </button>
   );
+
+ // POST 요청 처리 함수 추가 (직원계좌확인 코드)
+  const handleSubmit = async () => {
+    try {
+      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
+      console.log("next-server로 보낼 data",name, bankCode, accountNumber )
+      const response = await nextClient.post('/user/employee-account-check', {
+        name,
+        bankCode: selectedBank.code,
+        accountNumber
+      });
+
+      console.log("반환값",response.data);
+      // 응답 처리
+      if (response.data.success === true) {
+        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
+      } else {
+        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
+      }
+    } catch (error) {
+      console.error('Error checking account:', error); // 에러 출력
+      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
+    }
+  };
 
   return (
     <div className={styles.form}>
