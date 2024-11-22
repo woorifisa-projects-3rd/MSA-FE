@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import styles from './PresidentInfo.module.css';
 import BaseButton from '@/components/button/base-button';
 import { nextClient } from '@/lib/nextClient';
+import PrimaryButton from '@/components/button/primary-button';
 
 const PresidentInfo = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [birthDate, setBirthDate] = useState('1999년 10월 20일');
-  const [phoneNumber, setPhoneNumber] = useState('010-7611-4338');
+  const [birthDate, setBirthDate] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isEditingBirth, setIsEditingBirth] = useState(false);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState({ birthDate: '', phoneNumber: '' });
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const loadMyPageData = async () => {
@@ -47,18 +49,57 @@ const PresidentInfo = () => {
     return input;
   };
 
+  const isValidBirthDate = (date) => {
+    const regex = /^\d{4}(-\d{2}-\d{2}|\d{2}\d{2})$/; // YYYYMMDD 형식
+    if (!regex.test(date)) return false;
+  
+    // 유효한 날짜인지 확인
+    const formattedDate = date.includes('-')
+      ? date
+      : `${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}`;
+    const timestamp = Date.parse(formattedDate);
+    return !isNaN(timestamp);
+  };
+    
+  const isValidPhoneNumber = (number) => {
+    const regex = /^010(-?\d{4}){2}$/; // 010XXXXXXXX
+    return regex.test(number);
+  };
 
-  const handleSave = async () => {
+
+  const handleSave = async () => {   
+    if (isEditingBirth || isEditingPhone) {
+      setErrorMessage('확인 버튼을 눌러 확인해주세요.');
+      return;
+    }
+
     try {
-      await nextClient.put('/user/president/modify', {
-        phoneNumber: phoneNumber.replace(/-/g, ''),
-        birthDate: birthDate.replace(/[년월일\s]/g, '')
+      // birthDate 값을 yyyy-mm-dd 형식으로 변환
+      const formattedBirthDate = birthDate.replace(/[년월일\s]/g, '').replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+      const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
+
+      // 유효성 검사
+      if (!isValidBirthDate(formattedBirthDate)) {
+        setErrorMessage('유효한 8자리 생년월일을 입력해주세요.');
+        return;
+      }
+
+      if (!isValidPhoneNumber(phoneNumber)) {
+        setErrorMessage('유효한 전화번호를 입력해주세요.');
+        return;
+      }
+
+      await nextClient.put('/mypage/president/modify', {
+        phoneNumber: formattedPhoneNumber,
+        birthDate: formattedBirthDate,
       });
-      setIsEditing(false);
+
       setOriginalData({
         birthDate,
         phoneNumber
       });
+      setIsEditing(false);
+      alert("변경 사항이 저장되었습니다.");
     } catch (error) {
       console.error('정보 수정 에러:', error.message);
       // 에러 발생 시 원래 데이터로 되돌리기
@@ -66,6 +107,7 @@ const PresidentInfo = () => {
       setPhoneNumber(originalData.phoneNumber);
     }
   };
+
   const formatPhoneNumber = (input) => {
     const numbers = input.replace(/[^0-9]/g, '');
     if (numbers.length >= 10) {
@@ -80,49 +122,69 @@ const PresidentInfo = () => {
             <h2 className={styles.title}> {name} 사장님</h2>
             <div className={styles.email}>{email}</div>
         </div>
-        <div className={styles.fieldGroup}>
-          <div className={styles.inputWrapper}>
-            <label className={styles.label}>생년월일</label>
-            {isEditingBirth ? (
-              <input
-                type="text"
-                value={birthDate.replace(/[년월일\s]/g, '')}
-                onChange={(e) => setBirthDate(formatBirthDate(e.target.value))}
-                className={styles.input}
-                placeholder="YYYYMMDD"
+        <div className={styles.changeSection}>
+          <div className={styles.fieldGroup}>
+            <div className={styles.inputWrapper}>
+              <label className={styles.label}>생년월일</label>
+              <div className={styles.inputChange}>
+              {isEditingBirth ? (
+                <input
+                  type="text"
+                  value={birthDate.replace(/[년월일\s]/g, '')}
+                  onChange={(e) => setBirthDate(formatBirthDate(e.target.value))}
+                  className={styles.input}
+                  placeholder="YYYYMMDD"
+                />
+              ) : (
+                <div className={styles.displayText}>{birthDate}</div>
+              )}
+              <BaseButton
+                text={isEditingBirth ? '확인' : '생년월일 변경'}
+                onClick={() => {
+                  setIsEditingBirth(!isEditingBirth);
+                  setErrorMessage('');
+                }}
               />
-            ) : (
-              <div className={styles.displayText}>{birthDate}</div>
-            )}
+              </div>
+            </div>
           </div>
-          <BaseButton
-              text={isEditingBirth ? '저장' : '생년월일 변경'}
-              onClick={() => setIsEditingBirth(!isEditingBirth)}
-              className={styles.button}
-          />
-        </div>
 
-        <div className={styles.fieldGroup}>
-          <div className={styles.inputWrapper}>
-            <label className={styles.label}>전화번호</label>
-            {isEditingPhone ? (
-              <input
-                type="tel"
-                value={phoneNumber.replace(/-/g, '')}
-                onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
-                className={styles.input}
-                placeholder="01012345678"
+          <div className={styles.fieldGroup}>
+            <div className={styles.inputWrapper}>
+              <label className={styles.label}>전화번호</label>
+              <div className={styles.inputChange}>
+              {isEditingPhone ? (
+                <input
+                  type="tel"
+                  value={phoneNumber.replace(/-/g, '')}
+                  onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
+                  className={styles.input}
+                  placeholder="01012345678"
+                />
+              ) : (
+                <div className={styles.displayText}>{phoneNumber}</div>
+              )}
+              <BaseButton
+                  text={isEditingPhone ? '확인' : '전화번호 변경'}
+                  onClick={() => {
+                    setIsEditingPhone(!isEditingPhone);
+                    setErrorMessage('');
+                  }}
               />
-            ) : (
-              <div className={styles.displayText}>{phoneNumber}</div>
-            )}
+              </div>
+            </div>
           </div>
-          <BaseButton
-              text={isEditingPhone ? '저장' : '전화번호 변경'}
-              onClick={() => setIsEditingPhone(!isEditingPhone)}
-              className={styles.button}
+        </div>
+        <div className={styles.saveButton}>
+          <PrimaryButton
+            text="변경 사항 저장"
+            onClick={handleSave}
           />
-          
+          {errorMessage && (
+          <div className={styles.errorMessage}>
+            {errorMessage}
+          </div>
+          )}
         </div>
     </div>
   );
