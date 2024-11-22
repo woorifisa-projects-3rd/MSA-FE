@@ -8,6 +8,15 @@ import {
     BsBoxArrowRight, // 로그아웃
 } from 'react-icons/bs';
 
+// 오늘 날짜를 YYYY-MM-DD 형식으로 반환하는 함수
+const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 export const NAVIGATION_ITEMS = [
     {
         icon: BsGraphUp,
@@ -30,7 +39,11 @@ export const NAVIGATION_ITEMS = [
         title:"출ㆍ퇴근",
         subTitles:[
             {text:"직원 출ㆍ퇴근 캘린더", path:"/attendance/calendar"}, 
-            {text:"당일 출근자 조회/수정", path:"/attendance/daily-attendance"}
+            {
+                text:"당일 출근자 조회/수정", 
+                path:"/attendance/daily-attendance",
+                isDailyAttendance: true // 이 플래그로 특별 처리가 필요한 항목 구분
+            }
         ]
     },
     {

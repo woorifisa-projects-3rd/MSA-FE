@@ -10,38 +10,40 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
   const [postcodeAddress, setPostcodeAddress] = useState(initialPostcodeAddress || '');
   const [detailAddress, setDetailAddress] = useState(initialDetailAddress || '');
 
+  // 초기값을 상태로 설정
+  useEffect(() => {
+    setPostcodeAddress(initialPostcodeAddress);
+    setDetailAddress(initialDetailAddress);
+  }, [initialPostcodeAddress, initialDetailAddress]);
+
   // Daum 우편번호 검색 완료 후 처리 함수
   const handleComplete = (data) => {
+    const updatedAddress = data.address;
     setZipCode(data.zonecode);
-    setPostcodeAddress(data.address);
+    setPostcodeAddress(updatedAddress);
     setIsOpen(false);
+
+    // 부모로 변경된 값 전달
+    if (onAddressChange) {
+      onAddressChange(updatedAddress, detailAddress);
+    }
   };
 
   // 상세 주소 입력 처리 함수
-  const handleAddressChange = (e) => {
-    setDetailAddress(e.target.value);
-  };
+  const handleDetailChange = (e) => {
+    const updatedDetail = e.target.value;
+    setDetailAddress(updatedDetail);
 
+    // 부모로 변경된 값 전달
+    if (onAddressChange) {
+      onAddressChange(postcodeAddress, updatedDetail);
+    }
+  };
 
   // 우편번호 찾기 버튼 클릭 시 열기/닫기 토글 함수
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-
-  // 주소 변경 시 부모 컴포넌트로 변경된 값 전달
-  useEffect(()=>{
-    onAddressChange(postcodeAddress, detailAddress);
-  }, [postcodeAddress, detailAddress]);
-
-  // 초기값 설정
-  useEffect(() => {
-    if (initialPostcodeAddress) {
-      setPostcodeAddress(initialPostcodeAddress);
-    }
-    if (initialDetailAddress) {
-      setDetailAddress(initialDetailAddress);
-    }
-  }, [initialPostcodeAddress, initialDetailAddress]);
 
   return (
     <div className={styles.address}>
@@ -73,7 +75,7 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
         <input
           type="text"
           value={detailAddress}
-          onChange={handleAddressChange}
+          onChange={handleDetailChange}
           placeholder="상세 주소"
           className={styles['detailed-address-field']}
         />
