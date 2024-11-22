@@ -109,6 +109,54 @@ export async function DELETE(req) {
   }
 }
 
+export async function PUT(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const commuteid = searchParams.get('commuteid');
+    const { startTime, endTime, commuteDate } = await req.json();
+
+    if (!commuteid) {
+      return NextResponse.json(
+        { message: 'commuteid가 없습니다: commuteid' },
+        { status: 400 }
+      );
+    }
+
+    console.log('Attempting to update commute with commuteid:', commuteid);
+
+    const response = await springClient.put(`/attendance/commute?commuteid=${commuteid}`, {
+      startTime,
+      endTime,
+      commuteDate
+    });
+
+    if (response.status === 200) {
+      return NextResponse.json({
+        success: true,
+        message: '출퇴근 기록이 성공적으로 수정되었습니다.'
+      });
+    } else {
+      throw new Error('수정 실패');
+    }
+  } catch (error) {
+    console.error('수정 도중 서버에서 전달된 에러:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: '출퇴근 기록 수정에 실패했습니다.',
+        error: error.message,
+        details: error.response?.data
+      },
+      { status: error.response?.status || 500 }
+    );
+  }
+}
+
 // 근무 시간을 계산하는 헬퍼 함수
 function calculateTotalHours(minutes) {
   const hours = Math.floor(minutes / 60);
