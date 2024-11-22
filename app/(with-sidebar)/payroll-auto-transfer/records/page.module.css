@@ -20,3 +20,19 @@
     display: flex;
     gap: 10px;
 }
+
+.bankIcon {
+    width: 20px; /* 아이콘 너비 */
+    height: 20px; /* 아이콘 높이 */
+    display: inline-block;
+    vertical-align: middle; /* 세로 정렬 */
+}
+
+/* 테이블 셀 스타일 */
+.table td,
+.table th {
+    text-align: center; /* 수평 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+    padding: 10px;
+}
+

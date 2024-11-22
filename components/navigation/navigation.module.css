@@ -49,12 +49,14 @@
 }
 
 .subMenuItem{
+    cursor: pointer;
     display: flex;
     justify-content: center;
     width: 100%;
     font-size: 13px;
 }
 .subMenuItemLink:hover{
+    cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 4px; 
     color: var(--woori-deep-blue);

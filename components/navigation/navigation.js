@@ -4,29 +4,43 @@ import React, { useState } from "react";
 // import { IoIosArrowForward } from "react-icons/io";
 
 import classes from "./navigation.module.css";
-import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthProvider';
-import { authApi } from "@/lib/auth";
+import { nextClient } from "@/lib/nextClient";
 
 export default function Navigation(){
     const router = useRouter();
-    const { logout } = useAuth(); // AuthContext에서 logout 함수 가져오기
     
     const [activeIndex, setActiveIndex] = useState();
 
+    // 나중에 처리 
     const handleLogout = async() => {
         try{
-            // await authApi.logout(); // 스프링 서버에 로그아웃 알림
-            await logout();   //next.js 서버를 통해 브라우저에 저장된 쿠키 삭제 &  클라이언트 상태 초기화 
+            await nextClient.get('/auth/logout');
             router.push('/login'); // 로그인 페이지로 리다이렉트 
         }catch (error) {
             console.error('로그아웃 실패:', error);
         }
     }
+
+     // 날짜를 YYYY-MM-DD 형식으로 반환하는 함수
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleNavigation = (path, getDynamicPath) => {
+        if (getDynamicPath) {
+            router.push(`/attendance/daily-attendance?date=${getTodayDate()}`);
+        } else {
+            router.push(path);
+        }
+    };
 
 
     return (
@@ -51,14 +65,17 @@ export default function Navigation(){
                                 <div>{item.title}</div>
                             </div>
 
-                            {/* 메인 카테고리에 따른 세부 카테고리 */}
                             {activeIndex === index && item.subTitles && (
                                 <div className={classes.subMenuBox}>
                                     {item.subTitles.map((subTitle, subIndex)=>(
-                                        <li key={subIndex} className={classes.subMenuItem}>
-                                            <Link className={classes.subMenuItemLink} href={subTitle.path}>
+                                        <li 
+                                            key={subIndex} 
+                                            className={classes.subMenuItem}
+                                            onClick={() => handleNavigation(subTitle.path, subTitle.isDailyAttendance)}
+                                        >
+                                            <div className={classes.subMenuItemLink}>
                                                 {subTitle.text}
-                                            </Link>
+                                            </div>
                                         </li>
                                     ))}
                                 </div>
@@ -70,8 +87,8 @@ export default function Navigation(){
 
             {/* 로그아웃 섹션 */}
             <button 
-                onClick={handleLogout}
                 className={classes.logout}
+                onClick={handleLogout}
             >
                 <div>로그아웃</div>
                 <div><BsBoxArrowRight /></div>
