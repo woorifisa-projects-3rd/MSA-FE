@@ -3,20 +3,7 @@
     width: 100%;
 }
 
-.headerSection {
-    margin-bottom: 2rem;
-}
 
-.title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
-
-.email {
-    color: #666;
-    margin-bottom: 1.5rem;
-}
 
 .otherComponent {
     margin: 2rem 0;

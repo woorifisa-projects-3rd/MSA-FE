@@ -7,6 +7,7 @@ import ModalContainer from '@/components/modal/modal-container';
 import { useState, useEffect } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
 import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
+import PresidentInfo from './PresidentInfo';
 
 
 //테스트 데이터
@@ -26,9 +27,6 @@ export default function ProfileDetail({content}) {
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
     const [userData, setUserData] = useState(null);
-
-    const name =content.name;
-    const email =content.email;
 
     const workplaceInfo =content.workplaceInfo; // 사업장 정보(버튼 미포함)
 
@@ -75,13 +73,13 @@ export default function ProfileDetail({content}) {
     
    return (
        <div className={classes.container}>
-           <div className={classes.headerSection}>
-               <h2 className={classes.title}>{name} 사장님</h2>
-               <div className={classes.email}>{email}</div>
-           </div>
+        
                 
             {/* 다른 컴포넌트 적용해야함 */}
-           <div className={classes.otherComponent}>여기는 다른 컴포넌트</div>
+           <div className={classes.otherComponent}>
+                <PresidentInfo />
+                
+            </div>
 
            <DefaultTable tableName={tableName} tableHeaders={tableHeaders} list={enrichedWorkplaceInfo}/>
 
