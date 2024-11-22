@@ -9,6 +9,7 @@ import PrimaryButton from '@/components/button/primary-button';
 import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
 import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
+import { nextClient } from '@/lib/nextClient';
 
 
 //테스트 데이터
@@ -26,12 +27,13 @@ const getBankLogo = (code) => {
     return bank ? bank.logoUrl : null;
 };
 
-export default function ProfileDetail({content}) {
+export default function ProfileDetail({content, refreshStores}) {
     const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
     const workplaceModalRef = useRef(null);
+    const [error, setError] = useState('');
 
     const handleFormSubmit = () => {
         if (workplaceModalRef.current) {
@@ -42,7 +44,29 @@ export default function ProfileDetail({content}) {
           }
     }
 
-    const workplaceInfo = content; // 사업장 정보(버튼 미포함)
+    const workplaceInfo = content; // 사업장 정보    
+
+    const handleDeleteConfirm = async (workplaceInfo) => {        
+        if (!window.confirm('삭제하시면 다시 복구하기 어렵습니다. 정말 삭제하시겠습니까?')) {
+            return;
+        }
+
+        try {
+            const response = await nextClient.delete('/mypage/store', {
+                data: {storeid: workplaceInfo.storeId}
+            });
+            
+            if (response.data.success) {
+                alert('가게가 삭제 되었습니다.');
+                refreshStores();
+
+            } else {
+                throw new Error(response.data.error || '가게 삭제 실패');
+            }
+        } catch (error) {
+            setError(error.response?.data?.error || error.message);
+        }
+    }
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
@@ -76,7 +100,7 @@ export default function ProfileDetail({content}) {
                 text="삭제"
                 onClick={() => {
                     setSelectedWorkplace(workplace);
-                    setDeleteModalOpen(true);
+                    handleDeleteConfirm(workplace);            
                 }}
             />
         )
@@ -129,6 +153,7 @@ export default function ProfileDetail({content}) {
                     onSubmit={(formData) => {
                         setRegistrationModalOpen(false);
                     }}
+                    refreshStores={refreshStores}
                 />
             </ModalContainer>
 
@@ -150,13 +175,18 @@ export default function ProfileDetail({content}) {
             </ModalContainer>
 
             {/* 삭제 모달 추가  */}
-            <ModalContainer
-                isOpen={isDeleteModalOpen}
-                onClose={()=>setDeleteModalOpen(false)}
-                onConfirm={()=>console.log("삭제 !!!")}
+            {/* <ModalContainer
+            isOpen={isDeleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
             >
-                <DeleteConfirmModal/>
-            </ModalContainer>
+                <DeleteConfirmModal
+                    onConfirm={() => {
+                    setDeleteModalOpen(false);
+                    handleDeleteConfirm(selectedWorkplace); // 삭제 작업 실행
+                    }}
+                    onClose={() => setDeleteModalOpen(false)}
+                />
+            </ModalContainer> */}
 
        </div>
    );

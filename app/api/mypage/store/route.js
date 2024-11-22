@@ -31,3 +31,19 @@ export async function POST(request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
+
+  export async function DELETE(request) {
+    try {
+      const { storeid } = await request.json();
+
+      const response = await springClient.delete(`/user/store`, {
+        params: { storeid : storeid },
+       });
+
+      // 성공 응답 반환
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Spring Boot 가게 삭제 실패:', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+  }

@@ -7,13 +7,13 @@ import { nextClient } from "@/lib/nextClient";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
-const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
+const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStores }, ref) => {
   
   const [formData, setFormData] = useState({
     storeName: workplaceData?.storeName || '',
     businessNumber: workplaceData?.businessNumber || '',
     accountNumber: workplaceData?.accountNumber || '',
-    bankCode: workplaceData?.bankCode || 20,
+    bankCode: workplaceData?.bankCode || '020',
     postcodeAddress: workplaceData?.postcodeAddress || '',
     detailAddress: workplaceData?.detailAddress || '',
   });
@@ -23,7 +23,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
         const { location, bankCode, accountNumber } = workplaceData;
         console.log(workplaceData);
         
-        // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
+        // location 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
         const [postcodeAddress, ...detailParts] = location.split(', ');
         const detailAddress = detailParts.join(', ');
 
@@ -166,10 +166,10 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
         const response = await nextClient.post('/mypage/store', processedData);
 
         if (response.data.success) {
-          alert('가게가 추가되었습니다.');
+          alert('가게가 추가 되었습니다.');
           console.log("제출 데이터:", processedData);
           if (onSubmit) onSubmit(processedData);
-          Router.push('/mypage');
+          refreshStores();
         } else {
           throw new Error(response.data.error || '가게 추가 실패');
         }
