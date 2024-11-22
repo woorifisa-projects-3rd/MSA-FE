@@ -1,7 +1,7 @@
 import springClient from '@/lib/springClient'; // Spring 서버와의 통신용 클라이언트
 import { NextResponse } from 'next/server';
 
-export async function GET(request) {
+export async function POST(request) {
     try {
         // 요청 URL에서 쿼리 파라미터 추출
         const { searchParams } = new URL(request.url);
@@ -18,8 +18,9 @@ export async function GET(request) {
             );
         }
 
+        // 간편 장부
         // Spring Boot 서버로 GET 요청
-        const response = await springClient.get('/finance/transactionchart', {
+        const response = await springClient.post('/finance/simple-ledger-pdf', {
             params: { storeid, year, month }, // 쿼리 파라미터 전달
         });
 

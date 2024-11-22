@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, cloneElement } from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import classes from "./page.module.css";
 import { Chart as ChartJS, ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale } from 'chart.js';
 import BaseButton from '@/components/button/base-button';
 import { nextClient } from '@/lib/nextClient';
+import ModalContainer from '@/components/modal/modal-container';
+import classes from "./page.module.css";
 
 ChartJS.register(ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale);
 
@@ -16,17 +17,22 @@ export default function SalesExpenses() {
   const [monthlySalesData, setMonthlySalesData] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
-  const [salesData, setSalesData] = useState({});  // 초기값을 빈 객체로 설정
-  const [expensesData, setExpensesData] = useState({});  // 초기값을 빈 객체로 설정
+  const [salesData, setSalesData] = useState({});
+  const [expensesData, setExpensesData] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBusinessType, setSelectedBusinessType] = useState(null); // 선택된 사업자 유형 상태
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
       try {
         const response = await nextClient.get('/finance/analytics/transactionchart', {
           params: {
-            storeid: 3, // 고정된 스토어 ID
-            year: selectedYear, // 선택된 연도
-            month: selectedMonth, // 선택된 월
+            storeid: 3,
+            year: selectedYear,
+            month: selectedMonth,
           },
         });
 
@@ -34,17 +40,16 @@ export default function SalesExpenses() {
 
         console.log('응답 데이터: ', data);
 
-        // 매출 및 지출 데이터 필터링
-        const filteredSales = data.매출.filter(
+        // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
+        const filteredSales = (data.data.sales || []).filter(
           (item) => new Date(item.transactionDate).getFullYear() === selectedYear &&
                     new Date(item.transactionDate).getMonth() + 1 === selectedMonth
         );
-        const filteredExpenses = data.지출.filter(
+        const filteredExpenses = (data.data.expenses || []).filter(
           (item) => new Date(item.transactionDate).getFullYear() === selectedYear &&
                     new Date(item.transactionDate).getMonth() + 1 === selectedMonth
         );
 
-        // 매출 및 지출 카테고리별 합계 계산
         const calculateCategoryTotals = (items) => {
           const categories = [...new Set(items.map(item => item.classficationCode))];
           return categories.map(category => ({
@@ -55,21 +60,17 @@ export default function SalesExpenses() {
           }));
         };
 
-        // 카테고리별 합계 계산
         const salesCategoryTotals = calculateCategoryTotals(filteredSales);
         const expensesCategoryTotals = calculateCategoryTotals(filteredExpenses);
+        const monthlySales = data.data.monthlySales;
 
-        // 월별 매출 데이터 계산 (여기서는 예시로 월별 매출을 설정)
-        const monthlySales = data['월별 매출'];
-
-        // 상태 업데이트
         setList({ 매출: filteredSales, 지출: filteredExpenses });
-        setTotalSales(data.총매출);
-        setTotalExpenses(data.총지출);
-        setMonthlySalesData(monthlySales);
+        setTotalSales(data.data.totalSales || 0);
+        setTotalExpenses(data.data.totalExpenses || 0);
+        setMonthlySalesData(data.data.monthlySales);
+        console.log(data.data.monthlySales);
 
-        // 차트 데이터 설정
-        const salesData = {
+        setSalesData({
           labels: salesCategoryTotals.map(item => item.category),
           datasets: [
             {
@@ -78,9 +79,9 @@ export default function SalesExpenses() {
               hoverOffset: 6,
             },
           ],
-        };
+        });
 
-        const expensesData = {
+        setExpensesData({
           labels: expensesCategoryTotals.map(item => item.category),
           datasets: [
             {
@@ -89,11 +90,7 @@ export default function SalesExpenses() {
               hoverOffset: 6,
             },
           ],
-        };
-
-        // 차트 업데이트
-        setSalesData(salesData);
-        setExpensesData(expensesData);
+        });
       } catch (error) {
         console.error('API 호출 실패: ', error);
       }
@@ -102,19 +99,35 @@ export default function SalesExpenses() {
     loadTransactionAnalyticsPageData();
   }, [selectedYear, selectedMonth]);
 
+  // 간편장부
+  const handleBusinessTypeSelection = async (type) => {
+    setSelectedBusinessType(type);
+    console.log(`${type} 선택 완료`);
+  
+    try {
+      await nextClient.post(
+        `/finance/analytics/transactionsimplepdf?storeid=3&year=${selectedYear}&month=${selectedMonth}&taxtype=${selectedBusinessType}`,
+        { type }, // 요청 본문(body)
+      );
+      console.log('POST 요청 성공');
+      handleCloseModal();
+    } catch (error) {
+      console.error('POST 요청 실패:', error);
+    }
+  };
 
-  // 손익계산서 부분
-  // useEffect(() => {
-  //   const loaedTransactionAnalyticsPDFPageData = async () => {
-  //     try {
-  //       const response = await nextClient.post('/finance/analytics/transactionpdf', {
+  // 손익계산서
+  const handleGenerateIncomeStatement = async () => {
+    try {
+      const response = await nextClient.post(
+        `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`
+      );
+      console.log('손익계산서 요청 성공:', response.data);
+    } catch (error) {
+      console.error('손익계산서 요청 실패:', error);
+    }
+  };
 
-  //       })
-  //     }
-  //   }
-  // })
-
-  // 차트 옵션
   const options = {
     responsive: true,
     plugins: {
@@ -145,33 +158,24 @@ export default function SalesExpenses() {
       </div>
 
       <div className={classes.gridContainer}>
-
-        {/* 왼쪽 섹션 */}
         <div className={classes.leftSection}>
-          {/* 매출/지출 합계 표시 */}
           <div className={classes.summaryContainer}>
             <div className={classes.card}>
-              <div className={classes.icon}>
-                📈
-              </div>
+              <div className={classes.icon}>📈</div>
               <div className={classes.textContainer}>
                 <h3>매출</h3>
-                <p>{totalSales.toLocaleString()}원</p>
+                <p>{totalSales ? totalSales.toLocaleString() : 0}원</p> 
               </div>
             </div>
-            
             <div className={classes.card}>
-              <div className={classes.icon}>
-                📉
-              </div>
+              <div className={classes.icon}>📉</div>
               <div className={classes.textContainer}>
                 <h3>지출</h3>
-                <p>{totalExpenses.toLocaleString()}원</p>
+                <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
               </div>
             </div>
           </div>
 
-          {/* 매출 및 지출 도넛형 차트 */}
           <div className={classes.chartContainer}>
             <div>
               <h2>매출</h2>
@@ -191,28 +195,56 @@ export default function SalesExpenses() {
             </div>
           </div>
 
-          {/* 서류 발급 버튼 */}
           <div className={classes.reportsContainer}>
-            <BaseButton text="손익계산서 발급" />
-            <BaseButton text="간편장부 발급" />
+            <BaseButton text="손익계산서 발급" onClick={handleGenerateIncomeStatement}/>
+            <BaseButton text="간편장부 발급" onClick={handleOpenModal}/>
           </div>
         </div>
 
-        {/* 오른쪽 섹션 */}
+                <ModalContainer
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title="사업자 유형 선택"
+          onConfirm={() => handleBusinessTypeSelection(selectedBusinessType)}
+        >
+          <div className={classes.modalInfoText}>
+            <p>연 매출이 1억 400만원 이상인 경우 일반사업자를 선택해 주세요.</p>
+            <p>연 매출이 1억 400만원 미만인 경우 간이사업자를 선택해 주세요.</p>
+          </div>
+          
+          <div className={classes.modalRadioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="businessType"
+                value="0"
+                checked={selectedBusinessType === '0'}
+                onChange={() => setSelectedBusinessType('0')}
+              />
+              간이사업자
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="businessType"
+                value="1"
+                checked={selectedBusinessType === '1'}
+                onChange={() => setSelectedBusinessType('1')}
+              />
+              일반사업자
+            </label>
+          </div>
+        </ModalContainer>
+
+
         <div className={classes.rightSection}>
-          <div>
-            월별 매출 막대형 차트
-          </div>
-          <div className={classes.barChartContainer}>
-            <h2>월별 매출</h2>
-            {monthlySalesData.length > 0 ? (
-              <Bar className={classes.bar} data={monthlySalesData} options={options} />
-            ) : (
-              <p>월별 매출 데이터 로딩 중...</p>
-            )}
-          </div>
+          <h2>월별 매출</h2>
+          {monthlySalesData?.datasets ? ( // 데이터셋 확인
+            <Bar data={monthlySalesData} options={options} />
+          ) : (
+            <p>월별 매출 데이터 로딩 중...</p>
+          )}
         </div>
-
       </div>
     </div>
   );
