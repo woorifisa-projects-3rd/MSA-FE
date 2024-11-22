@@ -1,84 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 // import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
+import { useRouter } from 'next/navigation'; 
 import classes from "./calendar-wrapper.module.css";
 import "./calendar.css"
+import { nextClient } from '@/lib/nextClient';
 
 
 
 export default function Calendar (){
+  const router = useRouter(); // router 정의
+  const [events, setEvents] = useState([]);
 
   const today = new Date();
-  const currentYear = today.getFullYear();
-  const currentMonth = today.getMonth() + 1;
-  const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : currentMonth;
+//   const currentYear = today.getFullYear();
+//   const currentMonth = today.getMonth() + 1;
 
-    // 이벤트 더미데이터 
-  
-    const [events, setEvents] = useState([
-      {
-          id: '1',
-          title: '류혜리',
-          date: '2024-11-14',
-          backgroundColor: '#8CD3C5', // 초록색 (진행중)
-          borderColor: '#8CD3C5'
-      },
-      {
-          id: '2',
-          title: '프로젝트 마감',
-          date: '2024-11-14',
-          backgroundColor: '#8CD3C5', // 초록색 (진행중)
-          borderColor: '#8CD3C5'
-      },
-      {
-          id: '4',
-          title: '정성윤',
-          date: '2024-11-05',
-          backgroundColor: '#D3D3D3', // 회색 (지난 이벤트)
-          borderColor: '#D3D3D3'
-      },
-      {
-          id: '5',
-          title: '이원아',
-          date: '2024-11-06',
-          backgroundColor: '#D3D3D3', // 회색 (지난 이벤트)
-          borderColor: '#D3D3D3'
-      },
-      {
-          id: '6',
-          title: '강세빈',
-          date: '2024-11-07',
-          backgroundColor: '#D3D3D3', // 회색 (지난 이벤트)
-          borderColor: '#D3D3D3'
-      },
-      {
-          id: '7',
-          title: '박준혁',
-          date: '2024-11-20',
-          backgroundColor: '#8CD3C5', // 초록색 (진행중)
-          borderColor: '#8CD3C5'
+  console.log(events);
+
+
+  // API 호출 및 이벤트 가공
+  useEffect(() => {
+    const fetchMonthlyData = async () => {
+      try {
+        const response = await nextClient.get(`/attendance/calendar?storeid=1&year=2024&month=11`);
+        const data = response.data;
+        console.log("client calendar data", data);
+
+        // API 데이터 -> 캘린더 이벤트 데이터로 변환
+        const calendarEvents = data.map(item => ({
+          id: String(item.id || Math.random()), // 고유 ID
+          title: item.name, // 직원 이름
+          date: item.commuteDate, // 날짜
+          backgroundColor: '#8CD3C5', // 이벤트 배경색
+          borderColor: '#8CD3C5', // 이벤트 테두리색
+        }));
+        setEvents(calendarEvents);
+      } catch (error) {
+        console.error('Failed to fetch monthly data:', error);
       }
-  ]);
+    };
 
-  console.log(events)
-  
-  // 날짜 선택 시 새 이벤트 추가
-  const handleDateSelect = (selectInfo) => {
-    const title = prompt('일정을 입력하세요:');
-    if (title) {
-      const newEvent = {
-        id: String(Date.now()),  // 고유 ID 생성
-        title,
-        date: selectInfo.startStr  // 선택한 날짜
-      };
-      setEvents([...events, newEvent]);
-    }
+    fetchMonthlyData();
+    // 나중에 []에 currentYear, currentMonth 추가
+  }, []);
+
+
+   // 날짜 선택 시 페이지로 이동
+   const handleDateSelect = (selectInfo) => {
+    const selectedDate = selectInfo.startStr; // 선택된 날짜 (YYYY-MM-DD 형식)
+    router.push(`/attendance/daily-attendance?date=${selectedDate}`);
   };
+
+  
 
 
   return (
