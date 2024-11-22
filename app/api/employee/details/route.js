@@ -1,3 +1,4 @@
+
 import springClient from '@/lib/springClient'; // Spring Boot와 통신하는 Axios 클라이언트
 import { NextResponse } from 'next/server';
 
@@ -5,7 +6,7 @@ export async function GET(req) {
   try {
     // 클라이언트로부터 전달받은 쿼리 파라미터 추출
     const { searchParams } = new URL(req.url);
-    const storeId = searchParams.get('storeid');
+    const storeid = searchParams.get('storeid');
 
     if (!storeId) {
       return NextResponse.json(
@@ -15,7 +16,7 @@ export async function GET(req) {
     }
 
     // Spring Boot 서버에 GET 요청
-    const springResponse = await springClient.get(`/user/employee/details?storeid=${storeId}`);
+    const springResponse = await springClient.get(`/user/employee/details?storeid=${storeid}`);
     // console.log("employee/details-response",springResponse.data )
 
     // Spring Boot에서 받은 데이터 반환
