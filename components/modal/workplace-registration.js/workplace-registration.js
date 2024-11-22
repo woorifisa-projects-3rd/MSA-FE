@@ -3,6 +3,7 @@ import styles from "./workplace-registration.module.css"
 import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
 import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
+import { nextClient } from "@/lib/nextClient";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
@@ -39,6 +40,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
   const formRef = useRef();
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const geocodeAddress = async (address) => {
     try {
@@ -147,26 +149,32 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
 
     // 오류가 없으면 제출
     if (Object.keys(errors).length === 0) {
+      const { postcodeAddress, detailAddress, ...rest } = formData;
+
+      const geoLocation = await geocodeAddress(postcodeAddress);
+      const location = `${postcodeAddress}, ${detailAddress}`;
+
+      const processedData = {
+        ...rest,
+        accountNumber: formData.accountNumber,
+        location,
+        latitude: geoLocation.lat,
+        longitude: geoLocation.lng,
+      };
+
       try {
-        const { postcodeAddress, detailAddress, ...rest } = formData;
+        const response = await nextClient.post('/mypage/store', processedData);
 
-        const geoLocation = await geocodeAddress(postcodeAddress);
-        const location = `${postcodeAddress}, ${detailAddress}`;
-
-        if (onSubmit) {
-          const processedData = {
-            ...rest,
-            accountNumber: formData.accountNumber,
-            location,
-            latitude: geoLocation.lat,
-            longitude: geoLocation.lng,
-          };
-
+        if (response.data.success) {
+          alert('가게가 추가되었습니다.');
           console.log("제출 데이터:", processedData);
-          onSubmit(processedData);
+          if (onSubmit) onSubmit(processedData);
+          Router.push('/mypage');
+        } else {
+          throw new Error(response.data.error || '가게 추가 실패');
         }
       } catch (error) {
-        alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
+        setError(error.response?.data?.error || error.message);
       }
     } else {
       console.log('유효성 검사 실패!!!');
