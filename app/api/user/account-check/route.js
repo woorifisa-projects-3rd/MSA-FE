@@ -6,7 +6,7 @@ export async function POST(request) {
   try {
     // 클라이언트에서 보낸 데이터 받기
     const { accountNumber, bankCode } = await request.json();
-    console.log(accountNumber, bankCode)
+    console.log(bankCode, accountNumber);
 
     // Spring Boot로 계좌 확인 요청
     const response = await springClient.post('/user/account-check', { 

@@ -116,7 +116,7 @@ export default function ProfileDetail({content}) {
                 onClose={()=>setRegistrationModalOpen(false)}
                 onConfirm={()=>console.log("submit 완료")}
             >
-                <WorkplaceModal />
+                <WorkplaceModal mode='create' />
             </ModalContainer>
 
             {/* 편집 모달 */}

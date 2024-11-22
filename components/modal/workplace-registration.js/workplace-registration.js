@@ -12,6 +12,32 @@ export default function WorkplaceModal({
   //   console.error('Edit mode requires workplace data');
   //   return <div>데이터를 불러올 수 없습니다.</div>;
   // }
+
+  // POST 요청 처리 함수 추가 (사장계좌확인 코드)
+  const handleSubmit = async () => {
+    try {
+      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
+      
+      const response = await nextClient.post('/user/account-check', {
+        bankCode: selectedBank.code,
+        accountNumber
+      });
+
+      console.log("반환값",response.data);
+      // 응답 처리
+      if (response.data.success === true) {
+        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
+      } else {
+        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
+      }
+    } catch (error) {
+      console.error('Error checking account:', error); // 에러 출력
+      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
+    }
+  };
+
+
+  
   return (
     <div className={styles.formContainer}>
       <form className={styles.form}>
@@ -38,10 +64,12 @@ export default function WorkplaceModal({
           </div>
         </div>
 
+        {/* 현상황:mode가 create일 때는 사장으로 감, mode가 edit일때는 직원으로 감 */}
+        {/* mode 상관없이 항상 accountInputform은 president = true 여야함 */}
         <div className={styles.formGroup}>
           <label>계좌 등록</label>
           <AccountInputForm 
-              isPresident={mode === 'create'}  // create 모드일 때만 true
+              isPresident={true}  // create 모드일 때만 true
           />
         </div>
 

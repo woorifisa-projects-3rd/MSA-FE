@@ -1,43 +1,27 @@
-'use client'
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
 import { nextClient } from '@/lib/nextClient';
 
-const AccountInputForm = ({ isPresident = false, onChange, error, name, bankCode, accountNumber: propAccountNumber }) => {
+const AccountInputForm = ({ isPresident = false, onChange, error, name, accountNumber: propAccountNumber }) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
-  const [selectedBank, setSelectedBank] = useState(() => {
-    if (isPresident) return wooriBank;
-    if (bankCode) return bankCodeList.find(bank => bank.code === bankCode) || bankCodeList[0];
-    return bankCodeList[0];
-  });
-
+  const [selectedBank, setSelectedBank] = useState(() =>
+    isPresident ? wooriBank : bankCodeList[0] // 사장님이면 우리은행 고정, 아니면 첫 은행 기본값
+  );
   const [accountNumber, setAccountNumber] = useState(propAccountNumber || '');
   const [showBankList, setShowBankList] = useState(false);
-  const [validationMessage, setValidationMessage] = useState(''); // 유효성 메시지 상태 추가
+  const [validationMessage, setValidationMessage] = useState('');
   const dropdownRef = useRef(null);
 
   // 초기값 설정
   useEffect(() => {
     if (isPresident) {
-      setSelectedBank(wooriBank);
-    } else if (bankCode) {
-      const bank = bankCodeList.find(bank => bank.code === bankCode.toString());
-      if (bank) setSelectedBank(bank);
+      setSelectedBank(wooriBank); // 사장님 계좌는 우리은행 고정
     }
-    if (propAccountNumber) {
-      setAccountNumber(propAccountNumber);
-    }
-  }, [isPresident, bankCode, propAccountNumber, wooriBank]);
+  }, [isPresident, wooriBank]);
 
-  useEffect(() => {
-    if (isPresident && selectedBank.code !== '020') {
-      setSelectedBank(wooriBank);
-      setShowBankList(false);
-    }
-  }, [isPresident, selectedBank, wooriBank]);
-
+  // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -59,7 +43,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, name, bankCode
       onChange({
         bankCode: bank.code,
         bankName: bank.name,
-        accountNumber
+        accountNumber,
       });
     }
   };
@@ -72,75 +56,89 @@ const AccountInputForm = ({ isPresident = false, onChange, error, name, bankCode
       onChange({
         bankCode: selectedBank.code,
         bankName: selectedBank.name,
-        accountNumber: value
+        accountNumber: value,
       });
     }
   };
 
-  const BankSelector = isPresident ? (
-    <div className={styles.bankSelector}>
-      <div 
-        className={styles.bankIcon}
-        dangerouslySetInnerHTML={{ __html: wooriBank.logoUrl }}
-      />
-      <span>{wooriBank.name}</span>
-    </div>
-  ) : (
-    <button 
-      type="button"
-      onClick={() => setShowBankList(!showBankList)}
-      className={styles.bankButton}
-    >
-      <div 
-        className={styles.bankIcon}
-        dangerouslySetInnerHTML={{ __html: selectedBank.logoUrl }}
-      />
-      <span>{selectedBank.name}</span>
-    </button>
-  );
-
- // POST 요청 처리 함수 추가 (직원계좌확인 코드)
-  const handleSubmit = async () => {
+  // API 호출 함수: 사장님 계좌 확인
+  const handlePresidentSubmit = async () => {
     try {
-      // POST 요청: 선택한 은행 코드와 계좌 번호 전송
-      console.log("next-server로 보낼 data",name, bankCode, accountNumber )
+      const response = await nextClient.post('/user/account-check', {
+        bankCode: '020', // 우리은행 고정
+        accountNumber,
+      });
+
+      if (response.data.success) {
+        setValidationMessage('사장님 계좌가 유효합니다.');
+      } else {
+        setValidationMessage('사장님 계좌가 유효하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('사장님 계좌 확인 오류:', error);
+      setValidationMessage('사장님 계좌 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  // API 호출 함수: 직원 계좌 확인
+  const handleEmployeeSubmit = async () => {
+    try {
       const response = await nextClient.post('/user/employee-account-check', {
         name,
         bankCode: selectedBank.code,
-        accountNumber
+        accountNumber,
       });
 
-      console.log("반환값",response.data);
-      // 응답 처리
-      if (response.data.success === true) {
-        setValidationMessage('계좌가 유효합니다.'); // 성공 메시지
+      if (response.data.success) {
+        setValidationMessage('직원 계좌가 유효합니다.');
       } else {
-        setValidationMessage('계좌가 유효하지 않습니다.'); // 실패 메시지
+        setValidationMessage('직원 계좌가 유효하지 않습니다.');
       }
     } catch (error) {
-      console.error('Error checking account:', error); // 에러 출력
-      setValidationMessage('계좌 확인 중 오류가 발생했습니다.'); // 에러 메시지
+      console.error('직원 계좌 확인 오류:', error);
+      setValidationMessage('직원 계좌 확인 중 오류가 발생했습니다.');
     }
   };
 
   return (
     <div className={styles.form}>
       <div className={styles.formGroup}>
+        {/* 은행 선택 UI */}
         <div className="flex gap-2 items-center relative">
-          {BankSelector}
+          {isPresident ? (
+            // 사장님 모드: 은행 고정
+            <div className={styles.bankSelector}>
+              <div
+                className={styles.bankIcon}
+                dangerouslySetInnerHTML={{ __html: wooriBank.logoUrl }}
+              />
+              <span>{wooriBank.name}</span>
+            </div>
+          ) : (
+            // 직원 모드: 드롭다운 표시
+            <button
+              type="button"
+              onClick={() => setShowBankList(!showBankList)}
+              className={styles.bankButton}
+            >
+              <div
+                className={styles.bankIcon}
+                dangerouslySetInnerHTML={{ __html: selectedBank.logoUrl }}
+              />
+              <span>{selectedBank.name}</span>
+            </button>
+          )}
 
           {!isPresident && showBankList && (
             <div ref={dropdownRef} className={styles.dropdown}>
-              <div className={styles.dropdownHeader}>
-                은행 선택
-              </div>
+              <div className={styles.dropdownHeader}>은행 선택</div>
               {bankCodeList.map((bank) => (
                 <div
                   key={bank.code}
                   onClick={() => handleBankChange(bank)}
                   className={styles.dropdownItem}
                 >
-                  <div 
+                  <div
                     className={styles.bankIcon}
                     dangerouslySetInnerHTML={{ __html: bank.logoUrl }}
                   />
@@ -158,25 +156,30 @@ const AccountInputForm = ({ isPresident = false, onChange, error, name, bankCode
             className={styles.input}
           />
 
-          <BaseButton 
+          {/* 버튼: API 호출 */}
+          <BaseButton
             text="계좌 확인"
             type="button"
-            onClick={handleSubmit} // 버튼 클릭 시 handleSubmit 호출
+            onClick={isPresident ? handlePresidentSubmit : handleEmployeeSubmit}
           />
         </div>
-        {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
+
+        {/* 에러 메시지 */}
+        {error && (
+          <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>
+        )}
       </div>
 
+      {/* 유효성 메시지 출력 */}
       {validationMessage && (
-        <div className={styles.validationMessage}>
-          {validationMessage} {/* 유효성 메시지 출력 */}
-        </div>
+        <div className={styles.validationMessage}>{validationMessage}</div>
       )}
 
+      {/* 사장님 모드에서 추가 링크 */}
       {isPresident && (
         <div className={styles.bankLink}>
-          <a 
-            href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131" 
+          <a
+            href="https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131"
             className={styles.bankLinkText}
           >
             우리은행 사업자 계좌가 없으신가요?
