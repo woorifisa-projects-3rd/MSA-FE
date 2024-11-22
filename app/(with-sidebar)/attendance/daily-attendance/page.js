@@ -7,6 +7,7 @@ import DefaultTable from '@/components/table/DefaultTable';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { nextClient } from '@/lib/nextClient';
+import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
 
 export default function Form() {
  const [isModalOpen, setIsModalOpen] = useState(false); 
@@ -18,6 +19,8 @@ export default function Form() {
  const [isLoading, setIsLoading] = useState(false);
  const [formError, setFormError] = useState(''); 
  const [formData, setFormData] = useState({});
+ const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteCommuteid, setDeleteCommuteid] = useState(null);
 
  const tableHeaders = {
    no: "No.",
@@ -39,13 +42,16 @@ export default function Form() {
      );
      
      const formattedList = response.data.map((item, index) => ({
-       no: (index + 1).toString().padStart(2, '0'),
-       name: item.name,
-       startTime: item.startTime.substring(11, 16),
-       endTime: item.endTime ? item.endTime.substring(11, 16) : "미퇴근",
-       totalHours: item.totalHours,
-       salary: `${item.salary}원`,
-     }));
+      no: (index + 1).toString().padStart(2, '0'),
+      name: item.name,
+      startTime: item.startTime.substring(11, 16),
+      endTime: item.endTime ? item.endTime.substring(11, 16) : "미퇴근",
+      totalHours: item.totalHours,
+      salary: `${item.salary}원`,
+      delete: (
+        <button onClick={() => handleDelete(item.commuteId)}>삭제</button>
+      )
+    }));
      
      setAttendanceList(formattedList);
    } catch (error) {
@@ -169,6 +175,26 @@ export default function Form() {
    }
  };
 
+ const handleDelete = (commuteid) => {
+  setDeleteCommuteid(commuteid);
+  setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await nextClient.delete(`/attendance/daily-attendance?commuteid=${deleteCommuteid}`);
+      if (response.data.success) {
+        console.log(response.data.message);
+        await fetchDailyAttendance();
+      } else {
+        console.error(response.data.message);
+      }
+      setDeleteModalOpen(false);
+    } catch (error) {
+      console.error('Error deleting commute:', error);
+    }
+  };
+
  const handleSubmit = async () => {
    // 유효성 검사 실행
    if (!validateForm(formData)) {
@@ -260,6 +286,13 @@ export default function Form() {
        tableHeaders={tableHeaders} 
        list={attendanceList}
      />
+
+    <DeleteModal
+      isOpen={isDeleteModalOpen}
+      onClose={() => setDeleteModalOpen(false)}
+      onDelete={handleDeleteConfirm}
+      commuteid={deleteCommuteid}
+    />
    </>
  );
 }
