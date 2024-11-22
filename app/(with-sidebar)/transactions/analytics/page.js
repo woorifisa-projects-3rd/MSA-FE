@@ -67,7 +67,10 @@ export default function SalesExpenses() {
         setList({ 매출: filteredSales, 지출: filteredExpenses });
         setTotalSales(data.data.totalSales || 0);
         setTotalExpenses(data.data.totalExpenses || 0);
-        setMonthlySalesData(data.data.monthlySales);
+        setMonthlySalesData(monthlySales || []);
+        // console.log(totalSales);
+        // console.log(totalExpenses);
+        // console.log(monthlySalesData);
         console.log(data.data.monthlySales);
 
         setSalesData({
@@ -95,7 +98,6 @@ export default function SalesExpenses() {
         console.error('API 호출 실패: ', error);
       }
     };
-
     loadTransactionAnalyticsPageData();
   }, [selectedYear, selectedMonth]);
 
@@ -127,6 +129,17 @@ export default function SalesExpenses() {
       console.error('손익계산서 요청 실패:', error);
     }
   };
+
+    // 월별 매출 막대형 차트 데이터
+    const monthlySalesBarData = {
+      labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+      datasets: [
+        {
+          label: `${selectedYear}년 월별 매출`,
+          data: monthlySalesData,
+        },
+      ],
+    };
 
   const options = {
     responsive: true,
@@ -239,8 +252,8 @@ export default function SalesExpenses() {
 
         <div className={classes.rightSection}>
           <h2>월별 매출</h2>
-          {monthlySalesData?.datasets ? ( // 데이터셋 확인
-            <Bar data={monthlySalesData} options={options} />
+          {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
+            <Bar data={monthlySalesBarData} options={options} />
           ) : (
             <p>월별 매출 데이터 로딩 중...</p>
           )}
