@@ -1,3 +1,4 @@
+// refresh 관련 로직 나중에 해볼거임
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import springClient from '@/lib/springClient';

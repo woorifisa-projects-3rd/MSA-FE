@@ -4,11 +4,11 @@ import React, { useState } from "react";
 // import { IoIosArrowForward } from "react-icons/io";
 
 import classes from "./navigation.module.css";
-import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
 import { useRouter } from 'next/navigation';
+import { nextClient } from "@/lib/nextClient";
 
 export default function Navigation(){
     const router = useRouter();
@@ -18,6 +18,7 @@ export default function Navigation(){
     // 나중에 처리 
     const handleLogout = async() => {
         try{
+            await nextClient.get('/auth/logout');
             router.push('/login'); // 로그인 페이지로 리다이렉트 
         }catch (error) {
             console.error('로그아웃 실패:', error);
@@ -87,6 +88,7 @@ export default function Navigation(){
             {/* 로그아웃 섹션 */}
             <button 
                 className={classes.logout}
+                onClick={handleLogout}
             >
                 <div>로그아웃</div>
                 <div><BsBoxArrowRight /></div>
