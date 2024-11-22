@@ -24,7 +24,8 @@ export default function SalesExpenses() {
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get('/employee/details');
+            const response = await nextClient.get('/employee/details?storeid=1');
+            console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
             console.error("직원 데이터를 가져오는데 실패했습니다.", error);
@@ -129,7 +130,7 @@ export default function SalesExpenses() {
                             closeModal();
                         }}
                         ref={employeeFormRef}
-                         />
+                    />
                 </ModalContainer>
             )}
         </div>

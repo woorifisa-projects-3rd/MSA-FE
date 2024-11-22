@@ -98,7 +98,9 @@ export default function MainHeader () {
                 <div className={classes.headerTitle}>{getCurrentPagetTile()}</div>
                 
                 <div className={classes.headerMenu}>
-                    <button className={classes.profile_button}>내 정보</button>
+                    <Link href="/mypage">
+                        <button className={classes.profile_button}>내 정보</button>
+                    </Link>
                     <div ref={bellRef} className={classes.bellContainer}>
                         <FiBell
                             size={45}
@@ -114,12 +116,6 @@ export default function MainHeader () {
                             <AlarmModal modalRef={modalRef} notifications={notifications} />
                         )}
                     </div>
-                    <Link href="/mypage">
-                        <button className={classes.profile_button}>
-                            내 정보
-                        </button>
-                    </Link>
-                    <FiBell size={45} className={classes.bell_icon} />
                 </div>
                 
             </div>
