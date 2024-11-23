@@ -17,7 +17,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         birthDate: '',
         sex: true,
         phoneNumber: '',
-        employmentType: true,
+        employmentType: 1,
         bankCode: 20,
         accountNumber: '',
         salary: '',
