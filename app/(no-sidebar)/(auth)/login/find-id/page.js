@@ -2,7 +2,6 @@
 'use client'
 
 import { useState } from 'react'
-import { authApi } from '@/lib/auth'
 import styles from './findId.module.css'
 
 export default function FindIdPage() {
@@ -11,18 +10,18 @@ export default function FindIdPage() {
     const [result, setResult] = useState('');
     const [error, setError] = useState('');
 
-    const handleFindId = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await authApi.findId(name, phoneNumber);
-            setResult(`이메일을 찾았습니다. ${response.email}`);
-            setError('');
-        } catch (error) {
-            console.error('Email 찾기 실패:', error);
-            setError('일치하는 정보를 찾을 수 없습니다.');
-            setResult('');
-        }
-    };
+    // const handleFindId = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await authApi.findId(name, phoneNumber);
+    //         setResult(`이메일을 찾았습니다. ${response.email}`);
+    //         setError('');
+    //     } catch (error) {
+    //         console.error('Email 찾기 실패:', error);
+    //         setError('일치하는 정보를 찾을 수 없습니다.');
+    //         setResult('');
+    //     }
+    // };
 
     return (
         <div className={styles.container}>
@@ -36,7 +35,7 @@ export default function FindIdPage() {
 
             <div className={styles.rightSection}>
                 <h3>Email 찾기</h3>
-                <form className={styles.findIdForm} onSubmit={handleFindId}>
+                <form className={styles.findIdForm} >
                     <div className={styles.inputGroup}>
                         <input 
                             type="text" 
