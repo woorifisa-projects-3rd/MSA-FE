@@ -6,7 +6,7 @@
     height: var(--header-height);
     border-bottom: 1px solid #e5e7eb;
     z-index: 10000;
-    background: white;
+    background-color: var(--header-background);
 }
 
 .header_left{
