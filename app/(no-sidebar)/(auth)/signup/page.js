@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import styles from './signup.module.css';
 import PostcodeModal from '@/components/postcode-search/PostcodeModal';
+import { nextClient } from '@/lib/nextClient';
+import { redirect } from "next/navigation";
 
 export default function Signup() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +23,7 @@ export default function Signup() {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [error, setError] = useState('');
   const [isEmailConfirmDisabled, setEmailConfirmDisabled] = useState(false);
 
   const handleChange = (e) => {
@@ -76,7 +79,10 @@ export default function Signup() {
       !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? '유효한 이메일을 입력해주세요. 예) abc@gamil.com' : '',
     emailConfirm: (value, data) =>
       !data.isEmailConfirmed ? '이메일 인증을 완료해주세요.' : '',
-    password: (value) => (!value ? '비밀번호를 입력해주세요.' : ''),
+    password: (value) =>
+      !/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(value)
+        ? '비밀번호는 최소 8자리로 특수문자(!@#$%^&*(),.?":{}|<>), 숫자, 영문자를 포함해야 합니다.'
+        : '',
     confirmPassword: (value, data) =>
       value !== data.password ? '비밀번호가 일치하지 않습니다.' : '',
   };
@@ -111,7 +117,7 @@ export default function Signup() {
     });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     // 유효성 검사 수행
@@ -132,8 +138,22 @@ export default function Signup() {
         termsAccept: true,
       };
 
-      console.log(submissionData);
-      alert('회원가입이 완료되었습니다!');
+      try {
+        const response = await nextClient.post('/auth/signup', submissionData);
+        
+        if (response.data.success) {
+          console.log(submissionData);
+          alert('회원가입이 완료되었습니다!');
+          redirect('/login'); // 로그인 페이지로 이동
+        } else {
+          throw new Error(response.data.error || '회원가입 실패');
+        }
+      } catch (error) {
+        if (error.response?.status === 409) {
+          alert('이미 존재하는 이메일 / 전화번호입니다.');
+        }
+        setError(error.response?.data?.error || error.message);
+      }
     }
   }
 
