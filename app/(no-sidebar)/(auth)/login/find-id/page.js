@@ -60,7 +60,7 @@ export default function FindIdPage() {
                             <p className={styles.stepText}>
                                 <span className={styles.stepNumber}>Step 2.</span> 
                                 입력하신 정보와 일치하는
-                                <span className={styles.emphasis}> 이메일 형식의 아이디</span>를 알려드립니다
+                                <span className={styles.emphasis}> 이메일 형식의 아이디</span>를 <br />알려드립니다
                             </p>
                         </div>
                     </div>
