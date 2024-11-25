@@ -3,16 +3,18 @@ import styles from "./workplace-registration.module.css"
 import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
 import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
+import { nextClient } from "@/lib/nextClient";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
-const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
-  
+const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStores }, ref) => {
+    
   const [formData, setFormData] = useState({
+    storeId: workplaceData?.storeId || '',
     storeName: workplaceData?.storeName || '',
     businessNumber: workplaceData?.businessNumber || '',
     accountNumber: workplaceData?.accountNumber || '',
-    bankCode: workplaceData?.bankCode || 20,
+    bankCode: '020',
     postcodeAddress: workplaceData?.postcodeAddress || '',
     detailAddress: workplaceData?.detailAddress || '',
   });
@@ -22,15 +24,16 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
         const { location, bankCode, accountNumber } = workplaceData;
         console.log(workplaceData);
         
-        // address 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
-        // const [postcodeAddress, ...detailParts] = address.split(', ');
-        // const detailAddress = detailParts.join(', ');
+        // location 문자열을 ', ' 기준으로 나누어 postcodeAddress와 detailAddress 설정
+        const [postcodeAddress, ...detailParts] = location.split(', ');
+        const detailAddress = detailParts.join(', ');
 
         setFormData({
             ...workplaceData,
             bankCode,
             accountNumber,
-            postcodeAddress: location,
+            postcodeAddress,
+            detailAddress,
         });
     }
 }, [mode, workplaceData]);
@@ -38,6 +41,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
   const formRef = useRef();
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const geocodeAddress = async (address) => {
     try {
@@ -97,7 +101,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
   };
 
   const handleAccountChange = ({bankCode, accountNumber}) => {
-    const wooriCode = 20;
+    const wooriCode = '020';
     setFormData(prev => ({
         ...prev,
         bankCode: wooriCode,
@@ -146,25 +150,42 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit }, ref) => {
 
     // 오류가 없으면 제출
     if (Object.keys(errors).length === 0) {
+      const { postcodeAddress, detailAddress, ...rest } = formData;
+
+      const geoLocation = await geocodeAddress(postcodeAddress);
+      const location = `${postcodeAddress}, ${detailAddress}`;
+
+      const processedData = {
+        ...rest,
+        accountNumber: formData.accountNumber,
+        location,
+        latitude: geoLocation.lat,
+        longitude: geoLocation.lng,
+      };
+
       try {
-        const { postcodeAddress, detailAddress, ...rest } = formData;
-
-        const location = await geocodeAddress(postcodeAddress);
-
-        if (onSubmit) {
-          const processedData = {
-            ...rest,
-            accountNumber: formData.accountNumber,
-            location: postcodeAddress,
-            latitude: location.lat,
-            longitude: location.lng,
-          };
-
-          console.log("제출 데이터:", processedData);
-          onSubmit(processedData);
+        let response;
+        if (mode === 'edit') {          
+          response = await nextClient.put(`/mypage/store`, {
+            ...processedData,
+            storeid: workplaceData.storeId,
+          });
+          alert('가게가 수정 되었습니다.');
+        } else {
+          response = await nextClient.post('/mypage/store', processedData);
+          alert('가게가 추가 되었습니다.');
+        }
+        
+        if (response.data.success) {
+          if (onSubmit) onSubmit(processedData);
+          console.log("제출 데이터:", processedData);          
+          // refreshStores();
+          window.location.reload();
+        } else {
+          throw new Error(response.data.error || '가게 업데이트 실패');
         }
       } catch (error) {
-        alert("주소 변환에 실패했습니다. 다시 시도해주세요.");
+        setError(error.response?.data?.error || error.message);
       }
     } else {
       console.log('유효성 검사 실패!!!');
