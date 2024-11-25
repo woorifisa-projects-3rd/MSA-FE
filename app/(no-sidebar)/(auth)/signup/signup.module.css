@@ -61,7 +61,7 @@
 .addressButton {
     position: absolute;
     right: 8px;
-    top: 50%;
+    top: 30px;
     transform: translateY(-50%);
     padding: 0.5rem 1rem;
     border-radius: 6px;
@@ -158,3 +158,9 @@
     cursor: pointer;
   }
   
+  .error {
+    color: red;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    font-weight: bold;
+  }
