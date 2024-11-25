@@ -51,11 +51,11 @@ export default function SalesExpenses() {
         );
 
         const calculateCategoryTotals = (items) => {
-          const categories = [...new Set(items.map(item => item.classficationCode))];
+          const categories = [...new Set(items.map(item => item.classificationName))];
           return categories.map(category => ({
             category,
             total: items
-              .filter(item => item.classficationCode === category)
+              .filter(item => item.classificationName === category)
               .reduce((sum, item) => sum + parseInt(item.amount), 0)
           }));
         };
@@ -118,17 +118,44 @@ export default function SalesExpenses() {
     }
   };
 
-  // 손익계산서
+  // 손익 계산서
   const handleGenerateIncomeStatement = async () => {
     try {
       const response = await nextClient.post(
-        `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`
+        `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`,
+        {},
+        {
+          responseType: 'arraybuffer', // PDF 데이터를 바이너리 형식으로 받기 위해 설정
+        }
       );
+  
       console.log('손익계산서 요청 성공:', response.data);
+  
+      // Blob 객체 생성 (PDF 데이터를 위한)
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+  
+      // URL.createObjectURL을 사용해 Blob을 URL로 변환
+      const blobUrl = URL.createObjectURL(blob);
+  
+      // 다운로드를 위한 <a> 태그 생성
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `손익계산서_${selectedYear}_${selectedMonth}.pdf`; // 다운로드 파일명 설정
+  
+      // <a> 태그 클릭 이벤트 트리거
+      document.body.appendChild(a);
+      a.click();
+  
+      // 메모리 누수 방지를 위해 <a> 태그와 Blob URL 제거
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('손익계산서 요청 실패:', error);
     }
   };
+  
+  
+  
 
     // 월별 매출 막대형 차트 데이터
     const monthlySalesBarData = {
