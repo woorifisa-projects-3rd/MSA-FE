@@ -2,11 +2,18 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from './modal-container.module.css';  
-import Button from "../button/button";
-import PrimaryButton from "../button/primary-button";
 import BaseButton from "../button/base-button";
+import { X } from "lucide-react";
 
-export default function ModalContainer({isOpen, onClose,title, children, onConfirm, confirmText = "확인"}) {
+export default function ModalContainer({
+    title, 
+    isOpen, 
+    onClose,
+    onConfirm, 
+    children, 
+    confirmText = "확인",  
+    showButtons = true 
+  }) {
     const [mounted, setMounted] = useState(false); 
 
     useEffect(() => {  
@@ -60,7 +67,7 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
                     className={styles.closeButton}
                     onClick={onClose}
                 >
-                    X
+                    <X />
                 </button>
 
                 <h2 className={styles.modalHeader}>{title}</h2>
@@ -70,11 +77,12 @@ export default function ModalContainer({isOpen, onClose,title, children, onConfi
                 </div>
 
                 {/* 하단 취소/확인 버튼 */}
-
-                <div className={styles.buttonGroup}>
-                  <BaseButton  text="취소"  backgroundColor="black" onClick={onClose}/>
-                  <BaseButton text={confirmText}  onClick={onConfirm} />
-                </div>
+                {showButtons && (
+                    <div className={styles.buttonGroup}>
+                        <BaseButton text="취소" backgroundColor="black" onClick={onClose} />
+                        <BaseButton text={confirmText} onClick={onConfirm} />
+                    </div>
+                )}
             </div>
         </div>
     );

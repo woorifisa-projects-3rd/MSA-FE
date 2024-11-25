@@ -1,0 +1,227 @@
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    padding: 2rem 0;
+  }
+  
+  .card {
+    max-width: 64rem;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .progressBarContainer {
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .progressBarWrapper {
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+  }
+  
+  .progressBar {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .step {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stepCircle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+  
+  .stepCircle.active {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .stepText {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .progressLine {
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    height: 2px;
+    background-color: #e5e7eb;
+    width: 100%;
+    z-index: 0;
+  }
+  
+  .progressLineFill {
+    height: 100%;
+    background-color: #3b82f6;
+    transition: width 0.3s ease;
+  }
+  
+  .formContainer {
+    width: 100%;
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+  
+  .formTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+  }
+  
+  .verificationBox {
+    padding: 1rem;
+    background-color: #eff6ff;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .verificationTitle {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .verificationText {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .primaryButton {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .primaryButton:hover {
+    background-color: #2563eb;
+  }
+  
+  .primaryButton:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+  }
+  
+  .secondaryButton {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .secondaryButton:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .pinContainer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .pinInput {
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 1.25rem;
+  }
+  
+  .pinInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+  }
+  
+  .successIcon {
+    width: 4rem;
+    height: 4rem;
+    background-color: #dcfce7;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #16a34a;
+  }
+  
+  .navigationContainer {
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .navigationButtons {
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .flexRow {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .flexGrow {
+    flex-grow: 1;
+  }
+  
+  .textCenter {
+    text-align: center;
+  }
