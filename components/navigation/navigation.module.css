@@ -19,7 +19,7 @@
 .mainItemBox{
     display: flex;
     align-items: center;
-    padding: 20px 60px;
+    padding: 20px 0px;
     font-size: 16px;
     cursor: pointer;
 }
