@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import AlarmModal from "@/components/modal/alarm-modal/alarm-modal";
 import { useState, useEffect, useRef } from "react";
+import { Menu, Bell, X } from 'lucide-react';
 
 const initialNotifications = [
     { id: 1, location: "빽다방 상암점", time: "오전 08:50", message: "정성윤 님이 출근하셨습니다." },
@@ -17,7 +18,7 @@ const initialNotifications = [
     { id: 5, location: "마마된장 상암점", time: "오전 09:00", message: "정성윤 바보" },
 ];
 
-export default function MainHeader () {
+export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
     const [isAlarmOpen, setIsAlarmOpen] = useState(false);
     const [notifications, setNotifications] = useState(initialNotifications);
     const bellRef = useRef();
@@ -25,6 +26,8 @@ export default function MainHeader () {
     const logoWidth = 250;
     const pathname = usePathname();
     
+   
+
     // 읽지 않은 알림의 개수
     const unreadNotificationCount = notifications.filter(notification => !notification.read).length;
 
@@ -88,36 +91,69 @@ export default function MainHeader () {
     
     return (
         <header className={classes.header_container}>
-            <div className={classes.header_left}>
-                <Link href="/onboarding" style={{zIndex:100000}}>
-                    <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26} priority />
-                </Link>
-            </div>
-            <div className={classes.headerRight}>
-                
-                <div className={classes.headerTitle}>{getCurrentPagetTile()}</div>
-                
-                <div className={classes.headerMenu}>
-                    <Link href="/mypage">
-                        <button className={classes.profile_button}>내 정보</button>
+            {/* 데스크톱 헤더 */}
+            <div className={classes.desktopHeader}>
+                <div className={classes.header_left}>
+                    <Link href="/onboarding" style={{zIndex:100000}}>
+                        <Image className={classes.logoBox} src="/images/logo.png" alt="집계사장" width={logoWidth} height={logoWidth * 0.26} priority />
                     </Link>
-                    <div ref={bellRef} className={classes.bellContainer}>
-                        <FiBell
-                            size={45}
-                            className={classes.bell_icon}
-                            onClick={handleBellClick}
-                        />
-                        {unreadNotificationCount > 0 && (
-                            <span className={classes.notificationCnt}>
-                                {unreadNotificationCount}
-                            </span>
-                        )}
-                        {isAlarmOpen && (
-                            <AlarmModal modalRef={modalRef} notifications={notifications} />
-                        )}
-                    </div>
                 </div>
-                
+                <div className={classes.headerRight}>
+                    
+                    <div className={classes.headerTitle}>{getCurrentPagetTile()}</div>
+                    
+                    <div className={classes.headerMenu}>
+                        <Link href="/mypage">
+                            <button className={classes.profile_button}>내 정보</button>
+                        </Link>
+                        <div ref={bellRef} className={classes.bellContainer}>
+                            <FiBell
+                                size={45}
+                                className={classes.bell_icon}
+                                onClick={handleBellClick}
+                            />
+                            {unreadNotificationCount > 0 && (
+                                <span className={classes.notificationCnt}>
+                                    {unreadNotificationCount}
+                                </span>
+                            )}
+                            {isAlarmOpen && (
+                                <AlarmModal modalRef={modalRef} notifications={notifications} />
+                            )}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+      
+
+            {/* 모바일 헤더 */}
+            <div className={classes.mobileHeader}>
+                <div className={classes.mobileLeft}>
+                    <Link href="/" className={classes.mobileLogo}>
+                        <Image 
+                            className={classes.logoBox} 
+                            src="/images/logo.png" 
+                            alt="집계사장" 
+                            width={logoWidth}
+                            height={logoWidth * 0.26}
+                            priority
+                        />
+                    </Link>
+                </div>
+              
+                <div className={classes.mobileRight}>
+                    <button className={classes.bellButton}>
+                        <Bell className={classes.bellIcon} />
+                        <span className={classes.notificationCount}>5</span>
+                    </button>
+                    <button 
+                        className={classes.menuButton}
+                        onClick={onMenuToggle}
+                    >
+                        {isMobileMenuOpen ? <X /> : <Menu className={classes.menuIcon} />}
+                    </button>
+                </div>
             </div>
         </header>
     )

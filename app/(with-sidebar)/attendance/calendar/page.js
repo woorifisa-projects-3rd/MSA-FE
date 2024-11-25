@@ -3,7 +3,7 @@ import classes from "./page.module.css";
 
 export default function AttendanceCalendar() {
     return (
-        <div className={classes.container}>
+        <div >
             <Calendar />
         </div>
     );
