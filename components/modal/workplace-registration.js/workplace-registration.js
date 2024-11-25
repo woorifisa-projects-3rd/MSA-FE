@@ -261,4 +261,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
   );
 });
 
+// 이 부분을 추가
+WorkplaceModal.displayName = 'WorkplaceModal';
+
 export default WorkplaceModal;
