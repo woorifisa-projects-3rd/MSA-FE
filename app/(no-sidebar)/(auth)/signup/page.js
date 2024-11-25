@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import styles from './signup.module.css';
 import PostcodeModal from '@/components/postcode-search/PostcodeModal';
 import { nextClient } from '@/lib/nextClient';
-import { redirect } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 export default function Signup() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -144,7 +145,7 @@ export default function Signup() {
         if (response.data.success) {
           console.log(submissionData);
           alert('회원가입이 완료되었습니다!');
-          redirect('/login'); // 로그인 페이지로 이동
+          router.push('/login');
         } else {
           throw new Error(response.data.error || '회원가입 실패');
         }
