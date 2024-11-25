@@ -4,7 +4,7 @@ import PrimaryButton from '@/components/button/primary-button';
 import AttendanceModalBody from '@/components/modal/attendance-modal/attendance-modal-body';
 import ModalContainer from '@/components/modal/modal-container';
 import DefaultTable from '@/components/table/DefaultTable';
-import { useState, useEffect } from 'react';
+import { useState, useEffect , useCallback} from 'react';
 import { useSearchParams } from 'next/navigation';
 import { nextClient } from '@/lib/nextClient';
 
@@ -73,7 +73,6 @@ export default function Form() {
   //   }
   // ];
 
-
   // const changedList = list.map((list)=>({
   //  ...list,
   //  edit:(
@@ -87,45 +86,42 @@ export default function Form() {
   //  )
   // }))
   // 일별로 출퇴근한 데이터 조회 관련 state 및 함수
-  const [attendanceList, setAttendanceList] = useState([]);
+  const [attendanceList, setAttendanceList] =  useState([]);
 
-  const fetchDailyAttendance = async () => {
+  const fetchDailyAttendance = useCallback(async () => {
     try {
       const response = await nextClient.get(
         `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
       );
-
+  
       console.log("client가 next-servr로부터 받은 data",response)
       
-      // 받아온 데이터를 테이블 형식에 맞게 변환
       const formattedList = response.data.map((item, index) => ({
         no: (index + 1).toString().padStart(2, '0'),
         name: item.name,
-        startTime: item.startTime.substring(11, 16), // "2024-11-20T14:00:00" -> "14:00"
+        startTime: item.startTime.substring(11, 16),
         endTime: item.endTime.substring(11, 16),
         totalHours: item.totalHours,
         salary: `${item.salary}원`,
       }));
-
-      
+  
       setAttendanceList(formattedList);
     } catch (error) {
       console.error('Error fetching daily attendance:', error);
     }
-  };
-
-  // 선택된 날짜가 변경될 때마다 데이터 새로 조회
+  }, [selectedDate]); // selectedDate를 dependency로 추가
+  
+  // 그리고 useEffect의 dependency array에 fetchDailyAttendance 추가
   useEffect(() => {
     if (selectedDate) {
       fetchDailyAttendance();
     }
-  }, [selectedDate]);
+  }, [selectedDate, fetchDailyAttendance]);
 
 
   // 출퇴근 기록 추가 POST 요청 관련 state 및 함수 
   const [formData, setFormData] = useState({});
-
-
+  
   const handleFormChange = (updatedData) => {
     setFormData(updatedData);
   };
