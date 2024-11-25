@@ -1,12 +1,18 @@
 .header_container {
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
     width: 100%;
     height: var(--header-height);
     border-bottom: 1px solid #e5e7eb;
     z-index: 10000;
-    background: white;
+    background-color: var(--header-background);
+}
+
+/* 데스크톱헤더 */
+.desktopHeader {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%;
+    height: 100%;
 }
 
 .header_left{
@@ -97,4 +103,54 @@
     justify-content: center;
     min-width: 20px;
     height: 20px;
+}
+
+/* 모바일헤더 */
+.mobileHeader {
+    display: none;
+    height: 100%;
+    padding: 0 1rem;
+}
+.mobileLeft{
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mobileLogo{
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain;
+}
+.mobileRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menuIcon {
+    width: 24px;
+    height: 24px;
+    color: #4b5563;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .desktopHeader {
+        display: none;
+    }
+
+    .mobileHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
