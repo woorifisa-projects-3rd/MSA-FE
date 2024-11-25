@@ -1,0 +1,212 @@
+.container {
+    display: flex;
+    height: calc(100vh - var(--header-height));
+}
+.backgroundWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+}
+
+.leftBackground {
+    flex: 1;
+    background-color: #E8EEF9;
+}
+
+.rightBackground {
+    flex: 1;
+    background-color: #fff;
+}
+
+.contentWrapper {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 2rem; 
+    width: 100%;
+}
+
+.leftSection {
+    flex: 1;
+    padding: 8rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.content {
+    max-width: 600px;
+}
+
+.mainTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+}
+
+.highlight {
+    color: #7B9CFF;
+}
+
+.subTitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.features {
+    margin-top: 2rem;
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.featureText {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.illustration {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+.rightSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+}
+
+.loginForm {
+    width: 100%;
+    max-width: 400px;
+}
+
+.inputGroup {
+    margin-bottom: 1rem;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+/* 로딩 중 input 스타일 추가 */
+.inputGroup input:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 1rem;
+    background-color: #7B9CFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+/* 아이디찾기, 비밀번호 찾기 */
+.links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 1rem;
+}
+
+.findLink {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.findLink:hover {
+    text-decoration: underline;
+    color: #333;
+}
+.divider {
+    color: #ddd;
+    font-weight: bold;
+    padding: 0 10px;
+}
+.signupLink {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.signupLink:hover {
+    text-decoration: underline;
+    color: #333;
+}
+
+/* 에러 메시지 스타일 추가 */
+.errorMessage {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #dc2626;  /* 빨간색 */
+    background-color: #fee2e2;  /* 연한 빨간색 배경 */
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .leftSection {
+        padding: 2rem;
+    }
+
+    .mainTitle {
+        font-size: 2rem;
+    }
+
+    .content {
+        text-align: center;
+    }
+
+    .rightSection {
+        padding: 2rem;
+    }
+}
