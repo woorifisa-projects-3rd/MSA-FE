@@ -17,6 +17,7 @@ export default function Signup() {
     detailAddress: '',
     phoneNumber: '',
     email: '',
+    emailConfirm: '',
     password: '',
     confirmPassword: '',
     isEmailConfirmed: false, // 이메일 인증 상태 확인
@@ -26,6 +27,7 @@ export default function Signup() {
   const [formErrors, setFormErrors] = useState({});
   const [error, setError] = useState('');
   const [isEmailConfirmDisabled, setEmailConfirmDisabled] = useState(false);
+  const [emailConfirmNumber, setEmailConfirmNumber] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,15 +104,40 @@ export default function Signup() {
     return errors;
   };
 
+  const emailSendHandler = async(e) => {
+    e.preventDefault();    
+    
+    try {
+      const response = await nextClient.post('/auth/signup/email', {
+        email: formData.email,
+    });
+      
+      if (response.data.success) {
+        alert('이메일을 보냈습니다!');
+        setEmailConfirmNumber(response.data.pin);
+      } else {
+        throw new Error(response.data.error || '이메일 전송 실패');
+      }
+    } catch (error) {
+      setError(error.response?.data?.error || error.message);
+    }
+  }
+
   // 이메일 인증 확인
-  const handleEmailConfirm = () => {
-    // 실제 인증 요청을 서버로 보내고 확인
-    // 현재는 버튼 비활성화와 확인 상태만 처리
-    setEmailConfirmDisabled(true);
-    setFormData((prevData) => ({
-      ...prevData,
-      isEmailConfirmed: true,
-    }));
+  const handleEmailConfirm = () => {        
+    if (emailConfirmNumber == formData.emailConfirm) {
+      setEmailConfirmDisabled(true);
+      setFormData((prevData) => ({
+        ...prevData,
+        isEmailConfirmed: true,
+      }));
+    } else {
+      alert('인증번호가 일치하지 않습니다. 다시 확인해주세요.');
+      setFormData((prevData) => ({
+        ...prevData,
+        isEmailConfirmed: false,
+      }));
+    }
 
     setFormErrors((prevErrors) => {
       const { emailConfirm, ...rest } = prevErrors;
@@ -262,14 +289,20 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                  />
-                <button type="button" className={styles.verifyButton}>
+                <button type="button" className={styles.verifyButton} onClick={emailSendHandler}>
                   인증번호 보내기
                 </button>
                 {formErrors.email && <p className={styles.error}>{formErrors.email}</p>}
               </div>
 
               <div className={styles.inputGroup}>
-                <input type="text" placeholder="email 인증번호" />
+                <input
+                  type="text"
+                  name="emailConfirm"
+                  placeholder="email 인증번호"
+                  value={formData.emailConfirm}
+                  onChange={handleChange}
+                  />
                 <button
                   type="button"
                   className={styles.verifyButton}
