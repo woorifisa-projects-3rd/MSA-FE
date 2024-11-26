@@ -7,6 +7,7 @@ import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
 import { validateForm, commonValidateRules } from "@/utils/validation";
 
+const REQUIRED_ERROR = "필수 항목입니다.";
 
 const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
