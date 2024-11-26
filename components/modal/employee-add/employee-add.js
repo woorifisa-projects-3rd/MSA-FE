@@ -5,10 +5,8 @@ import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
+import { validateForm, commonValidateRules } from "@/utils/validation";
 
-const REQUIRED_ERROR = "필수 항목입니다.";
-const DATE_ERROR = "잘못된 날짜입니다.";
-const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
 const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
@@ -17,7 +15,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         birthDate: '',
         sex: true,
         phoneNumber: '',
-        employmentType: true,
+        employmentType: 1,
         bankCode: 20,
         accountNumber: '',
         salary: '',
@@ -68,31 +66,35 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         }));
     };
 
-     // 유효성 검사 함수
-     const validateForm = (data) => {
-        const errors = {};
+    const validateRules = {
+        name: commonValidateRules.required,
+        email: commonValidateRules.email,
+        phoneNumber: commonValidateRules.phoneNumber,
+        accountNumber: commonValidateRules.required,
+        salary: commonValidateRules.required,
+        paymentDate: commonValidateRules.paymentDate,
+        birthDate: commonValidateRules.birthDate,
+        address: (data) =>
+          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+      };
 
-        // 주소 필드 유효성 검사
+    const validateFormData = (data) => {
+        const errors = validateForm(data, validateRules);
+      
+        // 주소 필드 유효성 검사 추가
         if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
-            errors.postcodeAddress = REQUIRED_ERROR;
-            errors.detailAddress = REQUIRED_ERROR;
+          errors.address = "필수 항목입니다.";
         }
-    
-        // 각 필드에 대해 유효성 검사 수행
-        Object.keys(validateRules).forEach(field => {
-            const error = validateRules[field](data[field]);
-            if (error) errors[field] = error;
-        });
-    
+      
         return errors;
-    };
+      };
 
     // 제출 버튼 클릭시 유효성 검사 실행 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
     
         // 유효성 검사 수행
-        const errors = validateForm(formData);
+        const errors = validateFormData(formData);
         setFormErrors(errors);
         
         // 오류가 없으면 제출
@@ -138,38 +140,6 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     useImperativeHandle(ref, () => ({
         handleSubmit,
     }));
-    
-    const validateRules = {
-        name: value => value.trim() ? '' : REQUIRED_ERROR,
-        email: value => {
-            if (!value.trim()) {
-                return REQUIRED_ERROR;
-            }
-            // 이메일 형식 유효성 검사
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(value)) {
-                return "올바른 이메일 형식이 아닙니다.";
-            }
-            return '';
-        },
-        phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-        // bankCode: value => value ? '' : REQUIRED_ERROR,
-        accountNumber: value => value ? '' : REQUIRED_ERROR,
-        salary: value => value ? '' : REQUIRED_ERROR,
-        paymentDate: value => {
-            if (!value) return REQUIRED_ERROR;
-            if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
-            return '';
-        },
-        birthDate: value => {
-            if (!value.trim()) return REQUIRED_ERROR;
-            const inputDate = new Date(value);
-            const today = new Date();
-            if (inputDate >= today) return DATE_ERROR;
-        },
-        postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-    };
 
     // 입력 시 오류 제거
     const handleInputChange = (field, value) => {
@@ -294,8 +264,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {(formErrors.postcodeAddress || formErrors.detailAddress) && (
-                        <span className={styles.error}>{formErrors.postcodeAddress}</span>
+                    {(formErrors.address) && (
+                        <span className={styles.error}>{formErrors.address}</span>
                     )}
                 </div>
             </form>

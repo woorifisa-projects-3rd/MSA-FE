@@ -5,6 +5,7 @@ import styles from './signup.module.css';
 import PostcodeModal from '@/components/postcode-search/PostcodeModal';
 import { nextClient } from '@/lib/nextClient';
 import { useRouter } from 'next/navigation';
+import { validateForm, commonValidateRules } from "@/utils/validation";
 
 export default function Signup() {
   const router = useRouter();
@@ -66,42 +67,23 @@ export default function Signup() {
 
   // 유효성 검사 함수
   const validateRules = {
-    name: (value) => (!value ? '이름을 입력해주세요.' : ''),
-    birthDate: (value) => {
-      const today = new Date().toISOString().split('T')[0];
-      return !value ? '생년월일을 입력해주세요.' : value >= today ? '유효한 생년월일을 입력해주세요.' : '';
-    },
-    postcode: (value) => (!value ? '우편번호 찾기를 눌러 우편변호를 입력해주세요.' : ''),
-    basicAddress: (value) => (!value ? '주소를 입력해주세요.' : ''),
-    detailAddress: (value) => (!value ? '상세주소를 입력해주세요.': ''),
-    phoneNumber: (value) =>
-      !/^(\d{3}\d{7,8}|\d{3}-\d{3,4}-\d{4})$/.test(value)
-        ? '유효한 전화번호를 입력해주세요. 예) 010-1111-2222 또는 01011112222'
-        : '',
-    email: (value) =>
-      !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? '유효한 이메일을 입력해주세요. 예) abc@gamil.com' : '',
+    name: commonValidateRules.required,
+    birthDate: commonValidateRules.birthDate,
+    postcode: commonValidateRules.required,
+    basicAddress: commonValidateRules.required,
+    detailAddress: commonValidateRules.required,
+    phoneNumber: commonValidateRules.phoneNumber,
+    email: commonValidateRules.email,
     emailConfirm: (value, data) =>
-      !data.isEmailConfirmed ? '이메일 인증을 완료해주세요.' : '',
-    password: (value) =>
-      !/^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(value)
-        ? '비밀번호는 최소 8자리로 특수문자(!@#$%^&*(),.?":{}|<>), 숫자, 영문자를 포함해야 합니다.'
-        : '',
-    confirmPassword: (value, data) =>
-      value !== data.password ? '비밀번호가 일치하지 않습니다.' : '',
+      commonValidateRules.required(value) ||
+      (data.isEmailConfirmed ? "" : "이메일 인증을 완료해주세요."),
+    password: commonValidateRules.password,
+    confirmPassword: commonValidateRules.confirmPassword,
   };
 
   // 유효성 검사 수행
   const validateField = (name, value) => {
     return validateRules[name](value, formData);
-  };
-
-  const validateForm = (data) => {
-    const errors = {};
-    Object.keys(validateRules).forEach((field) => {
-      const error = validateRules[field](data[field], data);
-      if (error) errors[field] = error;
-    });
-    return errors;
   };
 
   const emailSendHandler = async(e) => {
@@ -149,7 +131,7 @@ export default function Signup() {
     e.preventDefault();
 
     // 유효성 검사 수행
-    const errors = validateForm(formData);
+    const errors = validateForm(formData, validateRules);
     setFormErrors(errors);
     
     // 오류가 없으면 제출
