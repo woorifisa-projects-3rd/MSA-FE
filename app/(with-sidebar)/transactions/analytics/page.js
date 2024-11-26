@@ -8,7 +8,7 @@ import { nextClient } from '@/lib/nextClient';
 import {PdfnextClient} from '@/lib/PdfnextClient'
 import ModalContainer from '@/components/modal/modal-container';
 import classes from "./page.module.css";
-import { ClipboardSignature } from 'lucide-react';
+import styles from './ModalStyles.module.css';
 
 ChartJS.register(ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale);
 
@@ -109,17 +109,36 @@ export default function SalesExpenses() {
     console.log(`${type} 선택 완료`);
   
     try {
-      await nextClient.post(
+      const response = await PdfnextClient.post(
         `/finance/analytics/transactionsimplepdf?storeid=3&year=${selectedYear}&month=${selectedMonth}&taxtype=${selectedBusinessType}`,
-        { type }, // 요청 본문(body)
+        {}, // 요청 본문(body)
+        { responseType: 'arraybuffer' }
       );
       console.log('POST 요청 성공');
+      console.log('데이터: ', response.data);
+
       handleCloseModal();
+
+      const pdfBlob = new Blob([new Uint8Array(response.data)], { type: 'application/pdf'});
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      const fileName = `${selectedYear}년_${String(selectedMonth).padStart(2,'0')}월_간편장부.pdf`;
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
     } catch (error) {
-      console.error('POST 요청 실패:', error);
+      console.error('간편장부 요청 실패:', error);
+      alert('간편장부 요청 중 오류가 발생했습니다.')
     }
   };
 
+
+  // 손익계산서
   const handleGenerateIncomeStatement = async () => {
     try {
       const response = await PdfnextClient.post(
@@ -141,52 +160,14 @@ export default function SalesExpenses() {
       link.setAttribute('download', fileName); // 동적 파일명
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
     } catch (error) {
       console.error('손익계산서 요청 실패:', error);
       alert('손익계산서 요청 중 오류가 발생했습니다.');
     }
   };
-  
-  
-  
-
-  // const handleGenerateIncomeStatement = async () => {
-  //   try {
-  //     // 서버로 요청 보내기
-  //     const response = await nextClient.post(
-  //       `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`,
-  //       {},
-  //       { responseType: 'arraybuffer' } // 바이너리 데이터로 응답받기
-  //     );
-  
-  //     console.log(response);
-  //     // 응답 데이터가 바이너리이므로 바로 Blob 객체 생성
-  //     const blob = new Blob([response], { type: 'application/pdf' });
-  
-  //     // Blob URL 생성 및 다운로드
-  //     const blobUrl = URL.createObjectURL(blob);
-  //     const a = document.createElement('a');
-  //     a.href = blobUrl;
-  //     a.download = `손익계산서_${selectedYear}_${selectedMonth}.pdf`;
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
-  
-  //     // 메모리 누수 방지
-  //     URL.revokeObjectURL(blobUrl);
-  //   } catch (error) {
-  //     console.error('손익계산서 요청 실패:', error);
-  //     alert('손익계산서 요청 중 오류가 발생했습니다.');
-  //   }
-  // };
-  
-  
-  
-    
-  
-    
-  
 
     // 월별 매출 막대형 차트 데이터
     const monthlySalesBarData = {
@@ -272,18 +253,18 @@ export default function SalesExpenses() {
           </div>
         </div>
 
-                <ModalContainer
+        <ModalContainer
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           title="사업자 유형 선택"
           onConfirm={() => handleBusinessTypeSelection(selectedBusinessType)}
         >
-          <div className={classes.modalInfoText}>
-            <p>연 매출이 1억 400만원 이상인 경우 일반사업자를 선택해 주세요.</p>
-            <p>연 매출이 1억 400만원 미만인 경우 간이사업자를 선택해 주세요.</p>
+          <div className={styles.modalInfoText}>
+            <p>💡 <strong>연 매출이 1억 400만원 이상</strong>인 경우 일반사업자를 선택해 주세요.</p>
+            <p>📊 <strong>연 매출이 1억 400만원 미만</strong>인 경우 간이사업자를 선택해 주세요.</p>
           </div>
           
-          <div className={classes.modalRadioGroup}>
+          <div className={styles.modalRadioGroup}>
             <label>
               <input
                 type="radio"

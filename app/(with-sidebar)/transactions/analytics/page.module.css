@@ -106,9 +106,10 @@
 
 
 .reportsContainer {
+  height: 4rem;
   margin-top: 2rem;
   display: flex;
-  gap: 2rem;
+  gap: 10rem;
 }
 
 /* 반응형 스타일 */
