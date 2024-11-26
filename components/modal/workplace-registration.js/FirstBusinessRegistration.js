@@ -49,7 +49,7 @@ const PinInput = ({ onComplete }) => {
 const FirstBusinessRegistration = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [verificationStep, setVerificationStep] = useState(0);
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  // const [isEmailSent, setIsEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -89,31 +89,32 @@ const FirstBusinessRegistration = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // API 호출 예시 (실제 구현 시 endpoint 수정 필요)
-      const response = await fetch('/api/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: formData.name, 
-          email: formData.email 
-        }),
-      });
+  //   setIsLoading(true);
+  //   try {
+  //     // API 호출 예시 (실제 구현 시 endpoint 수정 필요)
+  //     const response = await fetch('/api/send-verification', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ 
+  //         name: formData.name, 
+  //         email: formData.email 
+  //       }),
+  //     });
       
-      const data = await response.json();
-      if (data.success) {
-        setIsEmailSent(true);
-        setSuccess('인증 코드가 이메일로 전송되었습니다.');
-      } else {
-        setError('이메일 전송에 실패했습니다.');
-      }
-    } catch (err) {
-      setError('서버 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       setIsEmailSent(true);
+  //       setSuccess('인증 코드가 이메일로 전송되었습니다.');
+  //     } else {
+  //       setError('이메일 전송에 실패했습니다.');
+  //     }
+  //   } catch (err) {
+  //     setError('서버 오류가 발생했습니다.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  }
 
   const handleCodeVerification = async () => {
     if (!formData.verificationCode.trim()) {
@@ -329,157 +330,6 @@ const FirstBusinessRegistration = () => {
     }
   };
 
-//   const renderStepContent = () => {
-//     switch (currentStep) {
-//       case 1: // 사업자 정보 + 계좌정보
-//         return (
-//           <div className={styles.formContainer}>
-//             <h2 className={styles.formTitle}>사업자 정보 입력</h2>
-//             <div className={styles.formGroup}>
-//               <label className={styles.label}>사업장 상호명</label>
-//               <input
-//                 type="text"
-//                 name="businessName"
-//                 value={formData.businessName}
-//                 onChange={handleInputChange}
-//                 className={styles.input}
-//                 placeholder="상호명을 입력하세요"
-//               />
-//             </div>
-//             <div className={styles.formGroup}>
-//               <label className={styles.label}>사업자 번호</label>
-//               <input
-//                 type="text"
-//                 name="businessNumber"
-//                 value={formData.businessNumber}
-//                 onChange={handleInputChange}
-//                 className={styles.input}
-//                 placeholder="사업자 번호를 입력하세요"
-//               />
-//             </div>
-//             <div className={styles.formGroup}>
-//               <label className={styles.label}>계좌번호</label>
-//               <input
-//                 type="text"
-//                 name="accountNumber"
-//                 value={formData.accountNumber}
-//                 onChange={handleInputChange}
-//                 className={styles.input}
-//                 placeholder="계좌번호를 입력하세요"
-//               />
-//             </div>
-//           </div>
-//         );
-  
-//       case 2: // 본인 인증 (이메일)
-//         return (
-//           <div className={styles.formContainer}>
-//             <h2 className={styles.formTitle}>본인 인증</h2>
-//             <div className={styles.verificationBox}>
-//               {!isEmailSent ? (
-//                 <>
-//                   <div className={styles.formGroup}>
-//                     <label className={styles.label}>이름</label>
-//                     <input
-//                       type="text"
-//                       name="name"
-//                       value={formData.name}
-//                       onChange={handleInputChange}
-//                       className={styles.input}
-//                       placeholder="이름을 입력하세요"
-//                     />
-//                   </div>
-//                   <div className={styles.formGroup}>
-//                     <label className={styles.label}>이메일</label>
-//                     <input
-//                       type="email"
-//                       name="email"
-//                       value={formData.email}
-//                       onChange={handleInputChange}
-//                       className={styles.input}
-//                       placeholder="이메일을 입력하세요"
-//                     />
-//                   </div>
-//                 </>
-//               ) : (
-//                 <div className={styles.formGroup}>
-//                   <label className={styles.label}>인증 코드</label>
-//                   <input
-//                     type="text"
-//                     name="verificationCode"
-//                     value={formData.verificationCode}
-//                     onChange={handleInputChange}
-//                     className={`${styles.input} ${styles.verificationCodeInput}`}
-//                     placeholder="인증 코드 6자리"
-//                     maxLength={6}
-//                   />
-//                 </div>
-//               )}
-              
-//               {error && <p className={styles.errorText}>{error}</p>}
-//               {success && <p className={styles.successText}>{success}</p>}
-              
-//               {isLoading ? (
-//                 <div className={styles.loadingSpinner} />
-//               ) : (
-//                 <button
-//                   onClick={!isEmailSent ? handleEmailVerification : handleCodeVerification}
-//                   className={`${styles.button} ${styles.primaryButton}`}
-//                 >
-//                   {!isEmailSent ? '인증 메일 발송' : '인증 확인'}
-//                 </button>
-//               )}
-//             </div>
-//           </div>
-//         );
-  
-//       case 3: // PIN 번호 입력
-//         return (
-//           <div className={styles.formContainer}>
-//             <h2 className={styles.formTitle}>PIN 번호 입력</h2>
-//             <p className={styles.verificationStepDescription}>
-//               6자리 PIN 번호를 입력해주세요
-//             </p>
-//             <PinInput onComplete={handlePinComplete} />
-//             {error && <p className={styles.errorText}>{error}</p>}
-//           </div>
-//         );
-  
-//       case 4: // 주소
-//         return (
-//           <div className={styles.formContainer}>
-//             <h2 className={styles.formTitle}>주소 입력</h2>
-//             <div className={styles.formGroup}>
-//               <label className={styles.label}>기본 주소</label>
-//               <div className={styles.flexRow}>
-//                 <input
-//                   type="text"
-//                   name="address"
-//                   value={formData.address}
-//                   className={`${styles.input} ${styles.flexGrow}`}
-//                   placeholder="주소 검색을 클릭하세요"
-//                   readOnly
-//                 />
-//                 <button className={styles.addressSearchButton}>
-//                   주소 검색
-//                 </button>
-//               </div>
-//             </div>
-//             <div className={styles.formGroup}>
-//               <label className={styles.label}>상세 주소</label>
-//               <input
-//                 type="text"
-//                 name="addressDetail"
-//                 value={formData.addressDetail}
-//                 onChange={handleInputChange}
-//                 className={styles.input}
-//                 placeholder="상세 주소를 입력하세요"
-//               />
-//             </div>
-//           </div>
-//         );
-//     }
-//   };
 
   const canProceed = () => {
     switch (currentStep) {
@@ -499,18 +349,6 @@ const FirstBusinessRegistration = () => {
   };
 
 
-// {[1, 2, 3, 4].map((step) => (
-//     <div key={step} className={styles.step}>
-//       <div className={`${styles.stepCircle} ${currentStep >= step ? styles.active : ''}`}>
-//         {step}
-//       </div>
-//       <div className={styles.stepText}>
-//         {step === 1 ? '사업자 정보' : 
-//          step === 2 ? '본인 인증' :
-//          step === 3 ? 'PIN 입력' : '주소 입력'}
-//       </div>
-//     </div>
-//   ))}
 
   return (
     <div className={styles.container}>

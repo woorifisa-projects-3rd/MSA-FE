@@ -1,0 +1,42 @@
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+   }
+   
+   .content {
+    min-height: 400px;  /* 컨텐츠의 최소 높이 설정 */
+    padding: 2rem 0;
+   }
+   
+   /* 모바일 반응형 */
+   @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+      margin: 1rem;
+    }
+   
+    .content {
+      min-height: 300px;
+    }
+   }
+   
+   /* 애니메이션 효과 (선택사항) */
+   .stepTransition {
+    animation: fadeIn 0.3s ease;
+   }
+   
+   @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+   }

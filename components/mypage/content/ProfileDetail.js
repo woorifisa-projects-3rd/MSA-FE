@@ -10,7 +10,7 @@ import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm
 import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
 import { nextClient } from '@/lib/nextClient';
-import FirstBusinessRegistration from '../../modal/workplace-registration.js/FirstBusinessRegistration';
+import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
 
 
 //테스트 데이터
@@ -146,7 +146,7 @@ export default function ProfileDetail({content, refreshStores}) {
             </div>
 
             {/* 등록 모달 */}
-            <ModalContainer
+            {/* <ModalContainer
                 title="사업장 등록"
                 isOpen={isRegistrationModalOpen}
                 onClose={()=>setRegistrationModalOpen(false)}
@@ -159,7 +159,7 @@ export default function ProfileDetail({content, refreshStores}) {
                     }}
                     refreshStores={refreshStores}
                 />
-            </ModalContainer>
+            </ModalContainer> */}
 
             {/* 사업장 최초 등록 모달 */}
             <ModalContainer
@@ -168,7 +168,7 @@ export default function ProfileDetail({content, refreshStores}) {
                 onClose={()=>setFistRegistrationModalOpen(false)}
                 showButtons={false}
             >
-                <FirstBusinessRegistration />
+               <FirstStoreRegistration />
             </ModalContainer>
 
             {/* 편집 모달 */}

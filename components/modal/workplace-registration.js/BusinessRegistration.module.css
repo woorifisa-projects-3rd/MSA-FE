@@ -1,4 +1,4 @@
-.container {
+  .container {
     /* min-height: 100vh; */
     width: 700px;
   }
@@ -11,6 +11,7 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
   
+  /* StepProgress */
   .progressBarContainer {
     border-bottom: 1px solid #e5e7eb;
   }
@@ -127,6 +128,7 @@
     margin-bottom: 2rem;
   }
   
+  /* PinInput */
   .pinContainer {
     display: flex;
     justify-content: center;
@@ -183,6 +185,7 @@
     background-color: #e5e7eb;
   }
   
+  /* StepNavigation */
   .navigationContainer {
     border-top: 1px solid #e5e7eb;
   }
