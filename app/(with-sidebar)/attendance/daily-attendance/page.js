@@ -3,12 +3,11 @@
 import AttendanceModalBody from '@/components/modal/attendance-modal/attendance-modal-body';
 import ModalContainer from '@/components/modal/modal-container';
 import DefaultTable from '@/components/table/DefaultTable';
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 import { nextClient } from '@/lib/nextClient';
 
 // 렌더링 전 서버에서 데이터 가져오기
-export async function getServerSideProps(context) {
-  const selectedDate = context.query.date || null;
+async function fetchData(selectedDate) {
   let formattedList = [];
 
   if(selectedDate){
@@ -31,13 +30,14 @@ export async function getServerSideProps(context) {
     }
   }
       
-  return { 
-    props: { selectedDate, attendanceList:formattedList},
-  };
+  return formattedList
 
 }
 
-export default function Form({selectedDate, attendanceList}) {
+export default function Form({searchParams}) {
+  const selectedDate = searchParams?.date || null;
+  const [attendanceList, setAttendanceList] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState(null);
@@ -55,6 +55,10 @@ export default function Form({selectedDate, attendanceList}) {
     delete: "삭제"
 };
 
+  // 데이터를 초기화합니다.
+  useEffect(() => {
+    fetchData(selectedDate).then(setAttendanceList);
+  }, [selectedDate]);
 
   // 여기부터 출퇴근 기록 추가 post 요청 관련 함수
   const handleFormChange = (updatedData) => {
@@ -62,7 +66,7 @@ export default function Form({selectedDate, attendanceList}) {
   };
 
 
-  // post 요청은 ssr 이후에 처리 (client측에서)
+  // post 요청은 ssr 이후에 처리 
   const handleSubmit = async () => {
     setIsLoading(true);
 
