@@ -22,22 +22,21 @@ export default function PayRecords() {
         const loadPayStatementPageData = async () => {
           try {
             const response = await nextClient.get('/attendance/paystatement/employees');
-            // console.log(response);
             const data = response.data.data;
             console.log(data)
     
             const formattedData = data.map(item => ({
                 name: item.name,
                 account: item.accountNumber,
-                amount: item.amount,
+                amount: item.amount === 0 ? "0" : item.amount,
                 date: item.issuanceDate,
-                button: <BaseButton text={buttonText} />
+                button: <BaseButton text="확인" />
             }));
 
             setList(formattedData);
     
           } catch (error) {
-            console.error('마이페이지 정보 로드 에러:', error.message);
+            console.error('급여기록 정보 로드 에러:', error.message);
           }
         }
     
@@ -56,16 +55,6 @@ export default function PayRecords() {
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
-
-    // const [list, setList] = useState([
-    //     { name: '정성윤', account: '110-123456-45687', amount: '266,000원', date: '2024/10/03', button: <BaseButton text={buttonText}  /> },
-    //     { name: '이현아', account: '213-151-1223165', amount: '309,210원', date: '2024/11/03', button: <BaseButton text={buttonText}  /> },
-    //     { name: '류혜리', account: '111-15795-246821', amount: '309,210원', date: '2024/09/03', button:<BaseButton text={buttonText}  />},
-    //     { name: '임지혁', account: '258-1467-284567', amount: '309,210원', date: '2023/10/03', button: <BaseButton text={buttonText}  /> },
-    //     { name: '박준현', account: '258-1467-284567', amount: '309,210원', date: '2024/10/05', button:  <BaseButton text={buttonText}  />},
-    //     { name: '강세필', account: '258-1467-284567', amount: '309,210원', date: '2024/10/09', button: <BaseButton text={buttonText}  /> },
-    // ]);
-
 
     // 선택된 년, 월과 검색어에 맞는 데이터 필터링
     const filteredList = list.filter(item => {

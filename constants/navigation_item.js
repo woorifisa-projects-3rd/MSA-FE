@@ -31,7 +31,6 @@ export const NAVIGATION_ITEMS = [
         title:"급여 자동이체",
         subTitles:[
             {text: "급여기록ㆍ 명세서 조회", path:"/payroll-auto-transfer/records"},
-            {text: "급여 자동이체 관리", path:"/payroll-auto-transfer/management"}
         ]
     },
     {
