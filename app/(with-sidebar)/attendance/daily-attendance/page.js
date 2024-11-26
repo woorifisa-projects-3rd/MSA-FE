@@ -1,200 +1,316 @@
-'use client';
+  'use client';
 
-import PrimaryButton from '@/components/button/primary-button';
-import AttendanceModalBody from '@/components/modal/attendance-modal/attendance-modal-body';
-import ModalContainer from '@/components/modal/modal-container';
-import DefaultTable from '@/components/table/DefaultTable';
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { nextClient } from '@/lib/nextClient';
+  import PrimaryButton from '@/components/button/primary-button';
+  import AttendanceModalBody from '@/components/modal/attendance-modal/attendance-modal-body';
+  import ModalContainer from '@/components/modal/modal-container';
+  import DefaultTable from '@/components/table/DefaultTable';
+  import { useState, useEffect } from 'react';
+  import { useSearchParams } from 'next/navigation';
+  import { nextClient } from '@/lib/nextClient';
+  import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
 
-export default function Form() {
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [selectedAttendance, setSelectedAttendance] = useState(null);
-  const searchParams = useSearchParams();
-  const selectedDate = searchParams.get('date'); // 쿼리 파라미터에서 날짜 추출
-  const [isLoading, setIsLoading] = useState(false);
+  export default function Form() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [editModalData, setEditModalData] = useState(null);
+    const searchParams = useSearchParams();
+    const selectedDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
+    const [isLoading, setIsLoading] = useState(false);
+    const [formError, setFormError] = useState('');
+    const [formData, setFormData] = useState({});
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deleteCommuteId, setDeleteCommuteId] = useState(null);
 
-  
-
-  const tableHeaders = {
-    no: "No.",
-    name: "직원이름",
-    startTime: "출근시간",
-    endTime: "퇴근시간", 
-    totalHours: "총 근무시간",
-    salary: "급여금액",
-    edit: "수정",
-    delete: "삭제"
-};
-
-// api 요청시 받아올 데이터 - 현재는 더미데이터
-  // const list = [
-  //   {
-  //       no: "01",
-  //       name: "정성윤",
-  //       startTime: "14:00",
-  //       endTime: "18:04",
-  //       totalHours: "04:04",
-  //       salary: "38000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   },
-  //   {
-  //       no: "02",
-  //       name: "류혜리",
-  //       startTime: "08:58",
-  //       endTime: "15:03",
-  //       totalHours: "06:05",
-  //       salary: "60000원",
-  //   }
-  // ];
-
-
-  // const changedList = list.map((list)=>({
-  //  ...list,
-  //  edit:(
-  //   <PrimaryButton
-  //     text="편집"
-  //     onClick={() => {
-  //       setSelectedAttendance(list)
-  //       setEditModalOpen(true)
-  //     }}
-  //   />
-  //  )
-  // }))
-  // 일별로 출퇴근한 데이터 조회 관련 state 및 함수
-  const [attendanceList, setAttendanceList] = useState([]);
-
-  const fetchDailyAttendance = async () => {
-    try {
-      const response = await nextClient.get(
-        `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
-      );
-
-      console.log("client가 next-servr로부터 받은 data",response)
-      
-      // 받아온 데이터를 테이블 형식에 맞게 변환
-      const formattedList = response.data.map((item, index) => ({
-        no: (index + 1).toString().padStart(2, '0'),
-        name: item.name,
-        startTime: item.startTime.substring(11, 16), // "2024-11-20T14:00:00" -> "14:00"
-        endTime: item.endTime.substring(11, 16),
-        totalHours: item.totalHours,
-        salary: `${item.salary}원`,
-      }));
-
-      
-      setAttendanceList(formattedList);
-    } catch (error) {
-      console.error('Error fetching daily attendance:', error);
-    }
-  };
-
-  // 선택된 날짜가 변경될 때마다 데이터 새로 조회
-  useEffect(() => {
-    if (selectedDate) {
-      fetchDailyAttendance();
-    }
-  }, [selectedDate]);
-
-
-  // 출퇴근 기록 추가 POST 요청 관련 state 및 함수 
-  const [formData, setFormData] = useState({});
-
-
-  const handleFormChange = (updatedData) => {
-    setFormData(updatedData);
-  };
-
-
-  const handleSubmit = async () => {
-    setIsLoading(true);
-
-     // 날짜와 시간을 조합하여 ISO 문자열 형식으로 변환
-     const formattedStartTime = `${formData.date}T${formData.startTime}:00`;
-     const formattedEndTime = `${formData.date}T${formData.endTime}:00`;
-
-     const requestData = {
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
-      commuteDate: formData.date
+    const tableHeaders = {
+      no: 'No.',
+      name: '직원이름',
+      startTime: '출근시간',
+      endTime: '퇴근시간',
+      totalHours: '총 근무시간',
+      salary: '급여금액',
+      edit: '수정',
+      delete: '삭제',
     };
- 
-    try {
-      console.log("api/attendance/commute next server로 보내는 데이터:", requestData)
+
+    const [attendanceList, setAttendanceList] = useState([]);
+
+    const timeToMinutes = (time) => {
+      let [hours, minutes] = time.split(':').map(Number);
+      if (hours === 0) hours = 24;  // 00:00은 24:00으로 처리
+      return hours * 60 + minutes;
+    };
+    
+
+    const isDateValid = (date) => {
+      const today = new Date();
+      const selectedDate = new Date(date);
+
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      return selectedDate.getTime() <= today.getTime();
+    };
+
+    const validateForm = (data, mode = 'create') => {
+      // 수정 모드에서는 직원 ID와 날짜가 항상 있어야 하므로 검사를 생략
+      if (mode === 'create' && !data.storeemployeeId) {
+        setFormError('직원을 선택해주세요');
+        return false;
+      }
+    
+      const checkDate = data.date || data.commuteDate;
+      if (!checkDate) {
+        setFormError('날짜를 선택해주세요');
+        return false;
+      }
+    
+      if (!isDateValid(checkDate)) {
+        setFormError('오늘 이후의 날짜는 선택할 수 없습니다');
+        return false;
+      }
+    
+      if (!data.startTime) {
+        setFormError('출근시간을 입력해주세요');
+        return false;
+      }
+    
+      if (data.endTime) {
+        const startMinutes = timeToMinutes(data.startTime);
+        const endMinutes = timeToMinutes(data.endTime);
       
-      const response = await nextClient.post(`/attendance/commute?seid=${formData.storeemployeeId}`, requestData);
+        // 종료 시간이 시작 시간보다 빠르다면 유효하지 않다고 판단
+        if (endMinutes < startMinutes && data.endTime !== '00:00') {
+          setFormError('퇴근 시간이 출근 시간보다 빠를 수 없습니다');
+          return false;
+        }
+      }
+    
+      setFormError('');
+      return true;
+    };
+    
+    
+    const handleFormChange = (updatedData) => {
+      if (
+        (updatedData.storeemployeeId && formError === '직원을 선택해주세요') ||
+        (updatedData.date && (formError === '날짜를 선택해주세요' || formError === '오늘 이후의 날짜는 선택할 수 없습니다')) ||
+        (updatedData.startTime && formError === '출근시간을 입력해주세요') ||
+        (updatedData.endTime && formError === '퇴근시간은 출근시간보다 빠를 수 없습니다')
+      ) {
+        console.log("에러");
+        setFormError('');
+      }
 
-      console.log("등록 성공:", response.data);
+      setFormData(updatedData);
+    };
+    const fetchDailyAttendance = async () => {
+      try {
+        const response = await nextClient.get(
+          `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
+        );
+    
+        const formattedList = response.data.map((item, index) => ({
+          no: (index + 1).toString().padStart(2, '0'),
+          name: item.name,
+          storeemployeeId: item.storeemployeeId,  // 직원 ID 추가
+          commuteId: item.commuteId,  // 출퇴근 기록 ID 추가
+          startTime: item.startTime.substring(11, 16),
+          endTime: item.endTime ? item.endTime.substring(11, 16) : '미퇴근',
+          totalHours: item.totalHours,
+          salary: `${item.salary}원`,
+          commuteDate: item.commuteDate || selectedDate,  // 날짜 정보 추가
+          edit: (
+            <button onClick={() => handleEditClick(item)}>수정</button>
+          ),
+          delete: (
+            <button onClick={() => handleDelete(item.commuteId)}>삭제</button>
+          ),
+        }));
+    
+        setAttendanceList(formattedList);
+      } catch (error) {
+        console.error('Error fetching daily attendance:', error);
+      }
+    };
+
+
+    const handleSubmit = async () => {
+      console.log("제출 전 폼 데이터:", formData); // 데이터 확인용 로그
+    
+      if (!validateForm(formData)) {
+        console.log("폼 검증 실패:", formError); // 실패한 검증 내용 로그
+        return;
+      }
+    
+      setIsLoading(true);
+      const formattedStartTime = `${formData.date}T${formData.startTime}:00`;
+      const formattedEndTime = formData.endTime 
+        ? `${formData.date}T${formData.endTime}:00` 
+        : null;
       
-      setIsModalOpen(false);
-      setFormData({});
+      const requestData = {
+        startTime: formattedStartTime,
+        endTime: formattedEndTime,
+        commuteDate: formData.date
+      };
+    
+      try {
+        console.log("서버로 전송할 데이터:", requestData);
+        
+        const response = await nextClient.post(
+          `/attendance/commute?seid=${formData.storeemployeeId}`, 
+          requestData
+        );
+        console.log("등록 성공:", response.data);
+        
+        setIsModalOpen(false);
+        setFormData({});
+        setFormError('');
+        window.location.reload();
+      } catch (error) {
+        console.error("서버 요청 중 오류 발생:", error.response?.data || error.message); 
+        setFormError('데이터 저장 중 오류가 발생했습니다');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const handleEditClick = (item) => {
+      console.log("Edit 버튼 클릭 시, item:", item);
+    
+      const editData = {
+        commuteId: item.commuteId,  // 수정된 id로 설정
+        name: item.name,
+        date: item.startTime.substring(0, 10),
+        startTime: item.startTime.substring(11, 16),
+        endTime: item.endTime ? item.endTime.substring(11, 16) : ''
+      };
+    
+      setEditModalData(editData);
+      setEditModalOpen(true);
+    };
+    
+    const handleEditSubmit = async () => {
+      console.log("수정 전 폼 데이터:", editModalData);
+    
+      // 수정 폼 검증
+      if (!validateForm(editModalData, 'edit')) {
+        console.log("수정 폼 검증 실패:", formError); // 실패한 검증 내용 로그
+        return;
+      }
+    
+      const requestData = {
+        startTime: editModalData.date + 'T' + editModalData.startTime + ':00',
+        endTime: editModalData.endTime
+          ? editModalData.date + 'T' + editModalData.endTime + ':00'
+          : null,
+        commuteDate: editModalData.date
+      };
+    
+      console.log("서버로 보낼 데이터:", requestData, "id", editModalData.commuteId);
+    
+      try {
+        const response = await nextClient.put(
+          `/attendance/commute?commuteid=${editModalData.commuteId}`,
+          requestData
+        );
+    
+        if (response.data.success) {
+          console.log('수정 성공:', response.data.message);
+          await fetchDailyAttendance();
+          setEditModalOpen(false);
+          setFormError('');
+        } else {
+          console.error('수정 실패:', response.data.message);
+        }
+      } catch (error) {
+        console.error("수정 중 오류 발생:", error.response?.data || error.message);
+        setFormError('수정 중 오류가 발생했습니다');
+      }
+    };
+    
+    
+    const handleDelete = (commuteId) => {
+      setDeleteCommuteId(commuteId);
+      setDeleteModalOpen(true);
+    };
 
+    const handleDeleteConfirm = async () => {
+      try {
+        const response = await nextClient.delete(
+          `/attendance/daily-attendance?commuteid=${deleteCommuteId}`
+        );
+        if (response.data.success) {
+          console.log(response.data.message);
+          await fetchDailyAttendance();
+        } else {
+          console.error(response.data.message);
+        }
+        setDeleteModalOpen(false);
+      } catch (error) {
+        console.error('Error deleting commute:', error);
+      }
+    };
 
- 
+    useEffect(() => {
+      if (selectedDate) {
+        fetchDailyAttendance();
+      }
+    }, [selectedDate]);
 
-  return (
-    <>
-      <button onClick={() => setIsModalOpen(true)}>
-        출퇴근 기록 추가 모달 오픈
-      </button>
-      <div>
-        오늘 날짜 : {selectedDate}
-      </div>
+    return (
+      <>
+        <button onClick={() => setIsModalOpen(true)}>출퇴근 기록 추가 모달 오픈</button>
+        <div>오늘 날짜: {selectedDate}</div>
 
-      {/*등록 모달*/}
-      <ModalContainer
-        isOpen={isModalOpen}
-        onClose={()=>setIsModalOpen(false)}
-        title="출퇴근 기록 추가하기"
-        onConfirm={handleSubmit}
-      >
-        <AttendanceModalBody mode="create" onChange={handleFormChange} />
-      </ModalContainer>
+        <ModalContainer
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setFormError('');
+            setFormData({});
+          }}
+          title="출퇴근 기록 추가하기"
+          onConfirm={handleSubmit}
+        >
+          <AttendanceModalBody
+            mode="create"
+            onChange={handleFormChange}
+            error={formError}
+          />
+        </ModalContainer>
 
-      {/* 수정 모달 */}
-      <ModalContainer
-                title="출퇴근 기록 수정하기"
-                isOpen={isEditModalOpen}
-                onClose={()=>setEditModalOpen(false)}
-                onConfirm={()=>console.log("나중에 submit 할 것")}
-            >
-              <AttendanceModalBody mode='edit' attendanceData={selectedAttendance} />
-      </ModalContainer>
+        <ModalContainer
+          title="출퇴근 기록 수정하기"
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setEditModalOpen(false);
+            setFormError('');
+          }}
+          onConfirm={handleEditSubmit}
+        >
+          <AttendanceModalBody 
+            mode="edit" 
+            attendanceData={editModalData} 
+            onChange={(updatedData) => {
+              setEditModalData(updatedData);
+            }} 
+            error={formError}
+          />
+        </ModalContainer>
 
-      <DefaultTable tableName="출퇴근 조회" tableHeaders={tableHeaders} list={attendanceList}/>
-   
-    </>
-  );
-}
+        <DefaultTable
+          tableName="출퇴근 조회"
+          tableHeaders={tableHeaders}
+          list={attendanceList}
+        />
+
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onDelete={handleDeleteConfirm}
+          commuteId={deleteCommuteId}
+        />
+      </>
+    );
+  }
