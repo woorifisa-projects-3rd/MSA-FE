@@ -4,78 +4,151 @@ import React, { useState } from "react";
 // import { IoIosArrowForward } from "react-icons/io";
 
 import classes from "./navigation.module.css";
-import Link from "next/link";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthProvider';
-import { authApi } from "@/lib/auth";
+import { nextClient } from "@/lib/nextClient";
 
-export default function Navigation(){
+export default function Navigation({ isMobileMenuOpen }){
     const router = useRouter();
-    const { logout } = useAuth(); // AuthContext에서 logout 함수 가져오기
     
     const [activeIndex, setActiveIndex] = useState();
 
+    // 나중에 처리 
     const handleLogout = async() => {
         try{
-            // await authApi.logout(); // 스프링 서버에 로그아웃 알림
-            await logout();   //next.js 서버를 통해 브라우저에 저장된 쿠키 삭제 &  클라이언트 상태 초기화 
+            await nextClient.get('/auth/logout');
             router.push('/login'); // 로그인 페이지로 리다이렉트 
         }catch (error) {
             console.error('로그아웃 실패:', error);
         }
     }
 
+     // 날짜를 YYYY-MM-DD 형식으로 반환하는 함수
+    const getTodayDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleNavigation = (path, getDynamicPath) => {
+        if (getDynamicPath) {
+            router.push(`/attendance/daily-attendance?date=${getTodayDate()}`);
+        } else {
+            router.push(path);
+        }
+    };
+
 
     return (
-        <nav className={classes.nav}>
-            {/* 상단 드롭다운 섹션 */}
-            <div className={classes.topSection}>
-                <BusinessSelectDropdown/>
-            </div>
+        <>
+            {/* 데스크톱 네비게이션 */}
+            <nav className={classes.nav}>
+                {/* 상단 드롭다운 섹션 */}
+                <div className={classes.topSection}>
+                    <BusinessSelectDropdown/>
+                </div>
 
-            {/* 메인 네비게이션 섹션  */}
-            <div className={classes.navigationSection}>
-                <ul>
-                    {NAVIGATION_ITEMS.map((item, index)=>(
-                        <li 
-                            key={index}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onMouseLeave={() => setActiveIndex(null)}
-                        >
-                            {/* 메인 카테고리 */}
-                            <div className={`${classes.mainItemBox} ${activeIndex === index ? classes.active : ''}`}>
-                                {item.icon && <item.icon className={classes.icon} />}
-                                <div>{item.title}</div>
-                            </div>
-
-                            {/* 메인 카테고리에 따른 세부 카테고리 */}
-                            {activeIndex === index && item.subTitles && (
-                                <div className={classes.subMenuBox}>
-                                    {item.subTitles.map((subTitle, subIndex)=>(
-                                        <li key={subIndex} className={classes.subMenuItem}>
-                                            <Link className={classes.subMenuItemLink} href={subTitle.path}>
-                                                {subTitle.text}
-                                            </Link>
-                                        </li>
-                                    ))}
+                {/* 메인 네비게이션 섹션  */}
+                <div className={classes.navigationSection}>
+                    <ul>
+                        {NAVIGATION_ITEMS.map((item, index)=>(
+                            <li 
+                                key={index}
+                                onMouseEnter={() => setActiveIndex(index)}
+                                onMouseLeave={() => setActiveIndex(null)}
+                            >
+                                {/* 메인 카테고리 */}
+                                <div className={`${classes.mainItemBox} ${activeIndex === index ? classes.active : ''}`}>
+                                    {item.icon && <item.icon className={classes.icon} />}
+                                    <div>{item.title}</div>
                                 </div>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+
+                                {activeIndex === index && item.subTitles && (
+                                    <div className={classes.subMenuBox}>
+                                        {item.subTitles.map((subTitle, subIndex)=>(
+                                            <li 
+                                                key={subIndex} 
+                                                className={classes.subMenuItem}
+                                                onClick={() => handleNavigation(subTitle.path, subTitle.isDailyAttendance)}
+                                            >
+                                                <div className={classes.subMenuItemLink}>
+                                                    {subTitle.text}
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </div>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* 로그아웃 섹션 */}
+                <button 
+                    className={classes.logout}
+                    onClick={handleLogout}
+                >
+                    <div>로그아웃</div>
+                    <div><BsBoxArrowRight /></div>
+                </button>
+            </nav>
+            
+
+             {/* 모바일 네비게이션 */}
+            <div className={`${classes.mobileNav} ${isMobileMenuOpen ? classes.open : ''}`}>
+                <div className={classes.mobileNavContent}>
+                    {/* 상단 드롭다운 섹션 */}
+                    <div className={classes.mobileTopSection}>
+                        <BusinessSelectDropdown/>
+                    </div>
+
+                    {/* 메인 네비게이션 섹션 */}
+                    <div className={classes.mobileNavigationSection}>
+                        <ul>
+                            {NAVIGATION_ITEMS.map((item, index) => (
+                                <li key={index}>
+                                    <button 
+                                        className={classes.mobileMenuItem}
+                                        onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                                    >
+                                        {item.icon && <item.icon className={classes.mobileIcon} />}
+                                        <span>{item.title}</span>
+                                    </button>
+                                    
+                                    {activeIndex === index && item.subTitles && (
+                                        <div className={classes.mobileSubMenu}>
+                                            {item.subTitles.map((subTitle, subIndex) => (
+                                                <button
+                                                    key={subIndex}
+                                                    className={classes.mobileSubMenuItem}
+                                                    onClick={() => handleNavigation(subTitle.path, subTitle.isDailyAttendance)}
+                                                >
+                                                    {subTitle.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* 로그아웃 버튼 */}
+                    <button 
+                        className={classes.mobileLogout}
+                        onClick={handleLogout}
+                    >
+                        <span>로그아웃</span>
+                        <BsBoxArrowRight />
+                    </button>
+                </div>
             </div>
 
-            {/* 로그아웃 섹션 */}
-            <button 
-                onClick={handleLogout}
-                className={classes.logout}
-            >
-                <div>로그아웃</div>
-                <div><BsBoxArrowRight /></div>
-            </button>
-        </nav>
+        </>
+    
     )
 }

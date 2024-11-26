@@ -4,10 +4,9 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
+import { nextClient } from '@/lib/nextClient';
+import { validateForm, commonValidateRules } from "@/utils/validation";
 
-const REQUIRED_ERROR = "필수 항목입니다.";
-const DATE_ERROR = "잘못된 날짜입니다.";
-const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
 const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
@@ -16,7 +15,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         birthDate: '',
         sex: true,
         phoneNumber: '',
-        employmentType: true,
+        employmentType: 1,
         bankCode: 20,
         accountNumber: '',
         salary: '',
@@ -26,6 +25,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     });
 
     const [formErrors, setFormErrors] = useState({});
+    const [error, setError] = useState('');
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
@@ -60,27 +60,41 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             bankCode,
             accountNumber,
         }));
+        setFormErrors(prev => ({
+            ...prev,
+            accountNumber: bankCode && accountNumber ? '' : REQUIRED_ERROR,
+        }));
     };
 
-     // 유효성 검사 함수
-     const validateForm = (data) => {
-        const errors = {};
-    
-        // 각 필드에 대해 유효성 검사 수행
-        Object.keys(validateRules).forEach(field => {
-            const error = validateRules[field](data[field]);
-            if (error) errors[field] = error;
-        });
-    
+    const validateRules = {
+        name: commonValidateRules.required,
+        email: commonValidateRules.email,
+        phoneNumber: commonValidateRules.phoneNumber,
+        accountNumber: commonValidateRules.required,
+        salary: commonValidateRules.required,
+        paymentDate: commonValidateRules.paymentDate,
+        birthDate: commonValidateRules.birthDate,
+        address: (data) =>
+          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+      };
+
+    const validateFormData = (data) => {
+        const errors = validateForm(data, validateRules);
+      
+        // 주소 필드 유효성 검사 추가
+        if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+          errors.address = "필수 항목입니다.";
+        }
+      
         return errors;
-    };
+      };
 
     // 제출 버튼 클릭시 유효성 검사 실행 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         if (e) e.preventDefault();
     
         // 유효성 검사 수행
-        const errors = validateForm(formData);
+        const errors = validateFormData(formData);
         setFormErrors(errors);
         
         // 오류가 없으면 제출
@@ -90,39 +104,47 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 ...rest,
                 address: `${postcodeAddress}, ${detailAddress}`,  // address로 결합해서 제출
             };
-            if (onSubmit) onSubmit(updatedFormData);
+
+            try {
+                let response;
+                // Axios 통해 API 요청
+                if (mode === 'edit') {
+                    // 수정 요청
+                    response = await nextClient.put('/employee', {
+                        ...updatedFormData,
+                        seid: initialData.id, // 수정 대상 ID 전달
+                    });
+                    alert('직원 정보가 수정되었습니다.');
+                } else {
+                    // 추가 요청
+                    response = await nextClient.post('/employee', updatedFormData);
+                    alert('직원이 추가되었습니다.');
+                }
+                if (response.data.success) {
+                    // 성공 시 직원 관리 페이지로
+                    if (onSubmit) onSubmit(updatedFormData);
+                    Router.push('/employee/management');
+                } else {
+                    throw new Error(response.data.error || '요청 처리 실패');
+                }
+            } catch (error) {
+                setError(error.response?.data?.error || error.message);
+            }
             
         } else {
             console.log("유효성 검사 실패 !!!");
             console.log(errors);
-            
         }
     };
 
     useImperativeHandle(ref, () => ({
         handleSubmit,
     }));
-    
-    const validateRules = {
-        name: value => value.trim() ? '' : REQUIRED_ERROR,
-        email: value => value.trim() ? '' : REQUIRED_ERROR,
-        phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-        // bankCode: value => value ? '' : REQUIRED_ERROR,
-        accountNumber: value => value ? '' : REQUIRED_ERROR,
-        salary: value => value ? '' : REQUIRED_ERROR,
-        paymentDate: value => {
-            if (!value) return REQUIRED_ERROR;
-            if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
-            return '';
-        },
-        birthDate: value => {
-            if (!value.trim()) return REQUIRED_ERROR;
-            const inputDate = new Date(value);
-            const today = new Date();
-            if (inputDate >= today) return DATE_ERROR;
-        },
-        postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
+
+    // 입력 시 오류 제거
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormErrors(prev => ({ ...prev, [field]: '' })); // 입력 시 오류 제거
     };
 
     return (
@@ -135,7 +157,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="text"
                         placeholder="ex) 홍길동"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
                     />
                     {formErrors.name && <span className={styles.error}>{formErrors.name}</span>}
                 </div>
@@ -146,7 +168,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="email"
                         placeholder="example@email.com"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
                     />
                     {formErrors.email && <span className={styles.error}>{formErrors.email}</span>}
                 </div>
@@ -157,7 +179,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         type="tel"
                         placeholder="010-1111-1111"
                         value={formData.phoneNumber}
-                        onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+                        onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                     />
                     {formErrors.phoneNumber && <span className={styles.error}>{formErrors.phoneNumber}</span>}
                 </div>
@@ -167,7 +189,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         <label>성별</label>
                         <select
                             value={formData.sex}
-                            onChange={(e) => setFormData({...formData, sex: e.target.value})}
+                            onChange={(e) => handleInputChange('sex', e.target.value)}
                         >
                             <option value="true">남자</option>
                             <option value="false">여자</option>
@@ -179,7 +201,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         <input
                             type="date"
                             value={formData.birthDate}
-                            onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
+                            onChange={(e) => handleInputChange('birthDate', e.target.value)}
                         />
                         {formErrors.birthDate && <span className={styles.error}>{formErrors.birthDate}</span>}
                     </div>
@@ -203,7 +225,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => setFormData({ ...formData, salary: parseInt(e.target.value) })}
+                                onChange={(e) => handleInputChange('salary', e.target.value)}
                             />
                             <span>원</span>
                         </div>
@@ -218,7 +240,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             value={formData.paymentDate}
 
                             onChange={(e) => {
-                                setFormData({ ...formData, paymentDate: e.target.value });
+                                handleInputChange('paymentDate', e.target.value);
                             }}
                         />
                         {formErrors.paymentDate && <span className={styles.error}>{formErrors.paymentDate}</span>}
@@ -242,14 +264,15 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {(formErrors.postcodeAddress || formErrors.detailAddress) && (
-                        <span className={styles.error}>{formErrors.postcodeAddress}</span>
+                    {(formErrors.address) && (
+                        <span className={styles.error}>{formErrors.address}</span>
                     )}
                 </div>
-                {/* <button type="submit" className={styles.submitButton}>직원 등록하기</button> */}
             </form>
         </div>
     );
 });
+
+EmployeeForm.displayName = "EmployeeForm";
 
 export default EmployeeForm;

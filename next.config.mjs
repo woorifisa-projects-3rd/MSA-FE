@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    transpilePackages: ['@fullcalendar']
+    transpilePackages: ['@fullcalendar'],
+    reactStrictMode: false
   }
   
   export default nextConfig;

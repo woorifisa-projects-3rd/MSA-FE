@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Button from "@/components/button/button";
 import classes from "./page.module.css";
@@ -9,11 +9,10 @@ import NameSearch from "@/components/namesearch/name-search";
 import Sorting from "@/components/sorting/sorting";
 import { nextClient } from '@/lib/nextClient';
 import BaseButton from "@/components/button/base-button";
+import { bankCodeList } from "@/constants/bankCodeList";
 
-const buttonText = "확인";
 
 export default function PayRecords() {
-
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [sortOption, setSortOption] = useState('latest'); // 최신순 디폴트
     const [searchQuery, setSearchQuery] = useState('');
@@ -67,6 +66,7 @@ export default function PayRecords() {
     //     { name: '강세필', account: '258-1467-284567', amount: '309,210원', date: '2024/10/09', button: <BaseButton text={buttonText}  /> },
     // ]);
 
+
     // 선택된 년, 월과 검색어에 맞는 데이터 필터링
     const filteredList = list.filter(item => {
         const itemDate = new Date(item.date);
@@ -89,6 +89,29 @@ export default function PayRecords() {
         }
     });
 
+    // bankCodeList와 매칭하여 SVG 추가한 리스트 생성
+    const updatedList = sortedList.map(item => {
+        const bank = bankCodeList.find(bank => bank.code === item.code); // 코드로 은행 찾기
+        const updatedAccount = bank ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+    <div
+        className={classes.bankIcon} // SVG 스타일 추가
+        dangerouslySetInnerHTML={{ __html: bank.logoUrl }} // SVG 삽입
+    />
+    <span style={{ textAlign: 'center' }}>{item.account}</span> {/* 계좌번호 표시 */}
+</span>
+
+        ) : (
+            <span>{item.account}</span> /* 매칭되지 않은 경우 계좌번호만 반환 */
+        );
+    
+        return {
+            ...item,
+            account: updatedAccount, // 계좌번호에 SVG 포함
+        };
+    });
+    
+
     const tableHeaders = {
         name: '직원 이름',
         account: '계좌번호',
@@ -109,9 +132,9 @@ export default function PayRecords() {
             </div>
 
             {/* 테이블 영역 */}
-            <DefaultTable 
-                tableHeaders={tableHeaders} 
-                list={sortedList} 
+            <DefaultTable
+                tableHeaders={tableHeaders}
+                list={updatedList}
             />
         </div>
     );
