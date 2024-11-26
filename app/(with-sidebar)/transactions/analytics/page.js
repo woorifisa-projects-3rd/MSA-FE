@@ -5,8 +5,10 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale } from 'chart.js';
 import BaseButton from '@/components/button/base-button';
 import { nextClient } from '@/lib/nextClient';
+import {PdfnextClient} from '@/lib/PdfnextClient'
 import ModalContainer from '@/components/modal/modal-container';
 import classes from "./page.module.css";
+import { ClipboardSignature } from 'lucide-react';
 
 ChartJS.register(ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale);
 
@@ -38,7 +40,7 @@ export default function SalesExpenses() {
 
         const data = response.data;
 
-        console.log('응답 데이터: ', data);
+        // console.log('응답 데이터: ', data);
 
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
         const filteredSales = (data.data.sales || []).filter(
@@ -118,43 +120,72 @@ export default function SalesExpenses() {
     }
   };
 
-  // 손익 계산서
   const handleGenerateIncomeStatement = async () => {
     try {
-      const response = await nextClient.post(
+      const response = await PdfnextClient.post(
         `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`,
         {},
-        {
-          responseType: 'arraybuffer', // PDF 데이터를 바이너리 형식으로 받기 위해 설정
-        }
+        { responseType: 'arraybuffer' } // 바이너리 데이터를 정확히 받음
       );
   
-      console.log('손익계산서 요청 성공:', response.data);
+      console.log('데이터: ', response.data);
   
-      // Blob 객체 생성 (PDF 데이터를 위한)
-      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const pdfBlob = new Blob([new Uint8Array(response.data)], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
   
-      // URL.createObjectURL을 사용해 Blob을 URL로 변환
-      const blobUrl = URL.createObjectURL(blob);
+      // 동적으로 파일명 설정
+      const fileName = `${selectedYear}년_${String(selectedMonth).padStart(2, '0')}월_손익계산서.pdf`;
   
-      // 다운로드를 위한 <a> 태그 생성
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `손익계산서_${selectedYear}_${selectedMonth}.pdf`; // 다운로드 파일명 설정
-  
-      // <a> 태그 클릭 이벤트 트리거
-      document.body.appendChild(a);
-      a.click();
-  
-      // 메모리 누수 방지를 위해 <a> 태그와 Blob URL 제거
-      document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', fileName); // 동적 파일명
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error('손익계산서 요청 실패:', error);
+      alert('손익계산서 요청 중 오류가 발생했습니다.');
     }
   };
   
   
+  
+
+  // const handleGenerateIncomeStatement = async () => {
+  //   try {
+  //     // 서버로 요청 보내기
+  //     const response = await nextClient.post(
+  //       `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`,
+  //       {},
+  //       { responseType: 'arraybuffer' } // 바이너리 데이터로 응답받기
+  //     );
+  
+  //     console.log(response);
+  //     // 응답 데이터가 바이너리이므로 바로 Blob 객체 생성
+  //     const blob = new Blob([response], { type: 'application/pdf' });
+  
+  //     // Blob URL 생성 및 다운로드
+  //     const blobUrl = URL.createObjectURL(blob);
+  //     const a = document.createElement('a');
+  //     a.href = blobUrl;
+  //     a.download = `손익계산서_${selectedYear}_${selectedMonth}.pdf`;
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     document.body.removeChild(a);
+  
+  //     // 메모리 누수 방지
+  //     URL.revokeObjectURL(blobUrl);
+  //   } catch (error) {
+  //     console.error('손익계산서 요청 실패:', error);
+  //     alert('손익계산서 요청 중 오류가 발생했습니다.');
+  //   }
+  // };
+  
+  
+  
+    
+  
+    
   
 
     // 월별 매출 막대형 차트 데이터
