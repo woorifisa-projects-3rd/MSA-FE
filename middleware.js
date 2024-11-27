@@ -39,7 +39,7 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
 
   // 토큰이 없는 경우
   if (!token) {
-    // 보호된 경로 접근 시도하면 onboarding으로 리다이렉트
+    // 보호된 경로 접근 시도하면 login으로 리다이렉트
     if (!publicPaths.some(path => pathname.startsWith(path))) {
       return NextResponse.redirect(new URL('/login', request.url))
     }

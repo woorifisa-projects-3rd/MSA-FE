@@ -110,7 +110,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     <div className={styles.form}>
       {/* <h2 className="text-lg mb-4">계좌 등록</h2> */}
       <div className={styles.formGroup}>
-      <div className="flex gap-2 items-center relative">
+      <div className="flex gap-2 align-center">
         {BankSelector}
 
         {!isPresident && showBankList && (
@@ -145,11 +145,15 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
         />
 
 
-        <BaseButton 
+        {/* <BaseButton 
           text="계좌 확인"
           type="button"
           onClick={handleSubmit}
-        />
+        /> */}
+
+        <button type='button' onClick={handleSubmit} className={styles['zip-code-button']}>
+          계좌 확인
+        </button>
      
       </div>
       {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
