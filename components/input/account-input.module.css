@@ -32,7 +32,8 @@
   border-radius: 0.5rem;
   border: 1px solid #e5e7eb;
   background-color: white;
-  min-width: 8rem; /* 최소 너비 줄임 */
+  min-width: fit-content; /* 최소 너비 줄임 */
+  width: auto;
   font-size: 1rem;
   height: 2.75rem;
 }
