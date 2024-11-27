@@ -120,13 +120,11 @@ export default function SalesExpenses() {
 
     return (
         <div className={classes.container}>
-            {/* <h1 className={classes.title}>직원 정보 조회/수정 페이지</h1> */}
-        
-            {/* <BaseButton text= "직원 추가" onClick={() => openModal("add")}/> */}
-            <div className={classes.buttonsize}>
+            <div className={classes.employeeHeader}>
+                <h1 className={classes.title}>직원 정보 관리</h1>
                 <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
             </div>
-            <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={enrichedList} />
+            <DefaultTable tableHeaders={tableHeaders} list={enrichedList} />
         
             {isModalOpen && (
                 <ModalContainer
