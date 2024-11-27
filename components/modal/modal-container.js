@@ -37,6 +37,8 @@ export default function ModalContainer({
 
     // esc키로 모달 닫기
     useEffect(() => {
+        if (!isOpen) return;
+        
         const handleEsc = (e) => {
           if (e.key === 'Escape') onClose();
         };
