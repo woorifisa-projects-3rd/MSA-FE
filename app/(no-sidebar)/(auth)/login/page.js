@@ -109,6 +109,7 @@ export default function LoginPage() {
                             text={isLoading ? "로그인 중..." : "로그인"}  // 로딩 중 텍스트 변경
                             type="submit"
                             padding="1rem"
+                            width="100%"
                             disabled={isLoading}  // 로딩 중 버튼 비활성화
                         />
 
