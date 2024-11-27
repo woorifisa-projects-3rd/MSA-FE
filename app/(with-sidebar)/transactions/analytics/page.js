@@ -231,7 +231,11 @@ export default function SalesExpenses() {
     scales: {
       y: {
         ticks: {
-          callback: (value) => `${value / 1000000}백만`,
+          callback: (value) => {
+            if (value >= 1000000) {
+              return `${value / 1000000}백만`; // 100만 단위로 변환
+            }
+          },
         },
       },
     },
