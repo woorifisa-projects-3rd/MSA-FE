@@ -23,7 +23,7 @@ export const NAVIGATION_ITEMS = [
         title:"매출ㆍ지출",
         subTitles:[
             {text:"매출ㆍ지출 조회", path:"/transactions/analytics"}, 
-            {text:"간편장부ㆍ손익계산서", path:"/transactions/reports"}
+            // {text:"간편장부ㆍ손익계산서", path:"/transactions/reports"}
         ]
     },
     {
