@@ -16,7 +16,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         birthDate: '',
         sex: true,
         phoneNumber: '',
-        employmentType: 1,
+        employmentType: 2,
         bankCode: 20,
         accountNumber: '',
         salary: '',
@@ -89,6 +89,43 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
       
         return errors;
       };
+
+      const handleEmploymentTypeChange = (value) => {
+        setFormData(prev => {
+            const updatedData = { 
+                ...prev, 
+                employmentType: value === 'true' ? 2 : 1, // 시급(2) 또는 월급(1)
+            };
+    
+            // 월급 선택 시 4대 보험 무조건 포함
+            if (value === 'false') {
+                updatedData.insuranceIncluded = true; // 월급일 경우 포함으로 강제 설정
+            } else {
+                // 시급 선택 시 기존 보험 포함 상태를 유지
+                updatedData.insuranceIncluded = prev.insuranceIncluded;
+            }
+    
+            return updatedData;
+        });
+    };
+    
+    
+    const handleInsuranceChange = (value) => {
+        setFormData(prev => {
+            const updatedData = { 
+                ...prev, 
+                insuranceIncluded: value === 'true', 
+            };
+    
+            // 시급 선택 시 4대 보험 여부에 따라 employmentType 설정
+            if (prev.employmentType === 2 || prev.employmentType === 3) {
+                updatedData.employmentType = value === 'true' ? 3 : 2;
+            }
+    
+            return updatedData;
+        });
+    };
+    
 
     // 제출 버튼 클릭시 유효성 검사 실행 
     const handleSubmit = async (e) => {
@@ -212,8 +249,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     <div className={styles.formGroup}>
                         <label>고용 형태</label>
                         <select
-                            value={formData.employmentType}
-                            onChange={(e) => setFormData({...formData, employmentType: e.target.value})}
+                            value={formData.employmentType === 1 ? 'false' : 'true'}
+                            onChange={(e) => handleEmploymentTypeChange(e.target.value)}
                         >
                             <option value="true">시급</option>
                             <option value="false">월급</option>
@@ -221,20 +258,39 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     </div>
 
                     <div className={styles.formGroup}>
+                        <label>4대 보험 여부</label>
+                        <select
+                            value={formData.insuranceIncluded ? 'true' : 'false'}
+                            onChange={(e) => handleInsuranceChange(e.target.value)}
+                            disabled={formData.employmentType === 1} // 월급 선택 시 비활성화
+                        >
+                            <option value="true">포함</option>
+                            <option value="false">미포함</option>
+                        </select>
+                    </div>
+
+
+                    <div className={styles.formGroup}>
                         <label>금액</label>
                         <div className={styles.inputWithUnit}>
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => handleInputChange('salary', e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value >= 0) { // 음수가 아닌 경우에만 업데이트
+                                        handleInputChange('salary', value);
+                                    }
+                                }}
                             />
                             <span>원</span>
                         </div>
                         {formErrors.salary && <span className={styles.error}>{formErrors.salary}</span>}
                     </div>
 
+
                     <div className={styles.formGroup}>
-                        <label>급여날짜</label>
+                        <label>급여일</label>
                         <input
                             type="number"
                             placeholder='1부터 28까지 입력'
