@@ -143,10 +143,28 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                 </div>
               
                 <div className={classes.mobileRight}>
-                    <button className={classes.bellButton}>
+                    <Link href="/mypage">
+                        <button className={classes.profile_button}>내 정보</button>
+                    </Link>
+                    {/* <button className={classes.bellButton}>
                         <Bell className={classes.bellIcon} />
                         <span className={classes.notificationCount}>5</span>
-                    </button>
+                    </button> */}
+                    <div ref={bellRef} className={classes.bellContainer}>
+                        <FiBell
+                            size={45}
+                            className={classes.bell_icon}
+                            onClick={handleBellClick}
+                        />
+                        {unreadNotificationCount > 0 && (
+                            <span className={classes.notificationCnt}>
+                                {unreadNotificationCount}
+                            </span>
+                        )}
+                        {isAlarmOpen && (
+                            <AlarmModal modalRef={modalRef} notifications={notifications} />
+                        )}
+                    </div>
                     <button 
                         className={classes.menuButton}
                         onClick={onMenuToggle}
