@@ -11,12 +11,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
         bankCode: "020",
         location: "",
         latitude : 0,
-        longitude : 0,
-
-        // name: "",
-        // email: "",
-        // emailPinNumber: "",
-        // verificationCode : ""
+        longitude : 0
     })
     const [currentStep, setCurrentStep] = useState(1);
 
@@ -30,6 +25,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
         emailPinNumber: "",
         verificationCode : ""
     })
+
+    const [isEmailSent, setIsEmailSent] = useState(false);
 
 
     // Step 1: 사업자 정보 확인 
@@ -86,8 +83,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             console.log("스프링에서 프론트까지 전달",response.data);
             
             if (response.data) {
-                setCurrentStep(3)// 여기 바꿔줘야 넘어가지 성윤아!!! 
-                return true;
+                return setIsEmailSent(true);
             }
             // setError("인증 코드 발송에 실패했습니다.");
             return false;
@@ -100,19 +96,19 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 3-2: 이메일 인증 코드 확인
     const verifyEmailCode = async () => {
         try {
-            const response = await nextClient.post('/user/core/account/verify', {
+            const response = await nextClient.post('/store/registration/emailpincheck', {
                 email: verificationData.email,
-                code: verificationData.verificationCode
+                emailPinNumber: verificationData.emailPinNumber
             });
-            
+            console.log("스프링에서 프론트까지 전달",response.data);
             if (response.data) {
                 setCurrentStep(4);
                 return true;
             }
-            setError("인증 코드가 일치하지 않습니다.");
+           // setError("인증 코드가 일치하지 않습니다.");
             return false;
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            //setError("서버 오류가 발생했습니다.");
             return false;
         }
     };
@@ -173,6 +169,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             registerPin,
             sendVerificationEmail,
             finalizeRegistration, // 모든 함수 포함
+            isEmailSent,
+            setIsEmailSent
         }}>
             {children}
         </RegistrationContext.Provider>
