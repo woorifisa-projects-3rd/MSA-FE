@@ -73,6 +73,7 @@ export default function ProfileDetail({content, refreshStores}) {
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
+        businessNumber: `${workplace.businessNumber.slice(0, 3)}-${workplace.businessNumber.slice(3, 5)}-${workplace.businessNumber.slice(5, 10)}`,
         accountNumber: (
             <div className={classes.accountContainer}>
                 {workplace.bankCode && (

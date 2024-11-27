@@ -14,7 +14,8 @@ const FinanceProducts = () => {
       <div className={styles.contentHeader}>
         <h1 className={styles.title}>소상공인 맞춤형 금융 상품</h1>
         <p className={styles.subtitle}>
-          소상공인을 위한 특별 지원 프로그램! 창업자금, 재정 지원 서비스로 안정적인 사업 운영을 도와드립니다.
+          소상공인을 위한 특별 지원 프로그램!<br/>
+          창업자금, 재정 지원 서비스로 안정적인 사업 운영을 도와드립니다.
         </p>
       </div>
 
@@ -36,17 +37,17 @@ const FinanceProducts = () => {
             
             <div className={styles.productInfo}>
               <div className={styles.infoRow}>
-                <span className={styles.label}>대출 대상</span>
+                <span className={styles.label}>대상</span>
                 <span className={styles.value}>{product.target}</span>
               </div>
               
               <div className={styles.infoRow}>
-                <span className={styles.label}>대출 한도</span>
+                <span className={styles.label}>한도</span>
                 <span className={styles.value}>{product.limit}</span>
               </div>
               
               <div className={styles.infoRow}>
-                <span className={styles.label}>대출 기간</span>
+                <span className={styles.label}>기간</span>
                 <span className={styles.value}>{product.term}</span>
               </div>
 

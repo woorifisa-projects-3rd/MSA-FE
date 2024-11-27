@@ -40,8 +40,6 @@ export default function SalesExpenses() {
 
         const data = response.data;
 
-        // console.log('응답 데이터: ', data);
-
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
         const filteredSales = (data.data.sales || []).filter(
           (item) => new Date(item.transactionDate).getFullYear() === selectedYear &&
@@ -66,33 +64,62 @@ export default function SalesExpenses() {
         const expensesCategoryTotals = calculateCategoryTotals(filteredExpenses);
         const monthlySales = data.data.monthlySales;
 
+        // 카테고리 5개까지, 나머지는 '기타'로
+        const processChartData = (categories, maxLabels = 5) => {
+          const sortedCategories = [...categories].sort((a, b) => b.total - a.total);
+
+          const topCategories = sortedCategories.slice(0, maxLabels);
+          const others = sortedCategories.slice(maxLabels);
+
+          const topLabels = topCategories.map(item => item.category);
+          const topData = topCategories.map(item => item.total);
+
+          if (others.length > 0) {
+            topLabels.push("기타");
+            topData.push(others.reduce((sum, item) => sum + item.total, 0));
+          }
+
+          return { labels: topLabels, data: topData };
+        };
+
         setList({ 매출: filteredSales, 지출: filteredExpenses });
         setTotalSales(data.data.totalSales || 0);
         setTotalExpenses(data.data.totalExpenses || 0);
         setMonthlySalesData(monthlySales || []);
-        // console.log(totalSales);
-        // console.log(totalExpenses);
-        // console.log(monthlySalesData);
         console.log(data.data.monthlySales);
 
+        const salesProcessed = processChartData(salesCategoryTotals);
+        const expensesProcessed = processChartData(expensesCategoryTotals);
+
+        const chartColors = [
+          "#394F89",
+          "#0180CD", // main woori blue
+          "#38BEEF", // woori light blue
+          "#93C5FD",
+          "#E0FCFD",
+          "#A2DCEE",
+        ];
+
         setSalesData({
-          labels: salesCategoryTotals.map(item => item.category),
+          labels: salesProcessed.labels,
           datasets: [
             {
               label: '매출 카테고리별',
-              data: salesCategoryTotals.map(item => item.total),
+              data: salesProcessed.data,
               hoverOffset: 6,
+              backgroundColor: chartColors,
             },
           ],
         });
 
         setExpensesData({
-          labels: expensesCategoryTotals.map(item => item.category),
+          labels: expensesProcessed.labels,
           datasets: [
             {
               label: '지출 카테고리별',
-              data: expensesCategoryTotals.map(item => item.total),
+              data: expensesProcessed.data,
               hoverOffset: 6,
+              backgroundColor: chartColors,
             },
           ],
         });
@@ -102,6 +129,20 @@ export default function SalesExpenses() {
     };
     loadTransactionAnalyticsPageData();
   }, [selectedYear, selectedMonth]);
+
+  const donutChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 12,
+          boxHeight: 12,
+        },
+      },
+    },
+  };
 
   // 간편장부
   const handleBusinessTypeSelection = async (type) => {
@@ -114,7 +155,6 @@ export default function SalesExpenses() {
         {}, // 요청 본문(body)
         { responseType: 'arraybuffer' }
       );
-      console.log('POST 요청 성공');
       console.log('데이터: ', response.data);
 
       handleCloseModal();
@@ -174,17 +214,29 @@ export default function SalesExpenses() {
       labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
       datasets: [
         {
-          label: `${selectedYear}년 월별 매출`,
           data: monthlySalesData,
+          backgroundColor: "#38BEEF", // woori light blue
         },
       ],
     };
 
-  const options = {
+  const barChartOptions = {
     responsive: true,
     plugins: {
       legend: {
+        labels: '',
         position: 'bottom',
+      },
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: (value) => {
+            if (value >= 1000000) {
+              return `${value / 1000000}백만`; // 100만 단위로 변환
+            }
+          },
+        },
       },
     },
   };
@@ -193,11 +245,14 @@ export default function SalesExpenses() {
     <div className={classes.container}>
       <div className={classes.selectContainer}>
         <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
-          {[2024, 2023, 2022, 2021, 2020].map((year) => (
-            <option key={year} value={year}>
-              {year}년
-            </option>
-          ))}
+        {[...Array(5)].map((_, index) => {
+        const year = new Date().getFullYear() - index;
+        return (
+          <option key={year} value={year}>
+            {year}년
+          </option>
+          );
+        })}
         </select>
 
         <select value={selectedMonth} onChange={(e) => setSelectedMonth(Number(e.target.value))}>
@@ -229,27 +284,22 @@ export default function SalesExpenses() {
           </div>
 
           <div className={classes.chartContainer}>
-            <div>
-              <h2>매출</h2>
+            <div className={classes.chartStyle}>
+              {/* <h2>매출</h2> */}
               {salesData.labels ? (
-                <Doughnut data={salesData} options={options} />
+                <Doughnut data={salesData} options={donutChartOptions} />
               ) : (
                 <p>매출 데이터 로딩 중...</p>
               )}
             </div>
-            <div>
-              <h2>지출</h2>
+            <div className={classes.chartStyle}>
+              {/* <h2>지출</h2> */}
               {expensesData.labels ? (
-                <Doughnut data={expensesData} options={options} />
+                <Doughnut data={expensesData} options={donutChartOptions} />
               ) : (
                 <p>지출 데이터 로딩 중...</p>
               )}
             </div>
-          </div>
-
-          <div className={classes.reportsContainer}>
-            <BaseButton text="손익계산서 발급" onClick={handleGenerateIncomeStatement}/>
-            <BaseButton text="간편장부 발급" onClick={handleOpenModal}/>
           </div>
         </div>
 
@@ -290,12 +340,23 @@ export default function SalesExpenses() {
 
 
         <div className={classes.rightSection}>
-          <h2>월별 매출</h2>
+          <h2>{selectedYear}년 월별 매출</h2>
           {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
-            <Bar data={monthlySalesBarData} options={options} />
+            <Bar data={monthlySalesBarData} options={barChartOptions} />
           ) : (
             <p>월별 매출 데이터 로딩 중...</p>
           )}
+
+        <div className={classes.reportsContainer}>
+          {salesData.labels && expensesData.labels ?  (
+          <>
+            <BaseButton text="손익계산서 발급" onClick={handleGenerateIncomeStatement} />
+            <BaseButton text="간편장부 발급" onClick={handleOpenModal} />
+          </>
+        ) : (
+          <p></p>
+        )}
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ export default function OnboardingPage() {
   const router = useRouter()
 
   const handleSignupClick = () => {
-    router.push('/login/SignupForm')
+    router.push('/signup')
   }
 
   const handleWooriClick = () => {
@@ -26,7 +26,7 @@ export default function OnboardingPage() {
                 재무와 직원 관리를<br />
                 <span className={styles.highlight}>한 번에</span> 해결하세요!
               </h1>
-              <p>대한민국 소상공인/자영업자 사장님들을 위한 단 하나의 통합 플랫폼</p>
+              <p>대한민국 소상공인/자영업자 사장님들을 위한<br/>단 하나의 통합 플랫폼</p>
               <div className={styles.buttonGroup}>
                 <button
                     className={styles.primaryButton}

@@ -8,6 +8,8 @@
   import { useSearchParams } from 'next/navigation';
   import { nextClient } from '@/lib/nextClient';
   import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
+import BaseButton from '@/components/button/base-button';
+import classes from "./page.module.css";
 
   export default function Form() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,10 +122,10 @@
           salary: `${item.salary}원`,
           commuteDate: item.commuteDate || selectedDate,  // 날짜 정보 추가
           edit: (
-            <button onClick={() => handleEditClick(item)}>수정</button>
+            <PrimaryButton onClick={() => handleEditClick(item)} text="수정"/>
           ),
           delete: (
-            <button onClick={() => handleDelete(item.commuteId)}>삭제</button>
+            <PrimaryButton onClick={() => handleDelete(item.commuteId)} text="삭제"/>
           ),
         }));
     
@@ -260,8 +262,10 @@
 
     return (
       <>
-        <button onClick={() => setIsModalOpen(true)}>출퇴근 기록 추가 모달 오픈</button>
-        <div>오늘 날짜: {selectedDate}</div>
+        <div className={classes.attendanceHeader}>
+          <div className={classes.selectedDate}>{selectedDate}</div>
+          <BaseButton onClick={() => setIsModalOpen(true)} text="기록 추가"/>
+        </div>
 
         <ModalContainer
           isOpen={isModalOpen}
@@ -300,7 +304,6 @@
         </ModalContainer>
 
         <DefaultTable
-          tableName="출퇴근 조회"
           tableHeaders={tableHeaders}
           list={attendanceList}
         />

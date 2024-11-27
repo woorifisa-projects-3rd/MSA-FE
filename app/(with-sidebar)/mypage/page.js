@@ -9,11 +9,6 @@ import { nextClient } from "@/lib/nextClient";
 const tabs = [
   { 
       name: '프로필 편집',
-      email: 'alexarawles@gmail.com',
-  },
-  { 
-      name: '알림 설정',
-      content: '알림 설정 내용'
   },
   { 
       name: '비밀번호 변경',
@@ -60,9 +55,9 @@ export default function Home() {
       switch(selectedTab) {
           case 0:
               return <ProfileDetail content={stores} refreshStores={fetchStores}/>;
+        //   case 1:
+        //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:
-              return <AlarmSetting content={tabs[selectedTab]} />;
-          case 2:
               return <PasswordChange content={tabs[selectedTab]} />;
           default:
               return null;
