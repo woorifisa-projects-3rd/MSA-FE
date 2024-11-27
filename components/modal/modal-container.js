@@ -72,7 +72,7 @@ export default function ModalContainer({
 
                 <h2 className={styles.modalHeader}>{title}</h2>
                 
-                <div className={styles.modlaBody}>
+                <div className={styles.modalBody}>
                 {children}
                 </div>
 
