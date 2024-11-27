@@ -22,7 +22,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     const [verificationData, setVerificationData] = useState({
         name: "",
         email: "",
-        emailPinNumber: "",
+        pinNumber: "",
         verificationCode : ""
     })
 
@@ -98,7 +98,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
         try {
             const response = await nextClient.post('/store/registration/emailpincheck', {
                 email: verificationData.email,
-                emailPinNumber: verificationData.emailPinNumber
+                emailPinNumber: verificationData.verificationCode
             });
             console.log("스프링에서 프론트까지 전달",response.data);
             if (response.data) {
@@ -116,9 +116,9 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 4: PIN 번호 등록
     const registerPin = async () => {
         try {
-            const response = await nextClient.post('/user/core/account/pin', {
+            const response = await nextClient.post('/store/registration/pinnumbercheck', {
                 email: verificationData.email,
-                emailPinNumber: verificationData.emailPinNumber
+                pinNumber: verificationData.pinNumber
             });
             
             if (response.data) {
