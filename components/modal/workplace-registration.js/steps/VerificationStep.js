@@ -3,13 +3,8 @@ import styles from "../BusinessRegistration.module.css"
 import { useState } from "react";
 
 export default function VerificationStep(){
-    const { setCurrentStep } = useRegistration();
-    const [verificationData, setVerificationData] = useState({
-        name: '',
-        email: '',
-        verificationCode: ''
-      });
-      const [isEmailSent, setIsEmailSent] = useState(false);
+       const { setCurrentStep ,verificationData, setVerificationData , sendVerificationEmail, isEmailSent, setIsEmailSent, verifyEmailCode} = useRegistration()
+    
      
       const handleEmailVerification = () => {
         setIsEmailSent(true);
@@ -51,7 +46,7 @@ export default function VerificationStep(){
                     />
                 </div>
                 <button
-                    onClick={handleEmailVerification}
+                    onClick={sendVerificationEmail}
                     className={`${styles.button} ${styles.primaryButton}`}
                 >
                     인증 메일 발송
@@ -74,7 +69,7 @@ export default function VerificationStep(){
                     />
                 </div>
                 <button
-                    onClick={handleCodeVerification}
+                    onClick={verifyEmailCode}
                     className={`${styles.button} ${styles.primaryButton}`}
                 >
                     확인

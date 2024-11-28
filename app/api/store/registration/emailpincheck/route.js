@@ -4,11 +4,11 @@ import springClient from '@/lib/springClient';
 export async function POST(request) {
     try {
         // 클라이언트에서 보낸 데이터 받기
-        const { name, email } = await request.json();
-        console.log('프론트에서 왔다:', { name, email });
+        const { emailPinNumber, email } = await request.json();
+        console.log('프론트에서 왔다:', { emailPinNumber, email });
 
         // Spring Boot로 요청 보내기
-        const response = await springClient.post('/user/core/account/profile', { name, email });
+        const response = await springClient.post('/user/core/account/email/pin', { emailPinNumber, email });
         console.log('Spring Boot 에서 왔다.:', response.data);
 
         // 응답 처리

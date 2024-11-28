@@ -17,8 +17,8 @@ export default function StoreInfoStep(){
               <label className={styles.label}>사업장 상호명</label>
               <input
                 type="text"
-                name="businessName"
-                value={formData.businessName}
+                name="storeName"
+                value={formData.storeName}
                 onChange={handleChange}
                 className={styles.input}
                 placeholder="상호명을 입력하세요"
