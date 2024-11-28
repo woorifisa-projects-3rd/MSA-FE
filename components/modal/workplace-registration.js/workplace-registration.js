@@ -4,6 +4,7 @@ import BaseButton from '@/components/button/base-button';
 import AccountInputForm from "@/components/input/account-input";
 import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
 import { nextClient } from "@/lib/nextClient";
+import { validateForm, commonValidateRules } from "@/utils/validation";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
@@ -112,30 +113,28 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
       ...prevErrors,
       accountNumber: accountNumber?.trim() ? '' : REQUIRED_ERROR,
     }));
-};
+  };
 
-  // 유효성 검사 함수
-  const validateForm = (data) => {
-    const errors = {};
+  const validateRules = {
+    storeName: commonValidateRules.required,
+    businessNumber: commonValidateRules.required,
+  };
 
-    // 계좌 필드 유효성 검사
-    if (data.accountNumber === '') {
+  const validateFormData = (data) => {
+    const errors = validateForm(data, validateRules);
+
+    // 주소 필드 유효성 검사 추가
+    if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+      errors.address = REQUIRED_ERROR;
+    }
+
+    // 계좌 필드 유효성 검사 추가
+    if (!data.accountNumber.trim()) {
       errors.accountNumber = REQUIRED_ERROR;
     }
 
-    // 주소 필드 유효성 검사
-    if (!data.postcodeAddress || !data.detailAddress) {
-        errors.address = REQUIRED_ERROR;
-    }
-
-    // 각 필드에 대해 유효성 검사 수행
-    Object.keys(validateRules).forEach(field => {
-        const error = validateRules[field](data[field]);
-        if (error) errors[field] = error;
-    });
-
-      return errors;
-  };
+    return errors;
+  }
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -143,7 +142,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
     setIsSubmitted(true);
 
     // 유효성 검사 수행
-    const errors = validateForm(formData);
+    const errors = validateFormData(formData);
     setFormErrors(errors);
     console.log(formData);
     
@@ -197,11 +196,6 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
   useImperativeHandle(ref, () => ({
       handleSubmit,
   }));
-
-  const validateRules = {
-      storeName: value => value.trim() ? '' : REQUIRED_ERROR,
-      businessNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-  };
       
   return (
     <div className={styles.formContainer}>
@@ -262,5 +256,7 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
     </div>
   );
 });
+
+WorkplaceModal.displayName = "WorkplaceModal";
 
 export default WorkplaceModal;

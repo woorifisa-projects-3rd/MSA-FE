@@ -93,7 +93,7 @@ export default function Navigation({ isMobileMenuOpen }){
                     onClick={handleLogout}
                 >
                     <div>로그아웃</div>
-                    <div><BsBoxArrowRight /></div>
+                    <div className={classes.icon}><BsBoxArrowRight /></div>
                 </button>
             </nav>
             
@@ -143,7 +143,7 @@ export default function Navigation({ isMobileMenuOpen }){
                         onClick={handleLogout}
                     >
                         <span>로그아웃</span>
-                        <BsBoxArrowRight />
+                        <BsBoxArrowRight className={classes.icon}/>
                     </button>
                 </div>
             </div>

@@ -151,7 +151,6 @@ const AccountInputForm = ({
       <div className={styles.formGroup}>
         <div className="flex gap-2 items-center relative">
           {BankSelector}
-
           {!isPresident && showBankList && (
             <div ref={dropdownRef} className={styles.dropdown}>
               <div className={styles.dropdownHeader}>

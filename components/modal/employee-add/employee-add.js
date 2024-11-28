@@ -5,10 +5,9 @@ import styles from './employee-add.module.css';
 import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
+import { validateForm, commonValidateRules } from "@/utils/validation";
 
 const REQUIRED_ERROR = "필수 항목입니다.";
-const DATE_ERROR = "잘못된 날짜입니다.";
-const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 
 const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
@@ -17,7 +16,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         birthDate: '',
         sex: true,
         phoneNumber: '',
-        employmentType: true,
+        employmentType: 2,
         bankCode: 20,
         accountNumber: '',
         salary: '',
@@ -71,31 +70,72 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         }));
     };
 
-     // 유효성 검사 함수
-     const validateForm = (data) => {
-        const errors = {};
+    const validateRules = {
+        name: commonValidateRules.required,
+        email: commonValidateRules.email,
+        phoneNumber: commonValidateRules.phoneNumber,
+        accountNumber: commonValidateRules.required,
+        salary: commonValidateRules.required,
+        paymentDate: commonValidateRules.paymentDate,
+        birthDate: commonValidateRules.birthDate,
+        address: (data) =>
+          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+      };
 
-        // 주소 필드 유효성 검사
+    const validateFormData = (data) => {
+        const errors = validateForm(data, validateRules);
+      
+        // 주소 필드 유효성 검사 추가
         if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
-            errors.postcodeAddress = REQUIRED_ERROR;
-            errors.detailAddress = REQUIRED_ERROR;
+          errors.address = "필수 항목입니다.";
         }
-    
-        // 각 필드에 대해 유효성 검사 수행
-        Object.keys(validateRules).forEach(field => {
-            const error = validateRules[field](data[field]);
-            if (error) errors[field] = error;
-        });
-    
+      
         return errors;
+      };
+
+      const handleEmploymentTypeChange = (value) => {
+        setFormData(prev => {
+            const updatedData = { 
+                ...prev, 
+                employmentType: value === 'true' ? 2 : 1, // 시급(2) 또는 월급(1)
+            };
+    
+            // 월급 선택 시 4대 보험 무조건 포함
+            if (value === 'false') {
+                updatedData.insuranceIncluded = true; // 월급일 경우 포함으로 강제 설정
+            } else {
+                // 시급 선택 시 기존 보험 포함 상태를 유지
+                updatedData.insuranceIncluded = prev.insuranceIncluded;
+            }
+    
+            return updatedData;
+        });
     };
+    
+    
+    const handleInsuranceChange = (value) => {
+        setFormData(prev => {
+            const updatedData = { 
+                ...prev, 
+                insuranceIncluded: value === 'true', 
+            };
+    
+            // 시급 선택 시 4대 보험 여부에 따라 employmentType 설정
+            if (prev.employmentType === 2 || prev.employmentType === 3) {
+                updatedData.employmentType = value === 'true' ? 3 : 2;
+            }
+    
+            return updatedData;
+        });
+    };
+    
 
     // 제출 버튼 클릭시 유효성 검사 실행 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
     
         // 유효성 검사 수행
-        const errors = validateForm(formData);
+        const errors = validateFormData(formData);
         setFormErrors(errors);
         
         // 오류가 없으면 제출
@@ -141,38 +181,6 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     useImperativeHandle(ref, () => ({
         handleSubmit,
     }));
-    
-    const validateRules = {
-        name: value => value.trim() ? '' : REQUIRED_ERROR,
-        email: value => {
-            if (!value.trim()) {
-                return REQUIRED_ERROR;
-            }
-            // 이메일 형식 유효성 검사
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(value)) {
-                return "올바른 이메일 형식이 아닙니다.";
-            }
-            return '';
-        },
-        phoneNumber: value => value.trim() ? '' : REQUIRED_ERROR,
-        // bankCode: value => value ? '' : REQUIRED_ERROR,
-        accountNumber: value => value ? '' : REQUIRED_ERROR,
-        salary: value => value ? '' : REQUIRED_ERROR,
-        paymentDate: value => {
-            if (!value) return REQUIRED_ERROR;
-            if (value < 1 || value > 28) return PAYMENT_DATE_ERROR;
-            return '';
-        },
-        birthDate: value => {
-            if (!value.trim()) return REQUIRED_ERROR;
-            const inputDate = new Date(value);
-            const today = new Date();
-            if (inputDate >= today) return DATE_ERROR;
-        },
-        postcodeAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-        detailAddress: value => value.trim() ? '' : REQUIRED_ERROR,
-    };
 
     // 입력 시 오류 제거
     const handleInputChange = (field, value) => {
@@ -244,8 +252,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     <div className={styles.formGroup}>
                         <label>고용 형태</label>
                         <select
-                            value={formData.employmentType}
-                            onChange={(e) => setFormData({...formData, employmentType: e.target.value})}
+                            value={formData.employmentType === 1 ? 'false' : 'true'}
+                            onChange={(e) => handleEmploymentTypeChange(e.target.value)}
                         >
                             <option value="true">시급</option>
                             <option value="false">월급</option>
@@ -253,20 +261,39 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     </div>
 
                     <div className={styles.formGroup}>
+                        <label>4대 보험 여부</label>
+                        <select
+                            value={formData.insuranceIncluded ? 'true' : 'false'}
+                            onChange={(e) => handleInsuranceChange(e.target.value)}
+                            disabled={formData.employmentType === 1} // 월급 선택 시 비활성화
+                        >
+                            <option value="true">포함</option>
+                            <option value="false">미포함</option>
+                        </select>
+                    </div>
+
+
+                    <div className={styles.formGroup}>
                         <label>금액</label>
                         <div className={styles.inputWithUnit}>
                             <input
                                 type="number"
                                 value={formData.salary}
-                                onChange={(e) => handleInputChange('salary', e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value >= 0) { // 음수가 아닌 경우에만 업데이트
+                                        handleInputChange('salary', value);
+                                    }
+                                }}
                             />
                             <span>원</span>
                         </div>
                         {formErrors.salary && <span className={styles.error}>{formErrors.salary}</span>}
                     </div>
 
+
                     <div className={styles.formGroup}>
-                        <label>급여날짜</label>
+                        <label>급여일</label>
                         <input
                             type="number"
                             placeholder='1부터 28까지 입력'
@@ -300,8 +327,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {(formErrors.postcodeAddress || formErrors.detailAddress) && (
-                        <span className={styles.error}>{formErrors.postcodeAddress}</span>
+                    {(formErrors.address) && (
+                        <span className={styles.error}>{formErrors.address}</span>
                     )}
                 </div>
             </form>

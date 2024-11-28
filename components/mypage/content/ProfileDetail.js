@@ -10,6 +10,7 @@ import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm
 import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
 import { nextClient } from '@/lib/nextClient';
+import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
 
 
 //테스트 데이터
@@ -34,6 +35,9 @@ export default function ProfileDetail({content, refreshStores}) {
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
     const workplaceModalRef = useRef(null);
     const [error, setError] = useState('');
+
+
+    const [isFirstRegistrationModalOpen, setFistRegistrationModalOpen] = useState(false);
 
     const handleFormSubmit = () => {
         if (workplaceModalRef.current) {
@@ -69,6 +73,7 @@ export default function ProfileDetail({content, refreshStores}) {
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
+        businessNumber: `${workplace.businessNumber.slice(0, 3)}-${workplace.businessNumber.slice(3, 5)}-${workplace.businessNumber.slice(5, 10)}`,
         accountNumber: (
             <div className={classes.accountContainer}>
                 {workplace.bankCode && (
@@ -111,9 +116,10 @@ export default function ProfileDetail({content, refreshStores}) {
         
            <div className={classes.otherComponent}>
                 <PresidentInfo />
-                
+                <PrimaryButton onClick={() => setFistRegistrationModalOpen(true)} />
             </div>
 
+            {/* 여기서 사업장 등록 없으면 최초 사업장 등록 폼 연결 그게 아니면 사업장 리스트 노출 */} 
            <DefaultTable tableName={tableName} tableHeaders={tableHeaders} list={enrichedWorkplaceInfo}/>
 
             <div className={classes.addButtonContainer}>
@@ -136,12 +142,12 @@ export default function ProfileDetail({content, refreshStores}) {
                                />
                            </svg>
                        </div>
-                       <span className={classes.addButtonText}>사업장 추가 및 등록</span>
+                       <span className={classes.addButtonText}>사업장 추가등록</span>
                    </button>
             </div>
 
             {/* 등록 모달 */}
-            <ModalContainer
+            {/* <ModalContainer
                 title="사업장 등록"
                 isOpen={isRegistrationModalOpen}
                 onClose={()=>setRegistrationModalOpen(false)}
@@ -154,6 +160,16 @@ export default function ProfileDetail({content, refreshStores}) {
                     }}
                     refreshStores={refreshStores}
                 />
+            </ModalContainer> */}
+
+            {/* 사업장 최초 등록 모달 */}
+            <ModalContainer
+                title="사업장 등록"
+                isOpen={isFirstRegistrationModalOpen}
+                onClose={()=>setFistRegistrationModalOpen(false)}
+                showButtons={false}
+            >
+               <FirstStoreRegistration />
             </ModalContainer>
 
             {/* 편집 모달 */}

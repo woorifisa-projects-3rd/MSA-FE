@@ -1,0 +1,110 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+    pointer-events: none; /* 모달이 열리지 않을 때 클릭 방지 */
+}
+
+.modalOpen {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto; /* 모달이 열렸을 때 클릭 가능 */
+}
+
+.modalBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* 배경보다 컨텐츠가 위에 있도록 설정 */
+}
+
+.modalContent {
+    position: relative;
+    z-index: 1001; /* 모달 컨텐츠는 배경 위에 표시 */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    width: 600px;
+}
+  
+  .modalHeader {
+    display: flex;
+    align-items: start;
+    margin-bottom: 20px;
+  }
+  
+  .modalIcon {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fecaca;
+    margin-right: 16px;
+  }
+  
+  .modalIconSvg {
+    height: 24px;
+    width: 24px;
+    color: #e53e3e;
+  }
+  
+  .modalTitleContainer {
+    text-align: left;
+  }
+  
+  .modalTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a202c;
+  }
+  
+  .modalText {
+    font-size: 14px;
+    color: #4a5568;
+  }
+  
+  .modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .deleteButton {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  
+  .cancelButton {
+    background-color: white;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 8px;
+  }
