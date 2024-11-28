@@ -181,27 +181,34 @@
 
 /* 반응형 스타일 */
 @media (max-width: 768px) {
+    .backgroundWrapper {
+        display: none; /* 배경 wrapper 숨기기 */
+    }
     .container {
-        flex-direction: column;
+        background-color: #fff; /* 모바일에서는 흰색 배경으로 통일 */
     }
 
-    .leftBackground {
-        background-color: white;
+    .contentWrapper {
+        flex-direction: column; /* 세로 방향으로 변경 */
+        padding: 1rem;
     }
 
     .leftSection {
-        display: none;
+        display: none; /* 왼쪽 섹션 숨기기 */
     }
 
+    .rightSection {
+        padding: 2rem 1rem;
+        width: 100%; /* 오른쪽 섹션이 전체 너비를 차지하도록 */
+    }
+
+    .loginForm{
+        margin: 0 auto;
+    }
+  
     .loginTitle {
         font-size: 1.5rem;
     }
 
-    .content {
-        text-align: center;
-    }
-
-    .rightSection {
-        padding: 2rem;
-    }
+   
 }
