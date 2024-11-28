@@ -20,7 +20,7 @@ const tabs = [
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [stores, setStores] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchStores = async () => {
@@ -47,9 +47,9 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchStores();
-  }, []);
+//   useEffect(() => {
+//     fetchStores();
+//   }, []);
 
   const renderTabContent = () => {
       switch(selectedTab) {
