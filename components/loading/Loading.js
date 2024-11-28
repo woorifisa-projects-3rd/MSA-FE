@@ -8,6 +8,7 @@ const Loading = () => {
             position: 'absolute', // 부모 요소 기준 위치 설정
             top: '50%',
             left: '50%',
+            transform: 'translate(-50%, -50%)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
