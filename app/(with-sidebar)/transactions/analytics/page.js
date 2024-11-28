@@ -9,6 +9,7 @@ import {PdfnextClient} from '@/lib/PdfnextClient'
 import ModalContainer from '@/components/modal/modal-container';
 import classes from "./page.module.css";
 import styles from './ModalStyles.module.css';
+import Loading from '@/components/loading/Loading';
 
 ChartJS.register(ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale);
 
@@ -289,7 +290,7 @@ export default function SalesExpenses() {
               {salesData.labels ? (
                 <Doughnut data={salesData} options={donutChartOptions} />
               ) : (
-                <p>매출 데이터 로딩 중...</p>
+                <Loading />
               )}
             </div>
             <div className={classes.chartStyle}>
@@ -297,7 +298,7 @@ export default function SalesExpenses() {
               {expensesData.labels ? (
                 <Doughnut data={expensesData} options={donutChartOptions} />
               ) : (
-                <p>지출 데이터 로딩 중...</p>
+                <Loading />
               )}
             </div>
           </div>
@@ -344,7 +345,7 @@ export default function SalesExpenses() {
           {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
             <Bar data={monthlySalesBarData} options={barChartOptions} />
           ) : (
-            <p>월별 매출 데이터 로딩 중...</p>
+            <Loading />
           )}
 
         <div className={classes.reportsContainer}>
