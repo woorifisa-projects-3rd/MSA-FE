@@ -1,11 +1,19 @@
-// components/input/AccountInputForm.jsx
-'use client'
+'use client';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { bankCodeList } from '@/constants/bankCodeList';
 import styles from "./account-input.module.css";
 import BaseButton from '../button/base-button';
+import { nextClient } from '@/lib/nextClient';
 
-const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, accountNumber: propAccountNumber }) => {
+// AccountInputForm 컴포넌트
+const AccountInputForm = ({ 
+  isPresident = false, 
+  onChange, 
+  error, 
+  name, 
+  bankCode, 
+  accountNumber: propAccountNumber 
+}) => {
   const wooriBank = useMemo(() => bankCodeList.find(bank => bank.code === '020'), []);
   const [selectedBank, setSelectedBank] = useState(() => {
     if (isPresident) return wooriBank;
@@ -15,6 +23,7 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
 
   const [accountNumber, setAccountNumber] = useState(propAccountNumber || '');
   const [showBankList, setShowBankList] = useState(false);
+  const [validationMessage, setValidationMessage] = useState(''); // 유효성 메시지 상태 추가
   const dropdownRef = useRef(null);
 
   // 초기값 설정
@@ -76,14 +85,6 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     }
   };
 
-  const handleSubmit = () => {
-    console.log({
-      bankCode: selectedBank.code,
-      bankName: selectedBank.name,
-      accountNumber
-    });
-  };
-
   const BankSelector = isPresident ? (
     <div className={styles.bankSelector}>
       <div 
@@ -106,58 +107,93 @@ const AccountInputForm = ({ isPresident = false, onChange, error, bankCode, acco
     </button>
   );
 
+  // POST 요청 처리 함수 (사업장 및 추가 사업장 수정)
+  const presidentSubmit = async () => {
+    try {
+      const response = await nextClient.post('/user/account-check', {
+        bankCode: "020",
+        accountNumber
+      });
+      console.log("사장", bankCode, accountNumber )
+      if (response.data.success) {
+        setValidationMessage('사업장 계좌가 유효합니다.');
+      } else {
+        setValidationMessage('사업장 계좌가 유효하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('Error checking account:', error);
+      setValidationMessage('사업장 계좌 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  // POST 요청 처리 함수 (직원 추가 및 수정)
+  const employeeSubmit = async () => {
+    try {
+      const response = await nextClient.post('/user/employee-account-check', {
+        name,
+        bankCode: selectedBank.code,
+        accountNumber
+      });
+      console.log("직원",name, bankCode, accountNumber )
+      if (response.data.success) {
+        setValidationMessage('직원 계좌가 유효합니다.');
+      } else {
+        setValidationMessage('직원 계좌가 유효하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('Error checking employee account:', error);
+      setValidationMessage('직원 계좌 확인 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className={styles.form}>
-      {/* <h2 className="text-lg mb-4">계좌 등록</h2> */}
       <div className={styles.formGroup}>
-      <div className="flex gap-2 align-center">
-        {BankSelector}
-
-        {!isPresident && showBankList && (
-          <div ref={dropdownRef} className={styles.dropdown}>
-            <div className={styles.dropdownHeader}>
-              은행 선택
-            </div>
-            {bankCodeList.map((bank) => (
-              <div
-                key={bank.code}
-                onClick={() => {
-                  handleBankChange(bank)
-                }}
-                className={styles.dropdownItem}
-              >
-                <div 
-                  className={styles.bankIcon}
-                  dangerouslySetInnerHTML={{ __html: bank.logoUrl }}
-                />
-                <span>{bank.name}</span>
+        <div className="flex gap-2 items-center relative">
+          {BankSelector}
+          {!isPresident && showBankList && (
+            <div ref={dropdownRef} className={styles.dropdown}>
+              <div className={styles.dropdownHeader}>
+                은행 선택
               </div>
-            ))}
-          </div>
-        )}
+              {bankCodeList.map((bank) => (
+                <div
+                  key={bank.code}
+                  onClick={() => handleBankChange(bank)}
+                  className={styles.dropdownItem}
+                >
+                  <div 
+                    className={styles.bankIcon}
+                    dangerouslySetInnerHTML={{ __html: bank.logoUrl }}
+                  />
+                  <span>{bank.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
-        <input
-          type="text"
-          placeholder="계좌번호"
-          value={accountNumber}
-          onChange={handleAccountNumberChange}
-          className={styles.input}
-        />
+          <input
+            type="text"
+            placeholder="계좌번호"
+            value={accountNumber}
+            onChange={handleAccountNumberChange}
+            className={styles.input}
+          />
 
-
-        {/* <BaseButton 
-          text="계좌 확인"
-          type="button"
-          onClick={handleSubmit}
-        /> */}
-
-        <button type='button' onClick={handleSubmit} className={styles['zip-code-button']}>
-          계좌 확인
-        </button>
-     
+          <BaseButton 
+            text="계좌 확인"
+            type="button"
+            onClick={isPresident ? presidentSubmit : employeeSubmit} 
+          />
+        </div>
+        {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
       </div>
-      {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
-      </div>
+
+      {validationMessage && (
+        <div className={styles.validationMessage}>
+          {validationMessage} {/* 유효성 메시지 출력 */}
+        </div>
+      )}
 
       {isPresident && (
         <div className={styles.bankLink}>

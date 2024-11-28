@@ -229,6 +229,8 @@ const WorkplaceModal = forwardRef(({ mode, workplaceData, onSubmit, refreshStore
           {formErrors.businessNumber && <span className={styles.error}>{formErrors.businessNumber}</span>}
         </div>
 
+        {/* 현상황:mode가 create일 때는 사장으로 감, mode가 edit일때는 직원으로 감 */}
+        {/* mode 상관없이 항상 accountInputform은 president = true 여야함 */}
         <div className={styles.formGroup}>
           <label>계좌 등록</label>
           <AccountInputForm
