@@ -94,6 +94,7 @@ export default function FindIdPage() {
                             type="submit"
                             text="ID 찾기"
                             padding="1rem"
+                            width="100%"
                             // 나중에 onClick 추가할예정
                         />
                     </form>

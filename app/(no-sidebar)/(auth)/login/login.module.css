@@ -36,7 +36,7 @@
     padding: 8rem 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 1rem;
 }
@@ -128,21 +128,11 @@
     cursor: not-allowed;
 }
 
-.loginButton {
-    width: 100%;
-    padding: 1rem;
-    background-color: #7B9CFF;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-}
 /* 아이디찾기, 비밀번호 찾기 */
 .links {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     max-width: 400px;
     margin-top: 1rem;
@@ -195,12 +185,16 @@
         flex-direction: column;
     }
 
-    .leftSection {
-        padding: 2rem;
+    .leftBackground {
+        background-color: white;
     }
 
-    .mainTitle {
-        font-size: 2rem;
+    .leftSection {
+        display: none;
+    }
+
+    .loginTitle {
+        font-size: 1.5rem;
     }
 
     .content {

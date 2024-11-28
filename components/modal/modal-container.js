@@ -37,6 +37,8 @@ export default function ModalContainer({
 
     // esc키로 모달 닫기
     useEffect(() => {
+        if (!isOpen) return;
+        
         const handleEsc = (e) => {
           if (e.key === 'Escape') onClose();
         };
@@ -72,7 +74,7 @@ export default function ModalContainer({
 
                 <h2 className={styles.modalHeader}>{title}</h2>
                 
-                <div className={styles.modlaBody}>
+                <div className={styles.modalBody}>
                 {children}
                 </div>
 
