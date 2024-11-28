@@ -284,7 +284,7 @@ export default function SalesExpenses() {
             </div>
           </div>
 
-          <div className={classes.chartContainer}>
+          <div className={classes.chartContainer} style={{ position: 'relative' }}>
             <div className={classes.chartStyle}>
               {/* <h2>매출</h2> */}
               {salesData.labels ? (
