@@ -11,12 +11,15 @@ export async function POST(request) {
         const response = await springClient.post('/user/core/account/email/pin', { emailPinNumber, email });
         console.log('Spring Boot 에서 왔다.:', response.data);
 
-        // 응답 처리
-        if (response.data === true) {
-            return NextResponse.json({ success: true }, { status: 200 });
-        } else {
-            return NextResponse.json({ success: false }, { status: 400 });
-        }
+        // 응답 처리 - 나중에 이걸로 변경
+        // if (response.data === true) {
+        //     return NextResponse.json({ success: true }, { status: 200 });
+        // } else {
+        //     return NextResponse.json({ success: false }, { status: 400 });
+        // }
+
+        // 일단 응답 무조건 true로 
+        return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.error('Spring Boot 요청 실패:', error.message, error.response?.data);
         return NextResponse.json({ error: error.message }, { status: 500 });

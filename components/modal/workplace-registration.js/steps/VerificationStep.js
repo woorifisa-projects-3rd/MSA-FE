@@ -3,16 +3,27 @@ import styles from "../BusinessRegistration.module.css"
 import { useState } from "react";
 
 export default function VerificationStep(){
-       const { setCurrentStep ,verificationData, setVerificationData , sendVerificationEmail, isEmailSent, setIsEmailSent, verifyEmailCode} = useRegistration()
+    const { 
+        setCurrentStep,
+        verificationData, 
+        setVerificationData, 
+        sendVerificationEmail, 
+        isEmailSent, 
+        setIsEmailSent, 
+        verifyEmailCode
+    } = useRegistration()
+
+    // 성공 메시지를 위한 상태 추가
+    const [verificationSuccess, setVerificationSuccess] = useState(false);
+
+    // verifyEmailCode를 호출하고 성공 메시지를 처리하는 함수
+    const handleVerification = async () => {
+        const response = await verifyEmailCode();
+        if (response) {
+            setVerificationSuccess(true);
+        }
+    };
     
-     
-      const handleEmailVerification = () => {
-        setIsEmailSent(true);
-      };
-     
-      const handleCodeVerification = () => {
-        setCurrentStep(prev => prev + 1);
-      };
     return(
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>본인 인증</h2>
@@ -57,23 +68,29 @@ export default function VerificationStep(){
                 <div className={styles.formGroup}>
                     <label className={styles.label}>인증 코드</label>
                     <input
-                    type="text"
-                    value={verificationData.verificationCode}
-                    onChange={(e) => setVerificationData(prev => ({
-                        ...prev,
-                        verificationCode: e.target.value
-                    }))}
-                    className={styles.input}
-                    placeholder="인증 코드 6자리"
-                    maxLength={6}
+                        type="text"
+                        value={verificationData.verificationCode}
+                        onChange={(e) => setVerificationData(prev => ({
+                            ...prev,
+                            verificationCode: e.target.value
+                        }))}
+                        className={styles.input}
+                        placeholder="인증 코드 6자리"
+                        maxLength={6}
                     />
                 </div>
+         
                 <button
-                    onClick={verifyEmailCode}
+                    onClick={handleVerification}
                     className={`${styles.button} ${styles.primaryButton}`}
                 >
                     확인
                 </button>
+                {verificationSuccess && (
+                    <div className={styles.successText}>
+                        이메일 인증이 성공했습니다!
+                    </div>
+                )}
                 </>
             )}
             </div>

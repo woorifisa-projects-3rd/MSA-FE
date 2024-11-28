@@ -9,7 +9,7 @@ export async function POST(request) {
 
         // Spring Boot로 요청 보내기
         const response = await springClient.post('/user/store/businesscheck', { storeName, businessNumber });
-        console.log('Spring Boot 에서 왔다.:', response.data);
+        console.log('최초등록 1단계 response ', response.data);
 
         // 응답 처리
         if (response.data === true) {

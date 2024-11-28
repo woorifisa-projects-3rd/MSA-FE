@@ -1,5 +1,6 @@
 import { useRegistration } from "@/contexts/RegistrationContext";
 import styles from "../BusinessRegistration.module.css";
+
 export default function AccountStep(){
 
     const {formData, setFormData} = useRegistration();

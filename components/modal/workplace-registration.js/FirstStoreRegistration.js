@@ -12,15 +12,17 @@ export function FirstStoreRegistrationContent(){
     const {currentStep} = useRegistration();
     return(
         <div className={styles.container}>
-            <StepProgress />
-            <div className={styles.content}>
-                {currentStep === 1 && <StoreInfoStep />}
-                {currentStep === 2 && <AccountStep />}
-                {currentStep === 3 && <VerificationStep />}
-                {currentStep === 4 && <PinStep />}
-                {currentStep === 5 && <AddressStep />}
+            <div className={styles.card}>
+                <StepProgress />
+                <div className={styles.content}>
+                    {currentStep === 1 && <StoreInfoStep />}
+                    {currentStep === 2 && <AccountStep />}
+                    {currentStep === 3 && <VerificationStep />}
+                    {currentStep === 4 && <PinStep />}
+                    {currentStep === 5 && <AddressStep />}
+                </div>
+                <StepNavigation />
             </div>
-            <StepNavigation />
         </div>
     )
 }

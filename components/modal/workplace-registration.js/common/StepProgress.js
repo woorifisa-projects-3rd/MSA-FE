@@ -5,20 +5,24 @@ export default function StepProgress(){
     const { currentStep,  steps } = useRegistration();
 
     return(
-        <div className={styles.container}>
-            <div className={styles.progressBar}>
-            {steps.map((step, index) => (
-                <div key={index} className={styles.step}>
-                <div className={`${styles.circle} ${currentStep > index && styles.active}`}>
-                    {index + 1}
+        <div className={styles.progressBarContainer}>
+            <div className={styles.progressBarWrapper} >
+                <div className={styles.progressBar}>
+                    {steps.map((step, index) => (
+                        <div key={index} className={styles.step}>
+                        <div className={`${styles.stepCircle} ${currentStep > index && styles.active}`}>
+                            {index + 1}
+                        </div>
+                            <div className={styles.stepText}>{step}</div>
+                        </div>
+                    ))}
+                    <div className={styles.progressLine}>
+                        <div 
+                            className={styles.progressLineFill}
+                            style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }} 
+                        />
+                    </div>
                 </div>
-                <span className={styles.label}>{step}</span>
-                </div>
-            ))}
-            <div 
-                className={styles.line}
-                style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }} 
-            />
             </div>
         </div>
     )
