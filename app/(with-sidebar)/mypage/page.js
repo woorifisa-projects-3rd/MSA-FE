@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
 import AlarmSetting from "@/components/mypage/content/AlarmSetting";
+import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
 
@@ -68,7 +69,7 @@ export default function Home() {
   return (
       <div className={classes.container}>
           <div className={classes.content}>
-            {loading && <p>로딩 중입니다...</p>}
+            {loading && <Loading />}
             {error && <p className={classes.errorMessage}>에러: {error}</p>}
             {!loading && !error && (
                 <>
