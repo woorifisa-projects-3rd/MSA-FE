@@ -7,6 +7,7 @@ import BaseButton from '@/components/button/base-button';
 import EmployeeForm from '@/components/modal/employee-add/employee-add'
 import { useState, useEffect, useRef } from 'react';
 import { nextClient } from "@/lib/nextClient";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const edit = "수정";
 const del = "삭제";
@@ -19,16 +20,21 @@ export default function SalesExpenses() {
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null);
     const employeeFormRef = useRef(null);
+    
+    const {storeId} = useAuth();
+    console.log("storeId?",storeId)
 
     const fetchEmployees = async () => {
+        console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get('/employee/details?storeid=1');
+            const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
             console.error("직원 데이터를 가져오는데 실패했습니다.", error);
+            setEmployees([]);
             setError(error.response?.data?.error || error.message);
         } finally {
             setLoading(false);
@@ -37,7 +43,7 @@ export default function SalesExpenses() {
 
     useEffect(() => {
         fetchEmployees();
-    }, []);
+    }, [storeId]); // storeId가 변경될 때마다 직원 데이터 갱신
 
     // 모달 열기
     const openModal = (mode = "add", employee = null) => {
