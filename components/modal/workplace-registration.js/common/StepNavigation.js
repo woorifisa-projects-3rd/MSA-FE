@@ -11,7 +11,8 @@ export default function StepNavigation() {
         finalizeRegistration,
         validateEmailVerification,
         isEmailVerified,
-        isPinVerified
+        isPinVerified,
+        validateAllData
     } = useRegistration();
 
     const maxSteps = mode === "first" ? 5 : 4;
@@ -37,6 +38,10 @@ export default function StepNavigation() {
                     validationSuccess =  isPinVerified;
                     break;
                 case 5:
+                    // 먼저 데이터 검증
+                    if (!validateAllData()) {
+                        return;
+                    }
                     validationSuccess = await finalizeRegistration();
                     break;
                 default:
@@ -73,7 +78,7 @@ export default function StepNavigation() {
         if (currentStep === 4 && !isPinVerified) {
             return true;
         }
-        return currentStep === maxSteps;
+        return false;
     };
 
   
@@ -94,7 +99,7 @@ export default function StepNavigation() {
                     className={`${styles.button} ${styles.primaryButton}`}
                     disabled={isNextButtonDisabled()}
                 >
-                    {currentStep === maxSteps ? "완료" : "다음"}
+                    {currentStep === maxSteps ? "가게 등록" : "다음"}
                 </button>
             </div>
         </div>

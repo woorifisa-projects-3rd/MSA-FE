@@ -11,6 +11,7 @@ import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
 import { nextClient } from '@/lib/nextClient';
 import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
+import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
 
 
 //테스트 데이터
@@ -147,20 +148,15 @@ export default function ProfileDetail({content, refreshStores}) {
             </div>
 
             {/* 등록 모달 */}
-            {/* <ModalContainer
+            <ModalContainer
                 title="사업장 등록"
                 isOpen={isRegistrationModalOpen}
                 onClose={()=>setRegistrationModalOpen(false)}
                 onConfirm={handleFormSubmit}
+                showButtons={false}
             >
-                <WorkplaceModal
-                    ref={workplaceModalRef}
-                    onSubmit={(formData) => {
-                        setRegistrationModalOpen(false);
-                    }}
-                    refreshStores={refreshStores}
-                />
-            </ModalContainer> */}
+              <AdditionalStoreRegistration />
+            </ModalContainer>
 
             {/* 사업장 최초 등록 모달 */}
             <ModalContainer

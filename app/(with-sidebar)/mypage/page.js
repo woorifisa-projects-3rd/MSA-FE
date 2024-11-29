@@ -29,6 +29,7 @@ export default function Home() {
     setError(null);
     try {
         const response = await nextClient.get('/mypage/store/storelist');
+        console.log(response)
         const transformedStores = response.data.map(store => ({
             storeId: store.id,
             storeName: store.storeName,
@@ -47,14 +48,14 @@ export default function Home() {
     }
   };
 
-//   useEffect(() => {
-//     fetchStores();
-//   }, []);
+  useEffect(() => {
+    fetchStores();
+  }, []);
 
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} refreshStores={fetchStores}/>;
+              return <ProfileDetail content={stores} refreshStores={stores}/>;
         //   case 1:
         //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:
