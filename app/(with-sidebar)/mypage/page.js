@@ -47,14 +47,14 @@ export default function Home() {
     }
   };
 
-//   useEffect(() => {
-//     fetchStores();
-//   }, []);
+  useEffect(() => {
+    fetchStores();
+  }, []);
 
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} refreshStores={fetchStores}/>;
+              return <ProfileDetail content={stores} refreshStores={stores}/>;
         //   case 1:
         //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:
