@@ -9,17 +9,15 @@ export async function POST(request) {
 
         // Spring Boot로 요청 보내기
         const response = await springClient.post('/user/store/businesscheck', { storeName, businessNumber });
-        console.log('최초등록 1단계 response ', response.data);
+        console.log('최초등록 1단계 response ', response.status, response.data);
 
         // 응답 처리
-        if (response.data === true) {
+        if (response.data === 'ok') {
             return NextResponse.json({ success: true }, { status: 200 });
-        } else {
+        } else if(response.data === '이미 존재하는 가게 명입니다') {
             return NextResponse.json({ success: false }, { status: 400 });
         }
     } catch (error) {
-        console.error('Spring Boot 요청 실패:', error.message, error.response?.data);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
-    

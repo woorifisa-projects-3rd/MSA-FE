@@ -1,5 +1,5 @@
 import { RegistrationProvider , useRegistration} from "@/contexts/RegistrationContext"
-import styles from "./StoreRegistration.module.css"
+import styles from "./BusinessRegistration.module.css"
 import StepProgress from "./common/StepProgress"
 import StepNavigation from "./common/StepNavigation"
 import StoreInfoStep from "./steps/StoreInfoStep";

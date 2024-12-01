@@ -54,14 +54,14 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             if (response.data.success) {
                 setError("");
                 return true;
-            } else {
-                setError("사업자 정보 검증에 실패했습니다.");
-                return false;
-            }
+            } 
           
         } catch (error) {
             console.error('next 서버 오류:', error.message);
-            setError("서버 오류가 발생했습니다.");
+            if(error.response.status === 400){
+                setError("중복되는 가게명입니다.");
+            }
+            console.log(error)
             return false;
         }
     };
@@ -163,7 +163,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 5: 최종 가게 등록
     const finalizeRegistration = async () => {
         try {
-            const response = await nextClient.post('/user/store', {
+            console.log("최초가게등록 next-server로 요청할 데이터", formData)
+            const response = await nextClient.post('/store/registration/final-registration', {
                 ...formData,
                 // location과 coordinates는 주소 입력 시 설정됨
             });
@@ -179,6 +180,30 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             return false;
         }
     };
+
+    // 모든 필수 데이터 검증 함수
+    const validateAllData = () => {
+        const requiredFields = {
+            storeName: formData.storeName,
+            businessNumber: formData.businessNumber,
+            accountNumber: formData.accountNumber,
+            bankCode: formData.bankCode,
+            location: formData.location,
+            latitude: formData.latitude,
+            longitude: formData.longitude
+        };
+
+        const emptyFields = Object.entries(requiredFields)
+            .filter(([_, value]) => !value)
+            .map(([key]) => key);
+
+        if (emptyFields.length > 0) {
+            setError(`다음 항목을 모두 입력해주세요: ${emptyFields.join(', ')}`);
+            return false;
+        }
+        return true;
+    };
+
 
     return (
         <RegistrationContext.Provider value={{
@@ -203,6 +228,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             validateEmailVerification,
             isEmailVerified,
             isPinVerified,
+            validateAllData
         }}>
             {children}
         </RegistrationContext.Provider>

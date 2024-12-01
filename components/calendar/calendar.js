@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import classes from "./calendar-wrapper.module.css";
 import "./calendar.css"
 import { nextClient } from '@/lib/nextClient';
+import { useAuth } from '@/contexts/AuthProvider';
 
 
 
@@ -16,9 +17,11 @@ export default function Calendar (){
   const router = useRouter(); // router 정의
   const [events, setEvents] = useState([]);
 
+  const {storeId} = useAuth();
+
   const today = new Date();
-//   const currentYear = today.getFullYear();
-//   const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
 
   console.log(events);
 
@@ -27,7 +30,8 @@ export default function Calendar (){
   useEffect(() => {
     const fetchMonthlyData = async () => {
       try {
-        const response = await nextClient.get(`/attendance/calendar?storeid=1&year=2024&month=11`);
+        console.log(storeId);
+        const response = await nextClient.get(`/attendance/calendar?storeid=${storeId}&year=${currentYear}&month=${currentMonth}`);
         const data = response.data;
         console.log("client calendar data", data);
 

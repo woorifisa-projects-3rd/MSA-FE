@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import styles from '@/components/addsearch/AddressSearch.module.css'
 
-const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailAddress }) => {
+const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailAddress , onDetailChange, onAddressComplete}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [zipCode, setZipCode] = useState('');
   const [postcodeAddress, setPostcodeAddress] = useState(initialPostcodeAddress || '');
@@ -18,15 +18,19 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
 
   // Daum 우편번호 검색 완료 후 처리 함수
   const handleComplete = (data) => {
-    const updatedAddress = data.address;
-    setZipCode(data.zonecode);
-    setPostcodeAddress(updatedAddress);
-    setIsOpen(false);
+      const updatedAddress = data.address;
+      setZipCode(data.zonecode);
+      setPostcodeAddress(updatedAddress);
+      setIsOpen(false);
 
-    // 부모로 변경된 값 전달
-    if (onAddressChange) {
-      onAddressChange(updatedAddress, detailAddress);
-    }
+      // 부모로 변경된 값 전달 -> 삭제해도될듯
+      if (onAddressChange) {
+        onAddressChange(updatedAddress, detailAddress);
+      }
+      // postcodeAddress 선택 완료시에만 geocoding API 호출
+      if (onAddressComplete) {
+        onAddressComplete(updatedAddress);
+      }
   };
 
   // 상세 주소 입력 처리 함수
@@ -34,10 +38,9 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
     const updatedDetail = e.target.value;
     setDetailAddress(updatedDetail);
 
-    // 부모로 변경된 값 전달
-    if (onAddressChange) {
-      onAddressChange(postcodeAddress, updatedDetail);
-    }
+   if(onDetailChange){
+    onDetailChange(updatedDetail);
+   }
   };
 
   // 우편번호 찾기 버튼 클릭 시 열기/닫기 토글 함수
@@ -61,7 +64,14 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
       </div>
       {isOpen && (
         <div style={{ position: 'relative', zIndex: 100 }}>
-          <DaumPostcode onComplete={handleComplete} />
+          <DaumPostcode 
+            onComplete={handleComplete} 
+            autoClose={true}
+            defaultQuery=""
+            useSuggest={false}
+            style={{ width: '100%', height: '400px' }}
+            scripting="none"  // 스크립트 실행 제한
+          />
         </div>
       )}
       <input
