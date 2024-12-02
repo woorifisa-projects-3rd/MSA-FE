@@ -81,17 +81,17 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         salary: commonValidateRules.required,
         paymentDate: commonValidateRules.paymentDate,
         birthDate: commonValidateRules.birthDate,
-        // address: (data) =>
-        //   commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+        address: (data) =>
+          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
       };
 
     const validateFormData = (data) => {
         const errors = validateForm(data, validateRules);
       
         // 주소 필드 유효성 검사 추가
-        // if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
-        //   errors.address = "필수 항목입니다.";
-        // }
+        if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+          errors.address = "필수 항목입니다.";
+        }
       
         return errors;
       };
@@ -139,13 +139,6 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     
         // 유효성 검사 수행
         const errors = validateFormData(formData);
-        setFormErrors(errors);
-
-          // detailAddress 유효성 검사 추가
-        if (!formData.detailAddress.trim()) {
-            errors.detailAddress = "상세 주소를 입력해주세요.";
-        }
-
         setFormErrors(errors);
         
         // 오류가 없으면 제출
@@ -341,9 +334,9 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {/* {(formErrors.address) && (
+                    {(formErrors.address) && (
                         <span className={styles.error}>{formErrors.address}</span>
-                    )} */}
+                    )}
                     {formErrors.detailAddress && (
                         <span className={styles.error}>{formErrors.detailAddress}</span>
                     )}
