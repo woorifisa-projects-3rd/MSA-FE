@@ -4,13 +4,10 @@ import springClient from '@/lib/springClient';
 export async function GET(request) {
     try {
         // 쿼리 파라미터 받기
-        // const url = new URL(request.url);
-        // const storeId = url.searchParams.get('storeid');
-        const storeId = '1';
-        // const year = url.searchParams.get('year');
-        const year = '2024';
-        // const month = url.searchParams.get('month');
-        const month = '11';
+        const url = new URL(request.url);
+        const storeId = url.searchParams.get('storeid');
+        const year = url.searchParams.get('year');
+        const month = url.searchParams.get('month');
 
         // Spring Boot로 급여 명세서 요청
         // const response = await springClient.get(`/attendance/paystatement?storeid=${storeId}&year=${year}&month=${month}`);

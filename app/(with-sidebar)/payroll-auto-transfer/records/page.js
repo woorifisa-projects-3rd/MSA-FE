@@ -10,6 +10,7 @@ import Sorting from "@/components/sorting/sorting";
 import { nextClient } from '@/lib/nextClient';
 import BaseButton from "@/components/button/base-button";
 import { bankCodeList } from "@/constants/bankCodeList";
+import { useAuth } from '@/contexts/AuthProvider';
 
 
 export default function PayRecords() {
@@ -17,11 +18,22 @@ export default function PayRecords() {
     const [sortOption, setSortOption] = useState('latest'); // 최신순 디폴트
     const [searchQuery, setSearchQuery] = useState('');
     const [list, setList] = useState([]);
+    const [selectedPaymentType, setselectedPaymentType] = useState(null);
+
+    const {storeId} = useAuth();
+    console.log("storeId?",storeId);
+
+    console.log(selectedDate);
+
+    const selectedYear = selectedDate.getFullYear(); // 연도 추출
+    const selectedMonth = selectedDate.getMonth() + 1; // 월 추출 (1부터 시작)
+
+    console.log(selectedMonth,selectedYear);
 
     useEffect(() => {
         const loadPayStatementPageData = async () => {
           try {
-            const response = await nextClient.get('/attendance/paystatement/employees');
+            const response = await nextClient.get(`/attendance/paystatement/employees?storeid=${storeId}&year=${selectedYear}&month=${selectedMonth}`);
             const data = response.data.data;
             console.log(data)
     
@@ -41,7 +53,7 @@ export default function PayRecords() {
         }
     
         loadPayStatementPageData();
-      }, []);
+      }, [selectedYear, selectedMonth, storeId]);
 
 
     const handleMonthChange = (newDate) => {
@@ -115,8 +127,12 @@ export default function PayRecords() {
             <div className={classes.header}>
                 <MonthSelector onMonthChange={handleMonthChange} />
                 <div className={classes.filtering}>
-                    <NameSearch onChange={handleSearchChange} />
                     <Sorting onChange={handleSortChange} selectedOption={sortOption} />
+                    <NameSearch onChange={handleSearchChange} />
+                    <BaseButton
+                    text={'자동이체 설정'}
+                    >
+                    </BaseButton>
                 </div>
             </div>
 
