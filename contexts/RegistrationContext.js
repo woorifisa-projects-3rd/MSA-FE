@@ -76,10 +76,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 setError(""); // 성공시 에러 초기화
                 return true;
             }
-            setError("계좌 인증에 실패했습니다.");
-            return false;
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };

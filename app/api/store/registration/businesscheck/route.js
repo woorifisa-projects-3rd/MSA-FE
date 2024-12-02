@@ -17,7 +17,7 @@ export async function POST(request) {
     } catch (error) {
         // spring server에서 온 에러 메세지와 status code가 있다면 그대로 client에게 전달
         // 그게 아니면 형식적으로 '서버 에러가 발생했습니다' 와 500 status code 발생
-        const errorMessage = error.response.data || '서버 에러가 발생했습니다.';
+        const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
         const statusCode = error.response?.status || 500;
 
         return NextResponse.json({ 
