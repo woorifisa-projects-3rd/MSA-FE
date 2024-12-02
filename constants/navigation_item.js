@@ -23,7 +23,7 @@ export const NAVIGATION_ITEMS = [
         title:"매출ㆍ지출",
         subTitles:[
             {text:"매출ㆍ지출 조회", path:"/transactions/analytics"}, 
-            {text:"간편장부ㆍ손익계산서", path:"/transactions/reports"}
+            // {text:"간편장부ㆍ손익계산서", path:"/transactions/reports"}
         ]
     },
     {
@@ -31,7 +31,6 @@ export const NAVIGATION_ITEMS = [
         title:"급여 자동이체",
         subTitles:[
             {text: "급여기록ㆍ 명세서 조회", path:"/payroll-auto-transfer/records"},
-            {text: "급여 자동이체 관리", path:"/payroll-auto-transfer/management"}
         ]
     },
     {
