@@ -33,6 +33,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
     const [formErrors, setFormErrors] = useState({});
     const [error, setError] = useState('');
+    const [isAccountValid, setIsAccountValid] = useState(false);
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
@@ -73,6 +74,18 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         }));
     };
 
+    const handleAccountValidation = (isValid) => {
+        setIsAccountValid(isValid);
+        console.log(isAccountValid);
+        
+        if(isAccountValid) {
+            setFormErrors(prev => ({
+                ...prev,
+                accountNumber: '',
+            }));
+        }
+    }
+
     const validateRules = {
         name: commonValidateRules.required,
         email: commonValidateRules.email,
@@ -81,8 +94,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         salary: commonValidateRules.required,
         paymentDate: commonValidateRules.paymentDate,
         birthDate: commonValidateRules.birthDate,
-        address: (data) =>
-          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+        // address: (data) =>
+        //   commonValidateRules.address(data.postcodeAddress, data.detailAddress),
       };
 
     const validateFormData = (data) => {
@@ -140,9 +153,16 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         // 유효성 검사 수행
         const errors = validateFormData(formData);
         setFormErrors(errors);
+
+        if(!isAccountValid) {
+            setFormErrors(prev => ({
+                ...prev,
+                accountNumber: '확인 버튼을 눌러 계좌를 확인해주세요.',
+            }));
+        }
         
         // 오류가 없으면 제출
-        if (Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length === 0 && isAccountValid) {
             const { postcodeAddress, detailAddress, ...rest } = formData;
             const updatedFormData = {
                 ...rest,
@@ -321,6 +341,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             bankCode={formData.bankCode}
                             accountNumber={formData.accountNumber}
                             onChange={handleAccountChange}
+                            checkValidation={handleAccountValidation}
                             error={formErrors.accountNumber}
                             />
                             
