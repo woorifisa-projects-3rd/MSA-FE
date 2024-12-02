@@ -78,6 +78,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 return true;
             }
         } catch (error) {
+            console.log("2단계 계좌인증 실패", error.response.data);
             setError(error.response.data.error);
             return false;
         }
