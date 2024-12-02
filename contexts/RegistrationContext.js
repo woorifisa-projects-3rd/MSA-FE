@@ -57,11 +57,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             } 
           
         } catch (error) {
-            console.error('next 서버 오류:', error.message);
-            if(error.response.status === 400){
-                setError("중복되는 가게명입니다.");
-            }
-            console.log(error)
+            // 서버에서 전달된 에러메시지 사용
+            setError(error.response.data.error);
             return false;
         }
     };

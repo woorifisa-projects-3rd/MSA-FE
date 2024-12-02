@@ -14,10 +14,19 @@ export async function POST(request) {
         // 응답 처리
         if (response.data === 'ok') {
             return NextResponse.json({ success: true }, { status: 200 });
-        } else if(response.data === '이미 존재하는 가게 명입니다') {
-            return NextResponse.json({ success: false }, { status: 400 });
-        }
+        } 
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        // spring server에서 온 에러 메세지와 status code가 있다면 그대로 client에게 전달
+        // 그게 아니면 형식적으로 '서버 에러가 발생했습니다' 와 500 status code 발생
+        const errorMessage = error.response?.data?.message || '서버 에러가 발생했습니다.';
+        const statusCode = error.response?.status || 500;
+
+        return NextResponse.json({ 
+            success: false,
+            error: errorMessage 
+        }, { 
+            status: statusCode 
+        }); 
+
     }
 }
