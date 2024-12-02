@@ -45,6 +45,7 @@ export default function Calendar() {
     fetchMonthlyData(year, month); // 올바른 월 값으로 데이터 가져오기
   };
 
+
   // 날짜 선택 시 페이지로 이동
   const handleDateSelect = (selectInfo) => {
     const selectedDate = selectInfo.startStr; // 선택된 날짜 (YYYY-MM-DD 형식)
@@ -79,4 +80,5 @@ export default function Calendar() {
       />
     </div>
   );
+
 }
