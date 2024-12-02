@@ -7,6 +7,7 @@ import BaseButton from '@/components/button/base-button';
 import EmployeeForm from '@/components/modal/employee-add/employee-add'
 import { useState, useEffect, useRef } from 'react';
 import { nextClient } from "@/lib/nextClient";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const edit = "수정";
 const del = "삭제";
@@ -19,16 +20,21 @@ export default function SalesExpenses() {
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null);
     const employeeFormRef = useRef(null);
+    
+    const {storeId} = useAuth();
+    console.log("storeId?",storeId)
 
     const fetchEmployees = async () => {
+        console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get('/employee/details?storeid=1');
+            const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
             console.error("직원 데이터를 가져오는데 실패했습니다.", error);
+            setEmployees([]);
             setError(error.response?.data?.error || error.message);
         } finally {
             setLoading(false);
@@ -37,7 +43,7 @@ export default function SalesExpenses() {
 
     useEffect(() => {
         fetchEmployees();
-    }, []);
+    }, [storeId]); // storeId가 변경될 때마다 직원 데이터 갱신
 
     // 모달 열기
     const openModal = (mode = "add", employee = null) => {
@@ -92,8 +98,17 @@ export default function SalesExpenses() {
         }
     }
 
+        // 전화번호 형식 변환 함수
+    const formatPhoneNumber = (phoneNumber) => {
+        if (!phoneNumber) return "";
+        const cleaned = phoneNumber.replace(/\D/g, ""); // 숫자만 남기기
+        const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+        return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
+    };
+
     const enrichedList = employees.map(employee => ({
         ...employee,
+        phoneNumber: formatPhoneNumber(employee.phoneNumber), // 전화번호 포맷 적용
         edit: (
             <PrimaryButton
                 text="수정"
@@ -111,10 +126,12 @@ export default function SalesExpenses() {
 
     return (
         <div className={classes.container}>
-            <h1 className={classes.title}>직원 정보 조회/수정 페이지</h1>
+            <div className={classes.employeeHeader}>
+                <h1 className={classes.title}>직원 정보 관리</h1>
+                <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
+            </div>
+            <DefaultTable tableHeaders={tableHeaders} list={enrichedList} />
         
-            <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
-            <DefaultTable tableName="직원정보 관리" tableHeaders={tableHeaders} list={enrichedList} />
             {isModalOpen && (
                 <ModalContainer
                     isOpen={isModalOpen}

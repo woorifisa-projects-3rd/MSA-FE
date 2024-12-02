@@ -49,7 +49,7 @@ const PinInput = ({ onComplete }) => {
 const FirstBusinessRegistration = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [verificationStep, setVerificationStep] = useState(0);
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  // const [isEmailSent, setIsEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -89,31 +89,32 @@ const FirstBusinessRegistration = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // API 호출 예시 (실제 구현 시 endpoint 수정 필요)
-      const response = await fetch('/api/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: formData.name, 
-          email: formData.email 
-        }),
-      });
+  //   setIsLoading(true);
+  //   try {
+  //     // API 호출 예시 (실제 구현 시 endpoint 수정 필요)
+  //     const response = await fetch('/api/send-verification', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ 
+  //         name: formData.name, 
+  //         email: formData.email 
+  //       }),
+  //     });
       
-      const data = await response.json();
-      if (data.success) {
-        setIsEmailSent(true);
-        setSuccess('인증 코드가 이메일로 전송되었습니다.');
-      } else {
-        setError('이메일 전송에 실패했습니다.');
-      }
-    } catch (err) {
-      setError('서버 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       setIsEmailSent(true);
+  //       setSuccess('인증 코드가 이메일로 전송되었습니다.');
+  //     } else {
+  //       setError('이메일 전송에 실패했습니다.');
+  //     }
+  //   } catch (err) {
+  //     setError('서버 오류가 발생했습니다.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  }
 
   const handleCodeVerification = async () => {
     if (!formData.verificationCode.trim()) {
@@ -329,6 +330,7 @@ const FirstBusinessRegistration = () => {
     }
   };
 
+
   const canProceed = () => {
     switch (currentStep) {
       case 1:
@@ -345,6 +347,8 @@ const FirstBusinessRegistration = () => {
         return false;
     }
   };
+
+
 
   return (
     <div className={styles.container}>

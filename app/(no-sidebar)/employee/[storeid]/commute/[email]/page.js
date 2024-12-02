@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { AbsolutePathClient, nextClient } from '@/lib/nextClient';
+import Loading from '@/components/loading/Loading';
 
 export default function AttendancePage() {
     const [loading, setLoading] = useState(false);
@@ -72,7 +73,7 @@ export default function AttendancePage() {
                         disabled={loading}
                         className="flex-1 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400 hover:bg-blue-600"
                     >
-                        {loading ? 'Processing...' : '출근하기'}
+                        {loading ? <Loading/> : '출근하기'}
                     </button>
                     <button
                         type="button"
@@ -80,7 +81,7 @@ export default function AttendancePage() {
                         disabled={loading}
                         className="flex-1 px-4 py-2 bg-red-500 text-white rounded disabled:bg-gray-400 hover:bg-red-600"
                     >
-                        {loading ? 'Processing...' : '퇴근하기'}
+                        {loading ? <Loading/> : '퇴근하기'}
                     </button>
                 </div>
             </form>

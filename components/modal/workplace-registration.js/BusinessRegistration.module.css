@@ -1,0 +1,291 @@
+.container {
+  /* min-height: 100vh; */
+  width: 800px;
+  min-width: 800px;
+}
+
+.card {
+  /* max-width: 64rem; */
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  min-height: 400px;  /* 컨텐츠의 최소 높이 설정 */
+  padding: 2rem 0;
+}
+
+/* StepProgress */
+.progressBarContainer {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.progressBarWrapper {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.progressBar {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.step {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepCircle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e7eb;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stepCircle.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.stepText {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  color: #6b7280;
+}
+
+.progressLine {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  height: 2px;
+  background-color: #e5e7eb;
+  width: 100%;
+  z-index: 0;
+}
+
+.progressLineFill {
+  height: 100%;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+  
+/* 공통 css */
+.formContainer {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* 3단계 본인인증 관련 css  */
+.verificationBox {
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.verificationStepDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* PinInput */
+.pinContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.pinInput {
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  font-size: 1.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+}
+
+.pinInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.primaryButton {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.primaryButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.secondaryButton:hover {
+  background-color: #e5e7eb;
+}
+
+/* StepNavigation */
+.navigationContainer {
+  border-top: 1px solid #e5e7eb;
+}
+
+.navigationButtons {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.successText {
+  color: #059669;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.loadingSpinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.flexRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.flexGrow {
+  flex-grow: 1;
+}
+
+.verificationCodeInput {
+  letter-spacing: 0.25em;
+  font-family: monospace;
+  text-align: center;
+}
+
+.addressSearchButton {
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.addressSearchButton:hover {
+  background-color: #e5e7eb;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+ 
+  .content {
+    min-height: 300px;
+  }
+ }
+ 
+ /* 애니메이션 효과 (선택사항) */
+ .stepTransition {
+  animation: fadeIn 0.3s ease;
+ }
+ 
+ @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+ }

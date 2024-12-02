@@ -3,17 +3,13 @@ import { useEffect, useState } from "react";
 import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
 import AlarmSetting from "@/components/mypage/content/AlarmSetting";
+import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
 
 const tabs = [
   { 
       name: '프로필 편집',
-      email: 'alexarawles@gmail.com',
-  },
-  { 
-      name: '알림 설정',
-      content: '알림 설정 내용'
   },
   { 
       name: '비밀번호 변경',
@@ -25,7 +21,7 @@ const tabs = [
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [stores, setStores] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchStores = async () => {
@@ -34,6 +30,7 @@ export default function Home() {
     setError(null);
     try {
         const response = await nextClient.get('/mypage/store/storelist');
+        console.log(response)
         const transformedStores = response.data.map(store => ({
             storeId: store.id,
             storeName: store.storeName,
@@ -59,10 +56,10 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} refreshStores={fetchStores}/>;
+              return <ProfileDetail content={stores} refreshStores={stores}/>;
+        //   case 1:
+        //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:
-              return <AlarmSetting content={tabs[selectedTab]} />;
-          case 2:
               return <PasswordChange content={tabs[selectedTab]} />;
           default:
               return null;
@@ -72,7 +69,7 @@ export default function Home() {
   return (
       <div className={classes.container}>
           <div className={classes.content}>
-            {loading && <p>로딩 중입니다...</p>}
+            {loading && <Loading />}
             {error && <p className={classes.errorMessage}>에러: {error}</p>}
             {!loading && !error && (
                 <>

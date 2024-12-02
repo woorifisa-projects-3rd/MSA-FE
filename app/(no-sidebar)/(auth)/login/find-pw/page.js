@@ -105,6 +105,7 @@ export default function FindPasswordPage() {
                             type="submit" 
                             text="임시 비밀번호 발송"
                              padding="1rem"
+                             width="100%"
                         />
                     </form>
                 </div>
