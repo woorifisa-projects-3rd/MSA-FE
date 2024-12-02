@@ -33,7 +33,7 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
       }
   };
 
-  // 상세 주소 입력 처리 함수
+  // 상세 주소 입력 처리 함수 
   const handleDetailChange = (e) => {
     const updatedDetail = e.target.value;
     setDetailAddress(updatedDetail);
@@ -41,7 +41,7 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
    if(onDetailChange){
     onDetailChange(updatedDetail);
    }
-
+    
    if (onAddressChange) {
     onAddressChange(postcodeAddress, updatedDetail);
     }

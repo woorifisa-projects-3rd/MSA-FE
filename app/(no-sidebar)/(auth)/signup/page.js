@@ -86,24 +86,34 @@ export default function Signup() {
     return validateRules[name](value, formData);
   };
 
-  const emailSendHandler = async(e) => {
-    e.preventDefault();    
-    
+  const emailSendHandler = async (e) => {
+    e.preventDefault();
+  
     try {
+      // 이메일 전송 요청
       const response = await nextClient.post('/auth/signup/email', {
         email: formData.email,
-    });
-      
-      if (response.data.success) {
-        alert('이메일을 보냈습니다!');
-        setEmailConfirmNumber(response.data.pin);
+      });
+
+      console.log(response.data);
+  
+      // 성공 응답 처리
+      if (response.data.pin.success) {
+        alert('이메일을 발송했습니다!');
+        setEmailConfirmNumber(response.data.pin); // PIN 설정
+        setError(''); // 에러 상태 초기화
       } else {
-        throw new Error(response.data.error || '이메일 전송 실패');
+        // 백엔드에서 `success: false` 반환 시
+        throw new Error(response.data.pin.error || '이메일 전송 실패');
       }
     } catch (error) {
-      setError(error.response?.data?.error || error.message);
+      // 에러 처리
+      const errorMessage = error.response?.data?.error || error.message;
+      setError(errorMessage); // 에러 메시지 상태 업데이트
+      alert(errorMessage); // 사용자에게 에러 메시지 표시
     }
-  }
+  };
+  
 
   // 이메일 인증 확인
   const handleEmailConfirm = () => {        
