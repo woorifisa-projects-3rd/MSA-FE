@@ -45,13 +45,13 @@ export default function PasswordChange() {
                 newPassword: passwords.newPassword
             });
 
-            console.log("리스폰스 반환값 : !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" ,response)
+            console.log("스프링에서 왔다. : " ,response)
 
             if (response.status === 200) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
             } 
             } catch (error) {
-            alert('비밀번호 변경에 실패했습니다. 다시 시도해 주세요.');
+            alert('현재 비밀번호가 다릅니다. 다시 시도해 주세요.');
         }
     };
 
