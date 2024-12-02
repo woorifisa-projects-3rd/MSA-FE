@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const storeid = searchParams.get('storeid');
+  // const storeid = searchParams.get('storeid');
+  const storeid = 1;
   const year = searchParams.get('year');
   const month = searchParams.get('month');
   console.log(storeid, year, month);
