@@ -11,6 +11,7 @@
   --woori-deep-blue: #0067AC;
   --gray: #787878;
   --red: #E3262F;
+  --sidebar-color: #F3F7FE;
   --sidebar-width: 16%;
 }
 
@@ -27,7 +28,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  font-family: 'NanumGothic', sans-serif;
+  font-family: sans-serif;
 }
 
 @layer base {

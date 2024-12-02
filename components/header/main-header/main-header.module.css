@@ -1,7 +1,7 @@
 .header_container {
     width: 100%;
     height: var(--header-height);
-    border-bottom: 1px solid #e5e7eb;
+    /* border-bottom: 1px solid #e5e7eb; */
     z-index: 10000;
     background-color: var(--header-background);
 }
@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--sidebar-color);
 }
 
 .logoBox{
@@ -40,8 +41,8 @@
 .headerTitle{
     font-size: 20px; 
     font-weight: 600;
-    color: var(--main-woori-blue);
-    padding-left: 10px;
+    color: var(--woori-deep-blue);
+    padding-left: 20px;
 }
 .headerMenu{
     display: flex;

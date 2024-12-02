@@ -27,7 +27,7 @@
 .main{
     grid-area: main;
     padding: 0 50px;
-    background-color: whitesmoke;
+    /* background-color: whitesmoke; */
 }
   
   
