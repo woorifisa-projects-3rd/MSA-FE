@@ -4,6 +4,8 @@ import springClient from '@/lib/springClient';
 export async function POST(request) {
     try {
       // 클라이언트에서 보낸 데이터 받기
+
+      console.log('Parameters:', { storeId, email });
       const {latitude,longitude,endpoint,storeId,email } = await request.json();
       
       console.log(latitude,longitude,endpoint,storeId,email);
