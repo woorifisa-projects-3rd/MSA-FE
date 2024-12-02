@@ -106,7 +106,7 @@ export default function SalesExpenses() {
         return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
     };
 
-    const enrichedList = employees.map(employee => ({
+    const enrichedList = Object.values(employees).map(employee => ({
         ...employee,
         phoneNumber: formatPhoneNumber(employee.phoneNumber), // 전화번호 포맷 적용
         edit: (
