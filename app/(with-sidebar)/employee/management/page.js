@@ -26,14 +26,12 @@ export default function SalesExpenses() {
     const {storeId} = useAuth();
     console.log("storeId?",storeId)
 
-
-
     const fetchEmployees = async () => {
         console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get(`/employee/details?storeId=${storeId}`);
+            const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
@@ -46,7 +44,9 @@ export default function SalesExpenses() {
     };
 
     useEffect(() => {
-        fetchEmployees();
+        if(storeId) {
+            fetchEmployees();
+        }
     }, [storeId]); // storeId가 변경될 때마다 직원 데이터 갱신
 
     // 모달 열기
@@ -113,9 +113,9 @@ export default function SalesExpenses() {
         const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
         return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
     };
-
-    const filteredEmployees = Object.values(employees).filter(employee =>
-        employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const filteredEmployees = employees.filter(employee =>
+        employee.name.includes(searchQuery)
     );
 
     const enrichedList = filteredEmployees.map(employee => ({
