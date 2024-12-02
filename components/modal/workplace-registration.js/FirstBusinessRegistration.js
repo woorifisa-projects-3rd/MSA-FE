@@ -89,31 +89,7 @@ const FirstBusinessRegistration = () => {
       return;
     }
 
-  //   setIsLoading(true);
-  //   try {
-  //     // API 호출 예시 (실제 구현 시 endpoint 수정 필요)
-  //     const response = await fetch('/api/send-verification', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ 
-  //         name: formData.name, 
-  //         email: formData.email 
-  //       }),
-  //     });
-      
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       setIsEmailSent(true);
-  //       setSuccess('인증 코드가 이메일로 전송되었습니다.');
-  //     } else {
-  //       setError('이메일 전송에 실패했습니다.');
-  //     }
-  //   } catch (err) {
-  //     setError('서버 오류가 발생했습니다.');
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+
   }
 
   const handleCodeVerification = async () => {

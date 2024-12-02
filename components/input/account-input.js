@@ -116,13 +116,13 @@ const AccountInputForm = ({
       });
       console.log("사장", bankCode, accountNumber )
       if (response.data.success) {
-        setValidationMessage('사업장 계좌가 유효합니다.');
+        setValidationMessage({text: '사업장 계좌가 유효합니다.' , color: 'green'});
       } else {
-        setValidationMessage('사업장 계좌가 유효하지 않습니다.');
+        setValidationMessage({text: '사업장 계좌가 유효하지 않습니다.' , color: 'red'});
       }
     } catch (error) {
       console.error('Error checking account:', error);
-      setValidationMessage('사업장 계좌 확인 중 오류가 발생했습니다.');
+      setValidationMessage({text: '사업장 계좌 확인 중 오류가 발생했습니다.' , color: 'red'});
     }
   };
 
@@ -136,13 +136,13 @@ const AccountInputForm = ({
       });
       console.log("직원",name, bankCode, accountNumber )
       if (response.data.success) {
-        setValidationMessage('직원 계좌가 유효합니다.');
+        setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green'});
       } else {
-        setValidationMessage('직원 계좌가 유효하지 않습니다.');
+        setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red'});
       }
     } catch (error) {
       console.error('Error checking employee account:', error);
-      setValidationMessage('직원 계좌 확인 중 오류가 발생했습니다.');
+      setValidationMessage({text: '직원 계좌 확인 중 오류가 발생했습니다.', color:'red'});
     }
   };
 
@@ -190,9 +190,9 @@ const AccountInputForm = ({
       </div>
 
       {validationMessage && (
-        <div className={styles.validationMessage}>
-          {validationMessage} {/* 유효성 메시지 출력 */}
-        </div>
+      <p style={{ color: validationMessage.color }}>
+          {validationMessage.text}
+      </p>
       )}
 
       {isPresident && (
