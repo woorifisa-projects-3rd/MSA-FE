@@ -22,7 +22,7 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     isEmailConfirmed: false, // 이메일 인증 상태 확인
-    termsAccept: true,
+    termsAccept: false,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -171,7 +171,7 @@ export default function Signup() {
         birthDate: formData.birthDate,
         phoneNumber: formData.phoneNumber,
         address: fullAddress,
-        termsAccept: true,
+        termsAccept: false,
       };
 
       try {
