@@ -14,6 +14,13 @@
     font-weight: bold;
 }
 
+.titleRight {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
 .employeeHeader {
     display: flex;
     justify-content: space-between;
