@@ -166,15 +166,15 @@
                 </div>
                 )}
 
-                        {/* 등록 모달 */}
-                        <ModalContainer
+                {/* 등록 모달 */}
+                <ModalContainer
                     title="사업장 등록"
                     isOpen={isRegistrationModalOpen}
                     onClose={()=>setRegistrationModalOpen(false)}
                     onConfirm={handleFormSubmit}
                     showButtons={false}
                 >
-                <AdditionalStoreRegistration />
+                    <AdditionalStoreRegistration />
                 </ModalContainer>
 
                 {/* 사업장 최초 등록 모달 */}
@@ -184,7 +184,7 @@
                     onClose={()=>setFirstRegistrationModalOpen(false)}
                     showButtons={false}
                 >
-                <FirstStoreRegistration />
+                    <FirstStoreRegistration />
                 </ModalContainer>
 
                 {/* 편집 모달 */}
