@@ -85,6 +85,23 @@ export default function PayRecords() {
         button: '급여 명세서'
     };
 
+    // 자동이체 설정
+    const handleAutoTransferSelection = async (type) => {
+        setSelectedBusinessType(type);
+    
+        const termsAccept = type === '1'; // '1'이면 신청, '0'이면 해제
+    
+        try {
+            const response = await nextClient.post('/user/president/termaccept', {
+                termsAccept: termsAccept
+            });
+            console.log('자동이체 처리 성공:', response.data);
+        } catch (error) {
+            console.error('자동이체 처리 실패:', error.message);
+        }
+    };
+    
+
     // 모달 열기 함수
     const openModal = () => setIsModalOpen(true);
 
@@ -116,7 +133,7 @@ export default function PayRecords() {
                     <label>
                         <input
                             type="radio"
-                            name="terms_accept"
+                            name="termsAccept"
                             value="0"
                             checked={selectedBusinessType === '1'}
                             onChange={() => setSelectedBusinessType('1')}
@@ -126,7 +143,7 @@ export default function PayRecords() {
                     <label>
                         <input
                             type="radio"
-                            name="terms_accept"
+                            name="termsAccept"
                             value="1"
                             checked={selectedBusinessType === '0'}
                             onChange={() => setSelectedBusinessType('0')}
