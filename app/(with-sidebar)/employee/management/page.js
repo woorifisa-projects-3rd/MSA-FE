@@ -8,6 +8,7 @@ import EmployeeForm from '@/components/modal/employee-add/employee-add'
 import { useState, useEffect, useRef } from 'react';
 import { nextClient } from "@/lib/nextClient";
 import { useAuth } from "@/contexts/AuthProvider";
+import NameSearch from "@/components/namesearch/name-search";
 
 const edit = "수정";
 const del = "삭제";
@@ -19,6 +20,7 @@ export default function SalesExpenses() {
     const [employees, setEmployees] = useState([]); // 직원 리스트
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const employeeFormRef = useRef(null);
     
     const {storeId} = useAuth();
@@ -68,6 +70,10 @@ export default function SalesExpenses() {
         }
     }
 
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
 
     const tableHeaders = {
         name: "직원 이름",
@@ -108,7 +114,11 @@ export default function SalesExpenses() {
         return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
     };
 
-    const enrichedList = Object.values(employees).map(employee => ({
+    const filteredEmployees = Object.values(employees).filter(employee =>
+        employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const enrichedList = filteredEmployees.map(employee => ({
         ...employee,
         phoneNumber: formatPhoneNumber(employee.phoneNumber), // 전화번호 포맷 적용
         edit: (
@@ -130,7 +140,10 @@ export default function SalesExpenses() {
         <div className={classes.container}>
             <div className={classes.employeeHeader}>
                 <h1 className={classes.title}>직원 정보 관리</h1>
+                <div className={classes.titleRight}>
+                <NameSearch onChange={handleSearchChange} placeholder="이름으로 검색"/>
                 <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
+                </div>
             </div>
             <DefaultTable tableHeaders={tableHeaders} list={enrichedList} />
         
