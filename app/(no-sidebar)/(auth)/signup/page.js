@@ -134,18 +134,23 @@ export default function Signup() {
         ...prevData,
         isEmailConfirmed: true,
       }));
+
+      // 인증 성공 시 에러 메시지 제거
+      setFormErrors((prevErrors) => {
+        const { emailConfirm, ...rest } = prevErrors;
+        return rest;
+      });
     } else {
-      alert('인증번호가 일치하지 않습니다. 다시 확인해주세요.');
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        emailConfirm: '인증번호가 일치하지 않습니다. 다시 확인해주세요.',
+      }));
+
       setFormData((prevData) => ({
         ...prevData,
         isEmailConfirmed: false,
       }));
     }
-
-    setFormErrors((prevErrors) => {
-      const { emailConfirm, ...rest } = prevErrors;
-      return rest;
-    });
   };
 
   const submitHandler = async (e) => {
@@ -292,7 +297,7 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                  />
-                <button type="button" className={styles.verifyButton} onClick={emailSendHandler}>
+                <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
                   인증번호 보내기
                 </button>
                 {formErrors.email && <p className={styles.error}>{formErrors.email}</p>}
@@ -308,6 +313,7 @@ export default function Signup() {
                   placeholder="email 인증번호"
                   value={formData.emailConfirm}
                   onChange={handleChange}
+                  disabled={isEmailConfirmDisabled}
                   />
                 <button
                   type="button"
