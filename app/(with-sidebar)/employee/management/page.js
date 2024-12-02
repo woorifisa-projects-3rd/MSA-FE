@@ -24,12 +24,14 @@ export default function SalesExpenses() {
     const {storeId} = useAuth();
     console.log("storeId?",storeId)
 
+
+
     const fetchEmployees = async () => {
         console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
+            const response = await nextClient.get(`/employee/details?storeId=${storeId}`);
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
