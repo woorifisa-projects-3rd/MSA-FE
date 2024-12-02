@@ -115,7 +115,7 @@ export default function PayRecords() {
             <div className={classes.header}>
                 <MonthSelector onMonthChange={handleMonthChange} />
                 <div className={classes.filtering}>
-                    <NameSearch onChange={handleSearchChange} />
+                    <NameSearch onChange={handleSearchChange} placeholder="이름으로 검색"/>
                     <Sorting onChange={handleSortChange} selectedOption={sortOption} />
                 </div>
             </div>
