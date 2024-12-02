@@ -6,6 +6,7 @@ import AccountInputForm from '@/components/input/account-input';
 import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
 import { validateForm, commonValidateRules } from "@/utils/validation";
+import { useAuth } from '@/contexts/AuthProvider';
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
@@ -27,6 +28,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
     // name이 변경되면 AccountInputForm으로 name 값을 보내줄거임 
 
+
+    const {storeId} = useAuth();
 
     const [formErrors, setFormErrors] = useState({});
     const [error, setError] = useState('');
@@ -78,17 +81,17 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         salary: commonValidateRules.required,
         paymentDate: commonValidateRules.paymentDate,
         birthDate: commonValidateRules.birthDate,
-        address: (data) =>
-          commonValidateRules.address(data.postcodeAddress, data.detailAddress),
+        // address: (data) =>
+        //   commonValidateRules.address(data.postcodeAddress, data.detailAddress),
       };
 
     const validateFormData = (data) => {
         const errors = validateForm(data, validateRules);
       
         // 주소 필드 유효성 검사 추가
-        if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
-          errors.address = "필수 항목입니다.";
-        }
+        // if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+        //   errors.address = "필수 항목입니다.";
+        // }
       
         return errors;
       };
@@ -137,6 +140,13 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         // 유효성 검사 수행
         const errors = validateFormData(formData);
         setFormErrors(errors);
+
+          // detailAddress 유효성 검사 추가
+        if (!formData.detailAddress.trim()) {
+            errors.detailAddress = "상세 주소를 입력해주세요.";
+        }
+
+        setFormErrors(errors);
         
         // 오류가 없으면 제출
         if (Object.keys(errors).length === 0) {
@@ -144,6 +154,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
             const updatedFormData = {
                 ...rest,
                 address: `${postcodeAddress}, ${detailAddress}`,  // address로 결합해서 제출
+                storeId
             };
 
             try {
@@ -151,12 +162,15 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 // Axios 통해 API 요청
                 if (mode === 'edit') {
                     // 수정 요청
+
+                    console.log("next server로 보내는 직원 수정 데이터", updatedFormData, initialData.id)
                     response = await nextClient.put('/employee', {
                         ...updatedFormData,
                         seid: initialData.id, // 수정 대상 ID 전달
                     });
                     alert('직원 정보가 수정되었습니다.');
                 } else {
+                    
                     // 추가 요청
                     response = await nextClient.post('/employee', updatedFormData);
                     alert('직원이 추가되었습니다.');
@@ -327,8 +341,11 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {(formErrors.address) && (
+                    {/* {(formErrors.address) && (
                         <span className={styles.error}>{formErrors.address}</span>
+                    )} */}
+                    {formErrors.detailAddress && (
+                        <span className={styles.error}>{formErrors.detailAddress}</span>
                     )}
                 </div>
             </form>
