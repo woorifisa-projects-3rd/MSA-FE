@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import springClient from '@/lib/springClient';
 
@@ -15,10 +14,14 @@ export async function POST(request) {
         accountNumber,
         salary,
         paymentDate,
-        address
-        } = await request.json();
+        address,
+        storeId
+      } = await request.json();
+
+      // console.log("next sever로 온 response", storeId)
+      // console.log(storeId);
   
-        const storeid = 1;
+      
       const response = await springClient.post(`/user/employee`, {
         name,
         email,
@@ -32,7 +35,7 @@ export async function POST(request) {
         paymentDate,
         address
        }, {
-        params: {storeid : storeid},
+        params: {storeid :storeId},
        });
   
       // 성공 응답 반환
@@ -75,6 +78,19 @@ export async function POST(request) {
         address,
         seid
         } = await request.json();
+
+      console.log("server로 온 직원 수정 데이터:", name,
+        email,
+        birthDate,
+        sex,
+        phoneNumber,
+        employmentType,
+        bankCode,
+        accountNumber,
+        salary,
+        paymentDate,
+        address,
+        seid)
   
       const response = await springClient.put(`/user/employee`, {
         name,
