@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import springClient from '@/lib/springClient'; // Spring Boot와 통신하는 Axios 클라이언트
 import { NextResponse } from 'next/server';
 
