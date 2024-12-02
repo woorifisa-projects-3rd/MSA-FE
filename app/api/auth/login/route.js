@@ -7,6 +7,8 @@ export async function POST(request) {
     try {
       // 클라이언트에서 보낸 데이터 받기
       const { email, password } = await request.json();
+
+      console.log("client로부터 받은 ",email,password)
   
       // Spring Boot로 로그인 요청
       const response = await springClient.post('/user/president/login', { email, password });
