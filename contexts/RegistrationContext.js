@@ -15,6 +15,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     })
     const [currentStep, setCurrentStep] = useState(1);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const steps = mode === 'first' 
     ? ['business', 'account', 'verification', 'pin', 'address']
@@ -93,13 +94,11 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             console.log("스프링에서 프론트까지 전달",response.data);
             
             if (response.data) {
-                setError("");
+                setSuccess("이메일로 전송된 6자리 인증번호를 입력해주세요.");
                 return setIsEmailSent(true);
             }
-            setError("인증 코드 발송에 실패했습니다.");
-            return false;
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -112,14 +111,13 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 emailPinNumber: verificationData.verificationCode
             });
             if (response.data) {
-                setError("");
+                setSuccess("이메일 인증이 성공했습니다!");
                 setIsEmailVerified(true);
                 return true;
             }
-            setError("인증 코드가 일치하지 않습니다.");
-            return false;
+           
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };

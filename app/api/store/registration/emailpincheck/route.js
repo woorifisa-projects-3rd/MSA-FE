@@ -13,12 +13,18 @@ export async function POST(request) {
 
         if (response.data === true) {
             return NextResponse.json({ success: true }, { status: 200 });
-        } else {
-            return NextResponse.json({ success: false }, { status: 400 });
         }
     } catch (error) {
-        console.error('Spring Boot 요청 실패:', error.message, error.response?.data);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        const errorMessage = error.response.data.message || '서버 에러가 발생했습니다.';
+        const statusCode = error.response?.status || 500;
+       
+        return NextResponse.json({ 
+            success: false,
+            error: errorMessage 
+        }, { 
+            status: statusCode 
+        }); 
+
     }
 }
     
