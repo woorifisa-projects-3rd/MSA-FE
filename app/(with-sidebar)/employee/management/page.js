@@ -139,7 +139,7 @@ export default function SalesExpenses() {
             <div className={classes.employeeHeader}>
                 <h1 className={classes.title}>직원 정보 관리</h1>
                 <div className={classes.titleRight}>
-                <NameSearch onChange={handleSearchChange}/>
+                <NameSearch onChange={handleSearchChange} placeholder="이름으로 검색"/>
                 <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
                 </div>
             </div>

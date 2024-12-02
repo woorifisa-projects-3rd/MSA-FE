@@ -28,7 +28,7 @@ const FinanceProducts = () => {
           소상공인을 위한 특별 지원 프로그램!<br/>
           창업자금, 재정 지원 서비스로 안정적인 사업 운영을 도와드립니다.
         </p>
-        <NameSearch onChange={handleSearchChange}/>
+        <NameSearch onChange={handleSearchChange} placeholder="상품명으로 검색"/>
       </div>
 
       <div className={styles.productGrid}>
