@@ -55,7 +55,7 @@ export default function AttendancePage() {
             const longitude= location.lng;
             const endpoint = type === 'go' ? 'go-to-work' : 'leave-work'
 
-            const serverResponse = await AbsolutePathClient.post('/attendance/employee/commute', {
+            const serverResponse = await nextClient.post('/attendance/employee/commute', {
                 latitude,
                 longitude,
                 endpoint,
