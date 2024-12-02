@@ -6,7 +6,7 @@ export async function GET(request) {
         // 요청 URL에서 쿼리 파라미터 추출
         const { searchParams } = new URL(request.url);
         // const storeid = searchParams.get('storeid');
-        const storeid = 1;
+        const storeid = 3;
         const year = searchParams.get('year');
         const month = searchParams.get('month');
 

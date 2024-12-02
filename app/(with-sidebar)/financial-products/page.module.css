@@ -94,10 +94,11 @@
   }
   
   .label {
-    width: 120px;
+    width: 50px;
     color: #666;
     font-size: 15px;
     font-weight: 500;
+    margin-left: 10px;
   }
   
   .value {

@@ -10,7 +10,8 @@ import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm
 import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
 import { nextClient } from '@/lib/nextClient';
-import FirstBusinessRegistration from '../../modal/workplace-registration.js/FirstBusinessRegistration';
+import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
+import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
 
 
 //테스트 데이터
@@ -73,6 +74,7 @@ export default function ProfileDetail({content, refreshStores}) {
 
     const enrichedWorkplaceInfo = workplaceInfo.map(workplace =>({
         ...workplace,
+        businessNumber: `${workplace.businessNumber.slice(0, 3)}-${workplace.businessNumber.slice(3, 5)}-${workplace.businessNumber.slice(5, 10)}`,
         accountNumber: (
             <div className={classes.accountContainer}>
                 {workplace.bankCode && (
@@ -151,14 +153,9 @@ export default function ProfileDetail({content, refreshStores}) {
                 isOpen={isRegistrationModalOpen}
                 onClose={()=>setRegistrationModalOpen(false)}
                 onConfirm={handleFormSubmit}
+                showButtons={false}
             >
-                <WorkplaceModal
-                    ref={workplaceModalRef}
-                    onSubmit={(formData) => {
-                        setRegistrationModalOpen(false);
-                    }}
-                    refreshStores={refreshStores}
-                />
+              <AdditionalStoreRegistration />
             </ModalContainer>
 
             {/* 사업장 최초 등록 모달 */}
@@ -168,7 +165,7 @@ export default function ProfileDetail({content, refreshStores}) {
                 onClose={()=>setFistRegistrationModalOpen(false)}
                 showButtons={false}
             >
-                <FirstBusinessRegistration />
+               <FirstStoreRegistration />
             </ModalContainer>
 
             {/* 편집 모달 */}
