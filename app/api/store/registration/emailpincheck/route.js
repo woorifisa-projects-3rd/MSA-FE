@@ -15,7 +15,7 @@ export async function POST(request) {
             return NextResponse.json({ success: true }, { status: 200 });
         }
     } catch (error) {
-        const errorMessage = error.response.data.message || '서버 에러가 발생했습니다.';
+        const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
         const statusCode = error.response?.status || 500;
        
         return NextResponse.json({ 

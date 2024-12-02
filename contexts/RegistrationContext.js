@@ -140,14 +140,12 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             });
             
             if (response.data) {
-                setError("");
                 setIsPinVerified(true);
                 return true;
             }
-            setError("PIN 번호 등록에 실패했습니다.");
-            return false;
+           
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };
