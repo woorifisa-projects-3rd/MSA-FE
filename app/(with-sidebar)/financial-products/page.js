@@ -3,11 +3,22 @@
 
 import { financeProducts } from '@/constants/finance-product';
 import styles from './page.module.css';
+import NameSearch from '@/components/namesearch/name-search';
+import { useState } from 'react';
 
 const FinanceProducts = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const handleApplyClick = (url) => {
     window.open(url, '_blank');
   };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProducts = financeProducts.filter(product =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
   return (
     <div className={styles.container}>
@@ -17,10 +28,11 @@ const FinanceProducts = () => {
           소상공인을 위한 특별 지원 프로그램!<br/>
           창업자금, 재정 지원 서비스로 안정적인 사업 운영을 도와드립니다.
         </p>
+        <NameSearch onChange={handleSearchChange}/>
       </div>
 
       <div className={styles.productGrid}>
-        {financeProducts.map((product, index) => (
+        {filteredProducts.map((product, index) => (
           <div key={index} className={styles.productCard}>
             <div className={styles.productHeader}>
               <div className={styles.titleGroup}>
