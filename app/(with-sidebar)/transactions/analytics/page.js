@@ -132,7 +132,7 @@ export default function SalesExpenses() {
       }
     };
     loadTransactionAnalyticsPageData();
-  }, [selectedYear, selectedMonth]);
+  }, [storeid, selectedYear, selectedMonth]);
 
   const donutChartOptions = {
     responsive: true,

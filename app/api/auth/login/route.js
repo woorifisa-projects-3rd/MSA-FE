@@ -13,7 +13,8 @@ export async function POST(request) {
       // Spring Boot로 로그인 요청
       const response = await springClient.post('/user/president/login', { email, password });
       console.log("auth/login server response:", response.data)
-  
+      
+    
       const { accessToken, refreshToken } = response.data; // Spring Boot에서 받은 토큰
 
       cookies().set('refreshToken', refreshToken, {
