@@ -30,6 +30,10 @@ export default function LoginPage() {
         
             if (response.data.success) {
                 router.push('/mypage');
+                if (email === 'zipgyesajang@gmail.com') {
+                    router.push('/manager');
+                }
+                
             } 
         } catch (error) {
             setError(error.response?.data?.message || '로그인 중 오류가 발생했습니다.');
