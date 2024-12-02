@@ -38,10 +38,20 @@ export default function AttendancePage() {
         try {
             setLoading(true)
             
-            const location = await getCurrentLocation()
+            // 위치 정보 가져오기 실패할 경우의 에러 메시지를 더 구체적으로
+            const location = await getCurrentLocation().catch(error => {
+                if (error.code === 1) {
+                    throw new Error('위치 정보 액세스가 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.');
+                } else if (error.code === 2) {
+                    throw new Error('위치 정보를 가져올 수 없습니다. GPS 신호가 잡히지 않습니다.');
+                } else {
+                    throw new Error('위치 정보를 가져오는 중 오류가 발생했습니다.');
+                }
+            });
+
             console.log('Current location:', location)
 
-            const   latitude= location.lat;
+            const latitude= location.lat;
             const longitude= location.lng;
             const endpoint = type === 'go' ? 'go-to-work' : 'leave-work'
 
