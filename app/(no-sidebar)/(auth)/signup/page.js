@@ -27,6 +27,7 @@ export default function Signup() {
 
   const [formErrors, setFormErrors] = useState({});
   const [error, setError] = useState('');
+  const [emailSuccess, setEmailSuccess] = useState('');
   const [isEmailConfirmDisabled, setEmailConfirmDisabled] = useState(false);
   const [emailConfirmNumber, setEmailConfirmNumber] = useState('');
 
@@ -98,10 +99,19 @@ export default function Signup() {
       console.log(response.data);
   
       // 성공 응답 처리
-      if (response.data.pin.success) {
-        alert('이메일을 발송했습니다!');
-        setEmailConfirmNumber(response.data.pin); // PIN 설정
-        setError(''); // 에러 상태 초기화
+      if (response.data.success) {
+        if (response.data.pin.code === 'EMAIL_ALREADY_EXISTS') {
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            email: '이미 등록된 이메일입니다. 다른 이메일을 사용해주세요.',
+          }));
+
+        } else {
+          // alert('이메일을 발송했습니다!');
+          setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
+          setEmailConfirmNumber(response.data.pin); // PIN 설정
+          setError(''); // 에러 상태 초기화
+        }
       } else {
         // 백엔드에서 `success: false` 반환 시
         throw new Error(response.data.pin.error || '이메일 전송 실패');
@@ -119,22 +129,28 @@ export default function Signup() {
   const handleEmailConfirm = () => {        
     if (emailConfirmNumber == formData.emailConfirm) {
       setEmailConfirmDisabled(true);
+      setEmailSuccess('');
       setFormData((prevData) => ({
         ...prevData,
         isEmailConfirmed: true,
       }));
+
+      // 인증 성공 시 에러 메시지 제거
+      setFormErrors((prevErrors) => {
+        const { emailConfirm, ...rest } = prevErrors;
+        return rest;
+      });
     } else {
-      alert('인증번호가 일치하지 않습니다. 다시 확인해주세요.');
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        emailConfirm: '인증번호가 일치하지 않습니다. 다시 확인해주세요.',
+      }));
+
       setFormData((prevData) => ({
         ...prevData,
         isEmailConfirmed: false,
       }));
     }
-
-    setFormErrors((prevErrors) => {
-      const { emailConfirm, ...rest } = prevErrors;
-      return rest;
-    });
   };
 
   const submitHandler = async (e) => {
@@ -281,10 +297,13 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                  />
-                <button type="button" className={styles.verifyButton} onClick={emailSendHandler}>
+                <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
                   인증번호 보내기
                 </button>
                 {formErrors.email && <p className={styles.error}>{formErrors.email}</p>}
+                {!formErrors.email && emailSuccess && (
+                  <p className={styles.success}>{emailSuccess}</p>
+                )}
               </div>
 
               <div className={styles.inputGroup}>
@@ -294,6 +313,7 @@ export default function Signup() {
                   placeholder="email 인증번호"
                   value={formData.emailConfirm}
                   onChange={handleChange}
+                  disabled={isEmailConfirmDisabled}
                   />
                 <button
                   type="button"
