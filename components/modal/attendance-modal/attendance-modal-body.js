@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { nextClient } from "@/lib/nextClient";
 import styles from "./attendance-modal-body.module.css";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function AttendanceModalBody({
   mode,
@@ -19,12 +20,13 @@ export default function AttendanceModalBody({
 
   const [employees, setEmployees] = useState([]);
   const [totalWorkTime, setTotalWorkTime] = useState(null); // 총 근무시간 상태
+  const {storeId} = useAuth();
 
   // 직원 목록 가져오기 - create 모드일 때만
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await nextClient.get(`/employee/details?storeid=1`);
+        const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
         const data = await response.data;
         const mappedEmployees = data.map((employee) => ({
           storeemployeeId: employee.id,

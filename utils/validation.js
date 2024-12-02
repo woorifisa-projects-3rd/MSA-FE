@@ -9,7 +9,7 @@ export const PASSWORD_MISMATCH_ERROR = "비밀번호가 일치하지 않습니�
 
 // 유효성 검사 규칙
 export const commonValidateRules = {
-  required: (value) => (value.trim() ? "" : REQUIRED_ERROR),
+  required: (value) => (value ? "" : REQUIRED_ERROR),
 
   email: (value) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -38,8 +38,8 @@ export const commonValidateRules = {
       : REQUIRED_ERROR;
   },
 
-  address: (postcode, basicAddress) =>
-    postcode && basicAddress ? "" : REQUIRED_ERROR,
+  // address: (postcode, basicAddress) =>
+  //   postcode && basicAddress ? "" : REQUIRED_ERROR,
 
   paymentDate: (value) =>
     value && value >= 1 && value <= 28 ? "" : PAYMENT_DATE_ERROR,
