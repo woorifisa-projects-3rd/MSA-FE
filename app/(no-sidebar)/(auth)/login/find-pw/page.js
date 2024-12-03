@@ -25,10 +25,15 @@ export default function FindPasswordPage() {
         const response = await nextClient.post('/president/forwardingpassword', requestData);
     
         // 요청 성공 시 사용자 알림
-        alert(response.data || '임시 비밀번호가 이메일로 전송되었습니다.');
+        console.log("클라까지 다시온다data",response.data);
+        console.log("클라까지 다시온다success",response.data.success);
+        
+        if(response.data.success === true){
+            alert('임시 비밀번호가 이메일로 전송되었습니다.');
+        }
         } catch (error) {
         console.error('임시 비밀번호 발송 실패:', error);
-        alert(error.response?.data || '임시 비밀번호 발송 중 오류가 발생했습니다.');
+        alert('임시 비밀번호 발송 중 오류가 발생했습니다.');
         }
     };
   
