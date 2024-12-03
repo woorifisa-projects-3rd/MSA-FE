@@ -76,7 +76,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
     const handleAccountValidation = (isValid) => {
         setIsAccountValid(isValid);
-        console.log(isAccountValid);
+        console.log(isValid);
         
         if(isAccountValid) {
             setFormErrors(prev => ({
