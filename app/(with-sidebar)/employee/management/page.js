@@ -8,6 +8,7 @@ import EmployeeForm from '@/components/modal/employee-add/employee-add'
 import { useState, useEffect, useRef } from 'react';
 import { nextClient } from "@/lib/nextClient";
 import { useAuth } from "@/contexts/AuthProvider";
+import NameSearch from "@/components/namesearch/name-search";
 
 const edit = "수정";
 const del = "삭제";
@@ -19,19 +20,18 @@ export default function SalesExpenses() {
     const [employees, setEmployees] = useState([]); // 직원 리스트
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const employeeFormRef = useRef(null);
     
     const {storeId} = useAuth();
     console.log("storeId?",storeId)
-
-
 
     const fetchEmployees = async () => {
         console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
-            const response = await nextClient.get(`/employee/details?storeId=${storeId}`);
+            const response = await nextClient.get(`/employee/details?storeid=${storeId}`);
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
@@ -44,7 +44,9 @@ export default function SalesExpenses() {
     };
 
     useEffect(() => {
-        fetchEmployees();
+        if(storeId) {
+            fetchEmployees();
+        }
     }, [storeId]); // storeId가 변경될 때마다 직원 데이터 갱신
 
     // 모달 열기
@@ -67,6 +69,10 @@ export default function SalesExpenses() {
             fetchEmployees(); // 직원 리스트 갱신
         }
     }
+
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
 
 
     const tableHeaders = {
@@ -107,8 +113,12 @@ export default function SalesExpenses() {
         const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
         return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
     };
+    
+    const filteredEmployees = employees.filter(employee =>
+        employee.name.includes(searchQuery)
+    );
 
-    const enrichedList = Object.values(employees).map(employee => ({
+    const enrichedList = filteredEmployees.map(employee => ({
         ...employee,
         phoneNumber: formatPhoneNumber(employee.phoneNumber), // 전화번호 포맷 적용
         edit: (
@@ -130,7 +140,10 @@ export default function SalesExpenses() {
         <div className={classes.container}>
             <div className={classes.employeeHeader}>
                 <h1 className={classes.title}>직원 정보 관리</h1>
+                <div className={classes.titleRight}>
+                <NameSearch onChange={handleSearchChange} placeholder="이름으로 검색"/>
                 <BaseButton text= "직원 추가" onClick={() => openModal("add")}/>
+                </div>
             </div>
             <DefaultTable tableHeaders={tableHeaders} list={enrichedList} />
         

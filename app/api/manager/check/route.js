@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic'
-
 import { NextResponse } from 'next/server'
 import springClient from '@/lib/springClient';
 
@@ -7,10 +5,10 @@ export async function GET(request) {
     try {
 
         // Spring Boot 서버로 요청
-        const response = await springClient('/user/president/mypage');
-        console.log("/use/president/mypage 스프링 서버로 요청시 응답: ", response.data);
+        const response = await springClient('/user/manager/check');
+        console.log("/use/manager/check 스프링 서버로 요청시 응답: ", response.status);
         
-        return NextResponse.json(response.data);
+        return NextResponse.json(response.status);
     } catch (error) {
         console.error('Spring Boot 서버 에러:', {
             status: error.response?.status,

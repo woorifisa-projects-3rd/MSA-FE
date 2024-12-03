@@ -1,14 +1,28 @@
 .container {
-    padding: 20px;
-    background-color: #f5f5f5;
+    margin: 20px auto;
+    padding: 50px 70px;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255, 0.6);  
 }
 
 .title {
     font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.titleRight {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 .employeeHeader {
     display: flex;
     justify-content: space-between;
-    margin: 50px 20px 10px;
+    margin: 20px 10px;
 }

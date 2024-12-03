@@ -41,6 +41,7 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
    if(onDetailChange){
     onDetailChange(updatedDetail);
    }
+    
    if (onAddressChange) {
     onAddressChange(postcodeAddress, updatedDetail);
     }

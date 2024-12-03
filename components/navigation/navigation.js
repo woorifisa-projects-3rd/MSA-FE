@@ -1,21 +1,25 @@
 'use client';
 
 import React, { useState } from "react";
-// import { IoIosArrowForward } from "react-icons/io";
-
 import classes from "./navigation.module.css";
 import { NAVIGATION_ITEMS } from "@/constants/navigation_item";
 import { BsBoxArrowRight } from "react-icons/bs";
 import BusinessSelectDropdown from "../dropdown/business-dropdown";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { nextClient } from "@/lib/nextClient";
 
-export default function Navigation({ isMobileMenuOpen }){
+export default function Navigation({ isMobileMenuOpen }) {
     const router = useRouter();
-    
-    const [activeIndex, setActiveIndex] = useState();
+    const [activeIndex, setActiveIndex] = useState(null);
 
-    // 나중에 처리 
+    const handleMouseEnter = (index) => {
+        setActiveIndex(index);
+    };
+
+    const handleMouseLeave = () => {
+        setActiveIndex(null);
+    };
+
     const handleLogout = async() => {
         try{
             await nextClient.get('/auth/logout');
@@ -42,7 +46,6 @@ export default function Navigation({ isMobileMenuOpen }){
         }
     };
 
-
     return (
         <>
             {/* 데스크톱 네비게이션 */}
@@ -51,42 +54,46 @@ export default function Navigation({ isMobileMenuOpen }){
                 <div className={classes.topSection}>
                     <BusinessSelectDropdown/>
                 </div>
-
                 {/* 메인 네비게이션 섹션  */}
                 <div className={classes.navigationSection}>
                     <ul>
                         {NAVIGATION_ITEMS.map((item, index)=>(
                             <li 
                                 key={index}
-                                onMouseEnter={() => setActiveIndex(index)}
-                                onMouseLeave={() => setActiveIndex(null)}
+                                onMouseEnter={() => handleMouseEnter(index)}
+                                onMouseLeave={handleMouseLeave}
+                                className={classes.navigationItem}
                             >
                                 {/* 메인 카테고리 */}
                                 <div className={`${classes.mainItemBox} ${activeIndex === index ? classes.active : ''}`}>
                                     {item.icon && <item.icon className={classes.icon} />}
                                     <div>{item.title}</div>
                                 </div>
-
-                                {activeIndex === index && item.subTitles && (
-                                    <div className={classes.subMenuBox}>
-                                        {item.subTitles.map((subTitle, subIndex)=>(
-                                            <li 
-                                                key={subIndex} 
+                                <div
+                                    className={`${classes.subMenuBox} ${
+                                        activeIndex === index ? classes.subMenuOpen : ""
+                                    }`}
+                                >
+                                    {item.subTitles &&
+                                        item.subTitles.map((subItem, subIndex) => (
+                                            <div
+                                                key={subIndex}
                                                 className={classes.subMenuItem}
-                                                onClick={() => handleNavigation(subTitle.path, subTitle.isDailyAttendance)}
+                                                onClick={() =>
+                                                    handleNavigation(
+                                                        subItem.path,
+                                                        subItem.isDailyAttendance
+                                                    )
+                                                }
                                             >
-                                                <div className={classes.subMenuItemLink}>
-                                                    {subTitle.text}
-                                                </div>
-                                            </li>
+                                                {subItem.text}
+                                            </div>
                                         ))}
-                                    </div>
-                                )}
+                                </div>
                             </li>
                         ))}
                     </ul>
                 </div>
-
                 {/* 로그아웃 섹션 */}
                 <button 
                     className={classes.logout}
@@ -96,7 +103,6 @@ export default function Navigation({ isMobileMenuOpen }){
                     <div className={classes.icon}><BsBoxArrowRight /></div>
                 </button>
             </nav>
-            
 
              {/* 모바일 네비게이션 */}
             <div className={`${classes.mobileNav} ${isMobileMenuOpen ? classes.open : ''}`}>

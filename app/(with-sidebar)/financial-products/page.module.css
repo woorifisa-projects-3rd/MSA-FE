@@ -2,10 +2,12 @@
     padding: 40px 32px;
     max-width: 1200px;
     margin: 0 auto;
-    background: linear-gradient(to bottom, #fafafa, #ffffff);
   }
   
   .contentHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 48px;
     text-align: center;
   }
@@ -14,7 +16,6 @@
     font-size: 32px;
     font-weight: 700;
     color: #1a1a1a;
-    margin-bottom: 16px;
     letter-spacing: -0.5px;
   }
   
@@ -23,7 +24,7 @@
     font-size: 16px;
     line-height: 1.6;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 16px;
   }
   
   .productGrid {
@@ -35,7 +36,7 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 16px;
     padding: 32px;
-    background: #fff;
+    /* background: var(--sidebar-color); */
     transition: all 0.3s ease;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   }
@@ -70,7 +71,7 @@
   
   .applyButton {
     padding: 12px 24px;
-    background: #0078FF;
+    background: var(--main-woori-blue);
     color: white;
     border: none;
     border-radius: 8px;

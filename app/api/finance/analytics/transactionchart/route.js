@@ -12,6 +12,7 @@ export async function GET(request) {
 
         console.log(storeId, year, month);
 
+
         // 필수 파라미터 검증
         if (!storeId || !year || !month) {
             return NextResponse.json(
