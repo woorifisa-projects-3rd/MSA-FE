@@ -95,32 +95,18 @@ export default function Signup() {
       const response = await nextClient.post('/auth/signup/email', {
         email: formData.email,
       });
-
-      console.log(response.data);
   
       // 성공 응답 처리
-      if (response.data.success) {
-        if (response.data.pin.code === 'EMAIL_ALREADY_EXISTS') {
-          setFormErrors((prevErrors) => ({
-            ...prevErrors,
-            email: '이미 등록된 이메일입니다. 다른 이메일을 사용해주세요.',
-          }));
-
-        } else {
-          // alert('이메일을 발송했습니다!');
-          setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
-          setEmailConfirmNumber(response.data.pin); // PIN 설정
-          setError(''); // 에러 상태 초기화
-        }
-      } else {
-        // 백엔드에서 `success: false` 반환 시
-        throw new Error(response.data.pin.error || '이메일 전송 실패');
-      }
+      setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
+      setEmailConfirmNumber(response.data.pin); // PIN 설정
+      setError(''); // 에러 상태 초기화
     } catch (error) {
       // 에러 처리
       const errorMessage = error.response?.data?.error || error.message;
-      setError(errorMessage); // 에러 메시지 상태 업데이트
-      alert(errorMessage); // 사용자에게 에러 메시지 표시
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        email: errorMessage,
+      }));
     }
   };
   
@@ -176,19 +162,19 @@ export default function Signup() {
 
       try {
         const response = await nextClient.post('/auth/signup', submissionData);
+        console.log(submissionData);
+        alert('회원가입이 완료되었습니다!');
+        router.push('/login');
         
-        if (response.data.success) {
-          console.log(submissionData);
-          alert('회원가입이 완료되었습니다!');
-          router.push('/login');
-        } else {
-          throw new Error(response.data.error || '회원가입 실패');
-        }
       } catch (error) {
-        if (error.response?.status === 409) {
-          alert('이미 존재하는 이메일 / 전화번호입니다.');
+        let errorMessage;
+        if (error.response.status == '400') {
+          errorMessage = '이미 등록된 전화번호 혹은 이메일입니다.'
+        } else {
+          errorMessage = error.response?.data?.error || error.message;
         }
-        setError(error.response?.data?.error || error.message);
+        setError(errorMessage);
+        alert(errorMessage);
       }
     }
   }
@@ -296,6 +282,7 @@ export default function Signup() {
                   placeholder="email"
                   value={formData.email}
                   onChange={handleChange}
+                  disabled={isEmailConfirmDisabled}
                  />
                 <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
                   인증번호 보내기

@@ -31,6 +31,7 @@ export default function AttendanceModalBody({
         const mappedEmployees = data.map((employee) => ({
           storeemployeeId: employee.id,
           name: employee.name,
+          employmentType: employee.employmentType
         }));
         setEmployees(mappedEmployees);
       } catch (error) {
@@ -107,7 +108,9 @@ export default function AttendanceModalBody({
                 className={styles.select}
               >
                 <option value="">직원명</option>
-                {employees.map((employee) => (
+                {employees
+                .filter((employee) => employee.employmentType !== 10 && employee.employmentType !== 11)
+                .map((employee) => (
                   <option
                     key={employee.storeemployeeId}
                     value={employee.storeemployeeId}
