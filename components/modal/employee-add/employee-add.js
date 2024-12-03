@@ -192,11 +192,11 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     // 성공 시 직원 관리 페이지로
                     if (onSubmit) onSubmit(updatedFormData);
                     Router.push('/employee/management');
-                } else {
-                    throw new Error(response.data.error || '요청 처리 실패');
                 }
             } catch (error) {
-                setError(error.response?.data?.error || error.message);
+                const errorMessage = error.response?.data?.error || error.message;
+                setError(errorMessage);
+                alert(errorMessage);
             }
             
         } else {

@@ -282,6 +282,7 @@ export default function Signup() {
                   placeholder="email"
                   value={formData.email}
                   onChange={handleChange}
+                  disabled={isEmailConfirmDisabled}
                  />
                 <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
                   인증번호 보내기
