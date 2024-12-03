@@ -128,3 +128,10 @@
     margin-top: 5px;
     font-weight: bold;
 }
+
+.accountSection {
+    color: var(--main-woori-blue);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+}

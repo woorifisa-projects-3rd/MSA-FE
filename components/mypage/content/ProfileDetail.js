@@ -1,14 +1,17 @@
     'use client'
     import DefaultTable from '@/components/table/DefaultTable';
     import classes from './ProfileDetail.module.css';
+    // import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
     import ModalContainer from '@/components/modal/modal-container';
     import { useState, useEffect, useRef } from 'react';
     import PrimaryButton from '@/components/button/primary-button';
+    import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
     import PresidentInfo from './PresidentInfo';
     import { bankCodeList } from '@/constants/bankCodeList';
     import { nextClient } from '@/lib/nextClient';
     import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
     import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
+    import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
 
 
     const tableName = '보유하신 사업장';
@@ -32,6 +35,8 @@
         const [selectedWorkplace, setSelectedWorkplace] = useState(null);
         const workplaceModalRef = useRef(null);
         const [error, setError] = useState('');
+        const [deleteStoreId, setdeleteStoreId] = useState(null);
+        const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
         const handleFormSubmit = () => {
             if (workplaceModalRef.current) {
@@ -43,22 +48,30 @@
 
         const workplaceInfo = content;
 
-        const handleDeleteConfirm = async (workplaceInfo) => {
-            if (!window.confirm('삭제하시면 다시 복구하기 어렵습니다. 정말 삭제하시겠습니까?')) {
-                return;
-            }
+        const handleDeleteClick = (workplace) => {            
+            setdeleteStoreId(workplace.storeId);
+            setDeleteModalOpen(true);
+        }
 
+        const handleDeleteConfirm = async () => {            
+            if (!deleteStoreId) return;
+
+            setDeleteModalOpen(true);
             try {
                 const response = await nextClient.delete('/mypage/store', {
-                    data: { storeid: workplaceInfo.storeId },
+                    data: { storeid: deleteStoreId },
                 });
 
                 if (response.data.success) {
                     alert('가게가 삭제 되었습니다.');
-                    refreshStores();
+                    
                 } else {
                     throw new Error(response.data.error || '가게 삭제 실패');
                 }
+                setDeleteModalOpen(false);
+                // refreshStores();
+                window.location.reload();
+
             } catch (error) {
                 setError(error.response?.data?.error || error.message);
             }
@@ -95,7 +108,7 @@
                     text="삭제"
                     onClick={() => {
                         setSelectedWorkplace(workplace);
-                        handleDeleteConfirm(workplace);
+                        handleDeleteClick(workplace);
                     }}
                 />
             ),
@@ -192,8 +205,23 @@
                     onClose={() => setEditModalOpen(false)}
                     onConfirm={handleFormSubmit}
                 >
-                   
+                    {/* <WorkplaceModal
+                        mode="edit"
+                        workplaceData={selectedWorkplace}
+                        ref={workplaceModalRef}
+                        onSubmit={(formData) => {
+                            setEditModalOpen(false);
+                        }}
+                    /> */}
                 </ModalContainer>
+                <DeleteModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={() => setDeleteModalOpen(false)}
+                    onDelete={handleDeleteConfirm}
+                    deleteId={deleteStoreId}
+                    title="가게 삭제"
+                    text="해당 가게를 정말 삭제하시겠습니까?"
+                />
             </div>
         );
     }
