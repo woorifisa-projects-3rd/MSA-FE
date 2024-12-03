@@ -5,12 +5,12 @@ export async function POST(request) {
     console.log('Next.js /finance/analytics/transactionpdf 호출됨');
   
     try {
-      const { searchParams } = new URL(request.url);
-      const storeid = searchParams.get('storeid');
-      const year = searchParams.get('year');
-      const month = searchParams.get('month');
+      const body = await request.json();
+
+      const { storeId, selectedYear: year, selectedMonth: month } = body;
   
-      if (!storeid || !year || !month) {
+      console.log(storeId, year, month);
+      if (!storeId || !year || !month) {
         return NextResponse.json(
           { error: '필수 파라미터(storeid, year, month)가 누락되었습니다.' },
           { status: 400 }
@@ -18,7 +18,7 @@ export async function POST(request) {
       }
   
       const response = await PdfspringClient.post(
-        `/finance/transactionpdf?storeid=${storeid}&year=${year}&month=${month}`,
+        `/finance/transactionpdf?storeid=${storeId}&year=${year}&month=${month}`,
         null,
         { responseType: 'arraybuffer' } // PDF 데이터를 정확히 가져오기 위해 설정
       );

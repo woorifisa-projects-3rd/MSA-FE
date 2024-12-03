@@ -17,7 +17,7 @@ export default function StepNavigation() {
 
     const maxSteps = mode === "first" ? 5 : 4;
 
-    console.log("mode?", mode)
+    console.log("step navigation 내 log mode?", mode)
     const handleNext = async () => {
         console.log(`Current Step: ${currentStep}`); // 현재 단계 로그 출력
 

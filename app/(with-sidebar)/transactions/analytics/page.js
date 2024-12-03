@@ -10,6 +10,7 @@ import ModalContainer from '@/components/modal/modal-container';
 import classes from "./page.module.css";
 import styles from './ModalStyles.module.css';
 import Loading from '@/components/loading/Loading';
+import { useAuth } from '@/contexts/AuthProvider';
 
 ChartJS.register(ArcElement, BarElement, Tooltip, Legend, Colors, CategoryScale, LinearScale);
 
@@ -25,20 +26,28 @@ export default function SalesExpenses() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessType, setSelectedBusinessType] = useState(null); // 선택된 사업자 유형 상태
 
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const {storeId} = useAuth();
+  console.log("storeId?",storeId);
+
+
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
+
+      console.log(selectedYear, selectedMonth);
+
+
       try {
         const response = await nextClient.get('/finance/analytics/transactionchart', {
           params: {
-            storeid: 3,
-            year: selectedYear,
-            month: selectedMonth,
+            storeId: storeId,
+            selectedYear: selectedYear,
+            selectedMonth: selectedMonth,
           },
         });
-
         const data = response.data;
 
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
@@ -129,7 +138,7 @@ export default function SalesExpenses() {
       }
     };
     loadTransactionAnalyticsPageData();
-  }, [selectedYear, selectedMonth]);
+  }, [storeId ,selectedYear, selectedMonth]);
 
   const donutChartOptions = {
     responsive: true,
@@ -152,8 +161,13 @@ export default function SalesExpenses() {
   
     try {
       const response = await PdfnextClient.post(
-        `/finance/analytics/transactionsimplepdf?storeid=3&year=${selectedYear}&month=${selectedMonth}&taxtype=${selectedBusinessType}`,
-        {}, // 요청 본문(body)
+        `/finance/analytics/transactionsimplepdf`,
+        {
+          storeId: storeId,
+          selectedYear: selectedYear,
+          selectedMonth: selectedMonth,
+          type: type,
+        }, // 요청 본문
         { responseType: 'arraybuffer' }
       );
       console.log('데이터: ', response.data);
@@ -183,9 +197,13 @@ export default function SalesExpenses() {
   const handleGenerateIncomeStatement = async () => {
     try {
       const response = await PdfnextClient.post(
-        `/finance/analytics/transactionpdf?storeid=3&year=${selectedYear}&month=${selectedMonth}`,
-        {},
-        { responseType: 'arraybuffer' } // 바이너리 데이터를 정확히 받음
+        `/finance/analytics/transactionpdf`,
+        {
+          storeId: storeId,
+          selectedYear: selectedYear,
+          selectedMonth: selectedMonth,
+        }, // 요청 본문
+        { responseType: 'arraybuffer' }
       );
   
       console.log('데이터: ', response.data);

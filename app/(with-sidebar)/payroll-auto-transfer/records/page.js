@@ -121,6 +121,7 @@ export default function PayRecords() {
             <div className={classes.header}>
                 <MonthSelector onMonthChange={handleMonthChange} />
                 <div className={classes.filtering}>
+                    <NameSearch onChange={handleSearchChange} placeholder="이름으로 검색"/>
                     <Sorting onChange={handleSortChange} selectedOption={sortOption} />
                     <NameSearch onChange={handleSearchChange} />
                     <BaseButton text="자동이체 설정" onClick={openModal} />

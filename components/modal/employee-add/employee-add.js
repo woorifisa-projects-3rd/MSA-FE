@@ -33,6 +33,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
     const [formErrors, setFormErrors] = useState({});
     const [error, setError] = useState('');
+    const [isAccountValid, setIsAccountValid] = useState(false);
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
@@ -73,6 +74,18 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         }));
     };
 
+    const handleAccountValidation = (isValid) => {
+        setIsAccountValid(isValid);
+        console.log(isAccountValid);
+        
+        if(isAccountValid) {
+            setFormErrors(prev => ({
+                ...prev,
+                accountNumber: '',
+            }));
+        }
+    }
+
     const validateRules = {
         name: commonValidateRules.required,
         email: commonValidateRules.email,
@@ -89,9 +102,9 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         const errors = validateForm(data, validateRules);
       
         // 주소 필드 유효성 검사 추가
-        // if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
-        //   errors.address = "필수 항목입니다.";
-        // }
+        if (!data.postcodeAddress.trim() || !data.detailAddress.trim()) {
+          errors.address = "필수 항목입니다.";
+        }
       
         return errors;
       };
@@ -141,15 +154,15 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         const errors = validateFormData(formData);
         setFormErrors(errors);
 
-          // detailAddress 유효성 검사 추가
-        if (!formData.detailAddress.trim()) {
-            errors.detailAddress = "상세 주소를 입력해주세요.";
+        if(!isAccountValid) {
+            setFormErrors(prev => ({
+                ...prev,
+                accountNumber: '확인 버튼을 눌러 계좌를 확인해주세요.',
+            }));
         }
-
-        setFormErrors(errors);
         
         // 오류가 없으면 제출
-        if (Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length === 0 && isAccountValid) {
             const { postcodeAddress, detailAddress, ...rest } = formData;
             const updatedFormData = {
                 ...rest,
@@ -328,6 +341,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             bankCode={formData.bankCode}
                             accountNumber={formData.accountNumber}
                             onChange={handleAccountChange}
+                            checkValidation={handleAccountValidation}
                             error={formErrors.accountNumber}
                             />
                             
@@ -341,9 +355,9 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                         initialPostcodeAddress={formData.postcodeAddress}
                         initialDetailAddress={formData.detailAddress}
                         onAddressChange={handleAddressChange} />
-                    {/* {(formErrors.address) && (
+                    {(formErrors.address) && (
                         <span className={styles.error}>{formErrors.address}</span>
-                    )} */}
+                    )}
                     {formErrors.detailAddress && (
                         <span className={styles.error}>{formErrors.detailAddress}</span>
                     )}

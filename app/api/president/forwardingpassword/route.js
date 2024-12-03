@@ -12,7 +12,7 @@ export async function POST(request) {
         console.log('Spring Boot 응답:', response.data);
 
         // 응답 처리
-        if (response.data.status) {
+        if (response.data === '임시 비밀번호가 이메일로 전송되었습니다.') {
             return NextResponse.json({ success: true }, { status: 200 });
         } else {
             return NextResponse.json({ success: false }, { status: 400 });
