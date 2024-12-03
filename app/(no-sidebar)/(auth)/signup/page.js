@@ -162,19 +162,19 @@ export default function Signup() {
 
       try {
         const response = await nextClient.post('/auth/signup', submissionData);
+        console.log(submissionData);
+        alert('회원가입이 완료되었습니다!');
+        router.push('/login');
         
-        if (response.data.success) {
-          console.log(submissionData);
-          alert('회원가입이 완료되었습니다!');
-          router.push('/login');
-        } else {
-          throw new Error(response.data.error || '회원가입 실패');
-        }
       } catch (error) {
-        if (error.response?.status === 409) {
-          alert('이미 존재하는 이메일 / 전화번호입니다.');
+        let errorMessage;
+        if (error.response.status == '400') {
+          errorMessage = '이미 등록된 전화번호 혹은 이메일입니다.'
+        } else {
+          errorMessage = error.response?.data?.error || error.message;
         }
-        setError(error.response?.data?.error || error.message);
+        setError(errorMessage);
+        alert(errorMessage);
       }
     }
   }
