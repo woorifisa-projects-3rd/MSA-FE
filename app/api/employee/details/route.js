@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import springClient from '@/lib/springClient'; // Spring Boot와 통신하는 Axios 클라이언트
 import { NextResponse } from 'next/server';
 
@@ -5,7 +7,7 @@ export async function GET(req) {
   try {
     // 클라이언트로부터 전달받은 쿼리 파라미터 추출
     const { searchParams } = new URL(req.url);
-    const storeid = searchParams.get('storeid');
+    const storeid = searchParams.get('storeId');
     console.log(storeid);
     
     if (!storeid) {
