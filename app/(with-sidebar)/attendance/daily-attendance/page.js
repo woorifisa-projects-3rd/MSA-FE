@@ -107,7 +107,6 @@ export default function Form() {
   };
   const fetchDailyAttendance = async () => {
     try {
->>>>>>> origin/dev
       const response = await nextClient.get(
         `/attendance/daily-attendance?storeid=1&commutedate=${selectedDate}`
       );
