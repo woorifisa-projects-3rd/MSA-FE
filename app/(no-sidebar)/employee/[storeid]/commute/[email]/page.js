@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
-import { AbsolutePathClient, nextClient } from '@/lib/nextClient';
+import { nextClient } from '@/lib/nextClient';
 
 export default function AttendancePage() {
     const [loading, setLoading] = useState(false);
@@ -39,12 +39,13 @@ export default function AttendancePage() {
             
             const location = await getCurrentLocation()
             console.log('Current location:', location)
+            console.log(endpoint)
 
             const   latitude= location.lat;
             const longitude= location.lng;
             const endpoint = type === 'go' ? 'go-to-work' : 'leave-work'
 
-            const serverResponse = await AbsolutePathClient.post('/attendance/employee/commute', {
+            const serverResponse = await nextClient.post('/attendance/employee/commute', {
                 latitude,
                 longitude,
                 endpoint,
