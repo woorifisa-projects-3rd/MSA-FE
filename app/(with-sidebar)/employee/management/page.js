@@ -130,7 +130,7 @@ export default function SalesExpenses() {
     };
 
     const filteredEmployees = Object.values(employees).filter(employee =>
-        employee.name.includes(searchQuery) && employee.employmentType !== 10
+        employee.name.includes(searchQuery) && employee.employmentType !== 10 && employee.employmentType !== 11
     );
 
     const enrichedList = filteredEmployees.map(employee => ({
