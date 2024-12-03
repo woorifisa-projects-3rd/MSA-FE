@@ -45,6 +45,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 1: 사업자 정보 확인 
     const validateBusinessInfo = async () => {
         try {
+            setError("");
             const response = await nextClient.post('/store/registration/businesscheck', {
                 businessNumber: formData.businessNumber,
                 storeName: formData.storeName
