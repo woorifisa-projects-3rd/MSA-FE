@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from "./delete-commute-modal.module.css"
 
-const DeleteModal = ({ isOpen, onClose, onDelete, commuteid }) => {
+const DeleteModal = ({ isOpen, onClose, onDelete, deleteId, title, text }) => {
     return (
         <div className={`${styles.modal} ${isOpen ? styles.modalOpen : ''}`}>
         <div
@@ -30,9 +30,9 @@ const DeleteModal = ({ isOpen, onClose, onDelete, commuteid }) => {
               </svg>
             </div>
             <div className={styles.modalTitleContainer}>
-              <h3 className={styles.modalTitle}>출퇴근 기록 삭제</h3>
+              <h3 className={styles.modalTitle}>{title}</h3>
               <p className={styles.modalText}>
-                해당 출퇴근 기록을 정말 삭제하시겠습니까?
+                {text}
               </p>
             </div>
           </div>
@@ -47,7 +47,7 @@ const DeleteModal = ({ isOpen, onClose, onDelete, commuteid }) => {
             <button
               type="button"
               className={styles.deleteButton}
-              onClick={() => onDelete(commuteid)}
+              onClick={() => onDelete(deleteId)}
             >
               삭제
             </button>
