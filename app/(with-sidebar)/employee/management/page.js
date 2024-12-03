@@ -27,7 +27,7 @@ export default function SalesExpenses() {
     console.log("storeId?",storeId)
 
     const fetchEmployees = async () => {
-        console.log("직원 리스트 요청")
+        console.log("직원 리스트 요청 가게 아이디:", storeId)
         setLoading(true);
         setError(null);
         try {
@@ -35,7 +35,7 @@ export default function SalesExpenses() {
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
-            console.error("직원 데이터를 가져오는데 실패했습니다.", error);
+            console.error("직원 데이터를 가져오는데 실패했습니다.", error.response.data.error);
             setEmployees([]);
             setError(error.response?.data?.error || error.message);
         } finally {
