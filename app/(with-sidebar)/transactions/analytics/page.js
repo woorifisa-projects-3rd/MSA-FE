@@ -29,7 +29,7 @@ export default function SalesExpenses() {
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-  
+
   const {storeId} = useAuth();
   console.log("storeId?",storeId);
 
@@ -37,11 +37,17 @@ export default function SalesExpenses() {
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
 
+      console.log(selectedYear, selectedMonth);
+
 
       try {
-        const response = await nextClient.get(`/finance/analytics/transactionchart?storeid=${storeId}&year=${selectedYear}&month=${selectedMonth}`
-        );
-
+        const response = await nextClient.get('/finance/analytics/transactionchart', {
+          params: {
+            storeId: storeId,
+            selectedYear: selectedYear,
+            selectedMonth: selectedMonth,
+          },
+        });
         const data = response.data;
 
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
@@ -132,7 +138,7 @@ export default function SalesExpenses() {
       }
     };
     loadTransactionAnalyticsPageData();
-  }, [storeid, selectedYear, selectedMonth]);
+  }, [storeId ,selectedYear, selectedMonth]);
 
   const donutChartOptions = {
     responsive: true,
@@ -155,8 +161,13 @@ export default function SalesExpenses() {
   
     try {
       const response = await PdfnextClient.post(
-        `/finance/analytics/transactionsimplepdf?storeid=${storeId}&year=${selectedYear}&month=${selectedMonth}&taxtype=${selectedBusinessType}`,
-        {}, // 요청 본문(body)
+        `/finance/analytics/transactionsimplepdf`,
+        {
+          storeId: storeId,
+          selectedYear: selectedYear,
+          selectedMonth: selectedMonth,
+          type: type,
+        }, // 요청 본문
         { responseType: 'arraybuffer' }
       );
       console.log('데이터: ', response.data);
@@ -186,9 +197,13 @@ export default function SalesExpenses() {
   const handleGenerateIncomeStatement = async () => {
     try {
       const response = await PdfnextClient.post(
-        `/finance/analytics/transactionpdf?storeid=${storeId}&year=${selectedYear}&month=${selectedMonth}`,
-        {},
-        { responseType: 'arraybuffer' } // 바이너리 데이터를 정확히 받음
+        `/finance/analytics/transactionpdf`,
+        {
+          storeId: storeId,
+          selectedYear: selectedYear,
+          selectedMonth: selectedMonth,
+        }, // 요청 본문
+        { responseType: 'arraybuffer' }
       );
   
       console.log('데이터: ', response.data);
