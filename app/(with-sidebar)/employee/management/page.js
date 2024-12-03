@@ -109,12 +109,12 @@ export default function SalesExpenses() {
             if (response.data.success) {
                 alert('직원이 삭제되었습니다.');
                 fetchEmployees();
-            } else {
-                throw new Error(response.data.error || '직원 삭제 실패');
             }
             setDeleteModalOpen(false);
         } catch (error) {
-            setError(error.response?.data?.error || error.message);
+            const errorMessage = error.response?.data?.error || error.message;
+            setError(errorMessage);
+            alert(errorMessage);
         } finally {
             setDeleteModalOpen(false);
             setdeleteEmployeeId(null);
@@ -130,7 +130,7 @@ export default function SalesExpenses() {
     };
 
     const filteredEmployees = Object.values(employees).filter(employee =>
-        employee.name.includes(searchQuery) && employee.employmentType !== 10
+        employee.name.includes(searchQuery) && employee.employmentType !== 10 && employee.employmentType !== 11
     );
 
     const enrichedList = filteredEmployees.map(employee => ({

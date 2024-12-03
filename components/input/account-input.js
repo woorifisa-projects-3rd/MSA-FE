@@ -116,17 +116,17 @@ const AccountInputForm = ({
         accountNumber
       });
       console.log("사장", bankCode, accountNumber )
+      console.log(response.data);
+      
       if (response.data.success) {
         setValidationMessage({text: '사업장 계좌가 유효합니다.' , color: 'green'});
-        checkValidation?.(true);
       } else {
         setValidationMessage({text: '사업장 계좌가 유효하지 않습니다.' , color: 'red'});
-        checkValidation?.(false);
       }
+      checkValidation(response.data.success);
     } catch (error) {
       console.error('Error checking account:', error);
       setValidationMessage({text: '사업장 계좌 확인 중 오류가 발생했습니다.' , color: 'red'});
-      checkValidation?.(false);
     }
   };
 
@@ -143,15 +143,13 @@ const AccountInputForm = ({
       
       if (response.data.success) {
         setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green'});
-        checkValidation?.(true);
       } else {
         setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red'});
-        checkValidation?.(false);
       }
+      checkValidation(response.data.success);
     } catch (error) {
       console.error('Error checking employee account:', error);
       setValidationMessage({text: '직원 계좌 확인 중 오류가 발생했습니다.', color:'red'});
-      checkValidation?.(false);
     }
   };
 

@@ -24,22 +24,17 @@ export async function POST(request) {
         termsAccept
        });
 
-       if (response.status === 409) {
-        return NextResponse.json(
-          {
-            success: false,
-            code: response.data?.code,
-            message: response.data?.message,
-          },
-          { status: 409 }
-        );
-      }
-
       // 성공 응답 반환
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error('Spring Boot 회원가입 실패:', error.message);
+      const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+      const statusCode = error.response?.status || 500;
 
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ 
+          success: false,
+          error: errorMessage 
+      }, { 
+          status: statusCode 
+      });
     }
   }
