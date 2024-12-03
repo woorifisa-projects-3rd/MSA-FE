@@ -20,7 +20,7 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
     '/(auth)/login',
     '/(auth)/signup',
     '/(auth)/change-password',
-    // '/employee/[storeid]/commute', -> 동적 경로 나중에 처리 
+    '/employee/:storeid/commute',
   ]
 
 
