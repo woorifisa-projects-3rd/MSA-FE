@@ -15,6 +15,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     })
     const [currentStep, setCurrentStep] = useState(1);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const steps = mode === 'first' 
     ? ['business', 'account', 'verification', 'pin', 'address']
@@ -57,11 +58,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             } 
           
         } catch (error) {
-            console.error('next 서버 오류:', error.message);
-            if(error.response.status === 400){
-                setError("중복되는 가게명입니다.");
-            }
-            console.log(error)
+            // 서버에서 전달된 에러메시지 사용
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -79,10 +77,9 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 setError(""); // 성공시 에러 초기화
                 return true;
             }
-            setError("계좌 인증에 실패했습니다.");
-            return false;
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            console.log("2단계 계좌인증 실패", error.response.data);
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -98,13 +95,11 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             console.log("스프링에서 프론트까지 전달",response.data);
             
             if (response.data) {
-                setError("");
+                setSuccess("이메일로 전송된 6자리 인증번호를 입력해주세요.");
                 return setIsEmailSent(true);
             }
-            setError("인증 코드 발송에 실패했습니다.");
-            return false;
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -117,14 +112,13 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 emailPinNumber: verificationData.verificationCode
             });
             if (response.data) {
-                setError("");
+                setSuccess("이메일 인증이 성공했습니다!");
                 setIsEmailVerified(true);
                 return true;
             }
-            setError("인증 코드가 일치하지 않습니다.");
-            return false;
+           
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -147,14 +141,12 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             });
             
             if (response.data) {
-                setError("");
                 setIsPinVerified(true);
                 return true;
             }
-            setError("PIN 번호 등록에 실패했습니다.");
-            return false;
+           
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };

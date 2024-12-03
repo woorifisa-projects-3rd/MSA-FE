@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import springClient from '@/lib/springClient'; // Spring Boot와 통신하는 Axios 클라이언트
 import { NextResponse } from 'next/server';
 
@@ -17,15 +19,19 @@ export async function GET(req) {
 
     // Spring Boot 서버에 GET 요청
     const springResponse = await springClient.get(`/user/employee/details?storeid=${storeid}`);
-    // console.log("employee/details-response",springResponse.data )
+    console.log("employee/details-response", springResponse.data )
 
     // Spring Boot에서 받은 데이터 반환
     return NextResponse.json(springResponse.data, { status: 200 });
   } catch (error) {
-    console.error('Error fetching employee details from Spring Boot:', error.message);
-    return NextResponse.json(
-      { message: 'Failed to fetch employee details', error: error.message },
-      { status: 500 }
-    );
+    const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+    const statusCode = error.response?.status || 500;
+
+    return NextResponse.json({ 
+        success: false,
+        error: errorMessage 
+    }, { 
+        status: statusCode 
+    }); 
   }
 }

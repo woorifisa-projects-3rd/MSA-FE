@@ -3,7 +3,7 @@ import styles from "../BusinessRegistration.module.css";
 
 export default function AccountStep(){
 
-    const {formData, setFormData} = useRegistration();
+    const {formData, setFormData, error} = useRegistration();
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -30,6 +30,11 @@ export default function AccountStep(){
                     placeholder="계좌번호를 입력하세요"
                 />
             </div>
+            {error && (
+                <div className={styles.errorText}>
+                    {error}
+                </div>
+            )}
         </div>
     )
 }

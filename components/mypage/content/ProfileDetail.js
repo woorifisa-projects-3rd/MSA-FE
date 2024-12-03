@@ -1,11 +1,9 @@
     'use client'
     import DefaultTable from '@/components/table/DefaultTable';
     import classes from './ProfileDetail.module.css';
-    import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
     import ModalContainer from '@/components/modal/modal-container';
     import { useState, useEffect, useRef } from 'react';
     import PrimaryButton from '@/components/button/primary-button';
-    import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
     import PresidentInfo from './PresidentInfo';
     import { bankCodeList } from '@/constants/bankCodeList';
     import { nextClient } from '@/lib/nextClient';
@@ -198,21 +196,14 @@
                     <FirstStoreRegistration />
                 </ModalContainer>
 
-                {/* 편집 모달 */}
+                {/* 사업장 수정 모달 - 12/3에 반영하겠음 */}
                 <ModalContainer
                     title="사업장 수정"
                     isOpen={isEditModalOpen}
                     onClose={() => setEditModalOpen(false)}
                     onConfirm={handleFormSubmit}
                 >
-                    <WorkplaceModal
-                        mode="edit"
-                        workplaceData={selectedWorkplace}
-                        ref={workplaceModalRef}
-                        onSubmit={(formData) => {
-                            setEditModalOpen(false);
-                        }}
-                    />
+                   
                 </ModalContainer>
                 <DeleteModal
                     isOpen={isDeleteModalOpen}

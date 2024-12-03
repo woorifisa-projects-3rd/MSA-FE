@@ -27,8 +27,8 @@ export default function Calendar() {
         id: String(item.id || Math.random()), // 고유 ID
         title: item.name, // 직원 이름
         date: item.commuteDate, // 날짜
-        backgroundColor: '#8CD3C5', // 이벤트 배경색
-        borderColor: '#8CD3C5', // 이벤트 테두리색
+        backgroundColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
+        borderColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
       }));
       setEvents(calendarEvents);
     } catch (error) {

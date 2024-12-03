@@ -5,12 +5,16 @@ export async function GET(request) {
     try {
         // 요청 URL에서 쿼리 파라미터 추출
         const { searchParams } = new URL(request.url);
-        const storeid = searchParams.get('storeid');
-        const year = searchParams.get('year');
-        const month = searchParams.get('month');
+    
+        const storeId = searchParams.get('storeId');
+        const year = searchParams.get('selectedYear');
+        const month = searchParams.get('selectedMonth');
+
+        console.log(storeId, year, month);
+
 
         // 필수 파라미터 검증
-        if (!storeid || !year || !month) {
+        if (!storeId || !year || !month) {
             return NextResponse.json(
                 { error: '필수 파라미터(storeid, year, month)가 누락되었습니다.' },
                 { status: 400 }
@@ -18,9 +22,7 @@ export async function GET(request) {
         }
 
         // Spring Boot 서버로 GET 요청
-        const response = await springClient.get('/finance/transactionchart', {
-            params: { storeid, year, month }, // 쿼리 파라미터 전달
-        });
+        const response = await springClient.get(`/finance/transactionchart?storeid=${storeId}&year=${year}&month=${month}`);
 
         console.log('Spring Boot 응답 데이터: ', response.data);
 
