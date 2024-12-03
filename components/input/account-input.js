@@ -136,9 +136,9 @@ const AccountInputForm = ({
       });
       console.log("직원",name, bankCode, accountNumber )
       if (response.data.success) {
-        setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green'});
+        setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green', fontSize:'0.8rem', marginTop: '5px'});
       } else {
-        setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red'});
+        setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red', fontSize: '1.2rem' , marginTop: '5px'});
       }
     } catch (error) {
       console.error('Error checking employee account:', error);
@@ -190,7 +190,9 @@ const AccountInputForm = ({
       </div>
 
       {validationMessage && (
-      <p style={{ color: validationMessage.color }}>
+      <p style={{ marginTop: validationMessage.marginTop || '0px',
+                  fontSize: validationMessage.fontSize || '1rem', 
+                  color: validationMessage.color }}>
           {validationMessage.text}
       </p>
       )}
