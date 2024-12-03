@@ -113,9 +113,9 @@ export default function SalesExpenses() {
         const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
         return match ? `${match[1]}-${match[2]}-${match[3]}` : phoneNumber;
     };
-    
-    const filteredEmployees = employees.filter(employee =>
-        employee.name.includes(searchQuery)
+
+    const filteredEmployees = Object.values(employees).filter(employee =>
+        employee.name.includes(searchQuery) && employee.employmentType !== 10
     );
 
     const enrichedList = filteredEmployees.map(employee => ({
