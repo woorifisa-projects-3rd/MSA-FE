@@ -1,95 +1,102 @@
-'use client';
-import { useState, useEffect } from 'react';
-import styles from './page.module.css';
+'use client'
+import { useEffect, useState } from "react";
+import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
+import PasswordChange from "../../../components/mypage/content/PasswordChange";
+import AlarmSetting from "@/components/mypage/content/AlarmSetting";
+import Loading from "@/components/loading/Loading";
+import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
-import PrimaryButton from '@/components/button/primary-button';
+
+const tabs = [
+  { 
+      name: '프로필 편집',
+  },
+  { 
+      name: '비밀번호 변경',
+      content:'비밀번호 변경 내용'
+  }
+];
+
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const fetchStores = async () => {
+    
+    setLoading(true);
+    setError(null);
+    try {
+        const response = await nextClient.get('/mypage/store/storelist');
+        console.log(response)
+        const transformedStores = response.data.map(store => ({
+            storeId: store.id,
+            storeName: store.storeName,
+            businessNumber: store.businessNumber,
+            accountNumber: store.accountNumber,
+            bankCode: store.bankCode,
+            location: store.location,
+        }));
+        
+        setStores(transformedStores);
+    } catch (error) {
+        console.error("가게 데이터를 가져오는데 실패했습니다.");
+        setError(error.response?.data?.error || error.message);
+    } finally {
+        setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchStores();
   }, []);
 
-  const fetchUsers = async () => {
-    try {
-      // /manager/check 요청을 보내 상태 코드를 확인
-      const checkResponse = await nextClient.get('/manager/check');
-      
-      // 상태 코드가 200이 아닌 경우 /mypage로 리다이렉트
-      if (checkResponse.data !== 200) {
-        console.log('권한이 없습니다.');
-        window.location.href = '/mypage';
-        return;
+  const renderTabContent = () => {
+      switch(selectedTab) {
+          case 0:
+              return <ProfileDetail content={stores} refreshStores={stores}/>;
+        //   case 1:
+        //       return <AlarmSetting content={tabs[selectedTab]} />;
+          case 1:
+              return <PasswordChange content={tabs[selectedTab]} />;
+          default:
+              return null;
       }
-  
-      // 상태 코드가 200일 경우, /manager 요청을 보내 데이터 가져오기
-      const presidentsResponse = await nextClient.get('/manager');
-      console.log('받아온 데이터: ', presidentsResponse.data);
-      setUsers(presidentsResponse.data);  // 받아온 데이터로 상태 업데이트
-  
-    } catch (error) {
-      console.error('데이터를 가져오는 중 오류 발생: ', error);
-      setUsers([]);  // 오류 발생 시 빈 배열 설정
-    }
-  };
-
-  // 전화번호 포맷팅 함수
-  const formatPhoneNumber = (phoneNumber) => {
-    // 전화번호가 문자열 형태로 올바른지 확인 후 포맷팅
-    if (!phoneNumber) return phoneNumber;
-    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-  };
-
-  // 삭제 요청 처리
-  const handleDeleteClick = async (presidentId) => {
-    try {
-      // DELETE 요청을 보냄
-      const response = await nextClient.delete(`/manager`, {
-        data: { presidentid: presidentId }, // JSON 본문에 presidentid 포함
-      });
-  
-      if (response.data.success) {
-        alert('사장님이 삭제되었습니다.');
-        fetchUsers(); // 데이터 갱신
-      } else {
-        throw new Error(response.data.error || '사장님 삭제 실패');
-      }
-    } catch (error) {
-      console.error('삭제 실패:', error.message);
-      setError(error.response?.data?.error || error.message);
-    }
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>사용자</h1>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>전화번호</th>
-            <th>이메일</th>
-            <th>삭제</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name}</td>
-              <td>{formatPhoneNumber(user.phoneNumber)}</td>  {/* 전화번호 포맷팅 적용 */}
-              <td>{user.email}</td>
-              <td>
-                <PrimaryButton
-                  text="삭제"
-                  onClick={() => handleDeleteClick(user.presidentid)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <div className={classes.container}>
+          <div className={classes.content}>
+            {loading && <Loading />}
+            {error && <p className={classes.errorMessage}>에러: {error}</p>}
+            {!loading && !error && (
+                <>
+                  <div className={classes.tabNavigation}>
+                      <nav className={classes.tabList}>
+                          {tabs.map((tab, index) => (
+                              <button
+                                  key={index}
+                                  onClick={() => setSelectedTab(index)}
+                                  className={`${classes.tabButton} ${
+                                      selectedTab === index
+                                          ? classes.tabButtonActive
+                                          : classes.tabButtonInactive
+                                  }`}
+                              >
+                                  {tab.name}
+                              </button>
+                          ))}
+                      </nav>
+                  </div>
+                  <div className={classes.tabContent}>
+                      {renderTabContent()}
+                  </div>
+                  </>
+            )}
+            </div>
+        </div>
   );
 }
+
