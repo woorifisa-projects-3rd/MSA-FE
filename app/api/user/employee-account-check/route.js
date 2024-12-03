@@ -21,15 +21,10 @@ export async function POST(request) {
   
       if (response.data) {
         // 성공 응답 반환
-        return NextResponse.json({
-          success: true,
-          message: '계좌가 유효합니다.',
-        });
+        return NextResponse.json({success: true, message: '계좌가 유효합니다.',});
       } else {
         // 유효하지 않은 경우 응답 반환
-        return NextResponse.json({
-          success: false,
-          message: '계좌가 유효하지 않습니다.',
+        return NextResponse.json({success: false,message: '계좌가 유효하지 않습니다.',
         });
       }
     } catch (error) {
