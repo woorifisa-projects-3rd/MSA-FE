@@ -17,8 +17,14 @@ export async function POST(request) {
       // 성공 응답 반환
       return NextResponse.json({ success: true, pin: pinNumber });
     } catch (error) {
-      console.error('Spring Boot 이메일 전송 실패:', error.message);
+      const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+      const statusCode = error.response?.status || 500;
 
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ 
+          success: false,
+          error: errorMessage 
+      }, { 
+          status: statusCode 
+      });
     }
   }
