@@ -290,7 +290,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     <div className={styles.formGroup}>
                         <label>4대 보험 여부</label>
                         <select
-                            value={formData.insuranceIncluded ? 'true' : 'false'}
+                             value={formData.employmentType === 1 || formData.employmentType === 3 ? 'true' : 'false'}
                             onChange={(e) => handleInsuranceChange(e.target.value)}
                             disabled={formData.employmentType === 1} // 월급 선택 시 비활성화
                         >
