@@ -11,8 +11,9 @@ export async function PUT(request) {
       // Spring Boot로 로그인 요청
       const response = await springClient.put('/user/president/change-password', { beforePassword, newPassword });
       console.log("Next server에서 Spring Boot에서 받은 response:", response.statusText);
+      console.log("Next server에서 Spring Boot에서 받은 status:", response.status);
 
-      if (response.statusText === 'OK') {
+      if (response.status === 200) {
           return NextResponse.json({ success: true }, { status: 200 });
       } 
   } catch (error) {
