@@ -41,8 +41,15 @@ export async function POST(request) {
       // 성공 응답 반환
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error('Spring Boot 직원 추가 실패:', error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+      const statusCode = error.response?.status || 500;
+
+      return NextResponse.json({ 
+          success: false,
+          error: errorMessage 
+      }, { 
+          status: statusCode 
+      });
     }
   }
 
@@ -57,8 +64,15 @@ export async function POST(request) {
       // 성공 응답 반환
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error('Spring Boot 직원 삭제 실패:', error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+      const statusCode = error.response?.status || 500;
+
+      return NextResponse.json({ 
+          success: false,
+          error: errorMessage 
+      }, { 
+          status: statusCode 
+      });
     }
   }
 
@@ -111,7 +125,14 @@ export async function POST(request) {
       // 성공 응답 반환
       return NextResponse.json({ success: response.data});
     } catch (error) {
-      console.error('Spring Boot 직원 수정 실패:', error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+      const statusCode = error.response?.status || 500;
+
+      return NextResponse.json({ 
+          success: false,
+          error: errorMessage 
+      }, { 
+          status: statusCode 
+      });
     }
   }

@@ -196,7 +196,12 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     if (onSubmit) onSubmit(updatedFormData);
                 }
             } catch (error) {
-                const errorMessage = error.response?.data?.error || error.message;
+                let errorMessage;
+                if (error?.response?.status == '400') {
+                    errorMessage = '가게에 이미 등록된 이메일입니다.'
+                } else {
+                    errorMessage = error.response?.data?.error || error.message;
+                }
                 setError(errorMessage);
                 alert(errorMessage);
             } finally {
