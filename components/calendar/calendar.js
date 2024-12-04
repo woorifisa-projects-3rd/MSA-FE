@@ -10,6 +10,12 @@ import "./calendar.css";
 import { nextClient } from '@/lib/nextClient';
 import { useAuth } from '@/contexts/AuthProvider';
 
+const statusColors = {
+  '퇴근완료': '#808080',  // 회색
+  '출근중': '#8CD3C5',    // 초록색
+  '미퇴근': '#FF6B6B',    // 빨간색
+};
+
 export default function Calendar() {
   const router = useRouter();
   const [events, setEvents] = useState([]);
@@ -27,8 +33,8 @@ export default function Calendar() {
         id: String(item.id || Math.random()), // 고유 ID
         title: item.name, // 직원 이름
         date: item.commuteDate, // 날짜
-        backgroundColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
-        borderColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
+        backgroundColor: statusColors[item.status] || statusColors['퇴근완료'], // 기본값은 퇴근완료
+        borderColor: statusColors[item.status] || statusColors['퇴근완료']
       }));
       setEvents(calendarEvents);
     } catch (error) {
