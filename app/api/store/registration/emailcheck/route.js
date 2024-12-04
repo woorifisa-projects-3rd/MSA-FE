@@ -12,13 +12,13 @@ export async function POST(request) {
         console.log('Spring Boot 에서 왔다.:', response.data);
 
         // 응답 처리
-        if (response.data === true) {
+        if (response.data) {
             return NextResponse.json({ success: true }, { status: 200 });
         } 
     } catch (error) {
-        const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
+        const errorMessage = error.response.data.message // 확인테스트
         const statusCode = error.response?.status || 500;
-
+        console.log("3단계 오류메세지:", errorMessage)
         return NextResponse.json({ 
             success: false,
             error: errorMessage 

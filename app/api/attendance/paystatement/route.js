@@ -1,22 +1,30 @@
 import { NextResponse } from 'next/server';
+import springClient from '@/lib/springClient';
 
 export async function GET(request) {
     try {
-        // 쿼리 파라미터 받기
-        const url = new URL(request.url);
-        const payStatementId = url.searchParams.get('paystatementid');
-        
-        if (payStatementId) {
-            // payStatementId를 기반으로 리디렉션할 URL 생성
-            const redirectUrl = `https://example.com/pay_statement_${payStatementId}`;
-            
-            // 리디렉션 응답 반환
-            return NextResponse.redirect(redirectUrl);
-        } else {
-            return NextResponse.json({ error: 'Pay Statement ID is required' }, { status: 400 });
+        // URL에서 쿼리 파라미터 추출
+        const { searchParams } = new URL(request.url);
+        const paystatementid = searchParams.get("paystatementid");
+
+        if (!paystatementid) {
+            return NextResponse.json({ error: "paystatementid가 필요합니다." }, { status: 400 });
         }
+
+        console.log("쿼리 파라미터 - paystatementid:", paystatementid);
+
+        // Spring Boot로 급여 명세서 요청
+        const response = await springClient.get(`/attendance/paystatement/url`, {
+            params: { paystatementid },
+        });
+
+        console.log("Spring Boot 응답 데이터:", response.data);
+
+        // 성공 응답 반환
+        return NextResponse.json({ success: true, data: response.data });
     } catch (error) {
-        console.error('리디렉션 요청 실패:', error.message);
+        console.error("Spring Boot 요청 실패:", error.message);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
