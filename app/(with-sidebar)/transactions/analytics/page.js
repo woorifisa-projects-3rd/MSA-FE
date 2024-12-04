@@ -336,23 +336,33 @@ export default function SalesExpenses() {
       </div>
 
       <div className={classes.gridContainer}>
-        <div className={classes.leftSection}>
-          <div className={classes.summaryContainer}>
-            <div className={classes.card}>
-              <div className={classes.icon}>📈</div>
-              <div className={classes.textContainer}>
-                <h3>매출</h3>
-                <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
-              </div>
-            </div>
-            <div className={classes.card}>
-              <div className={classes.icon}>📉</div>
-              <div className={classes.textContainer}>
-                <h3>지출</h3>
-                <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
-              </div>
-            </div>
-          </div>
+  <div className={classes.leftSection}>
+    <div className={classes.summaryContainer}>
+      <div className={classes.card}>
+        <div className={classes.icon}>📈</div>
+        <div className={classes.textContainer}>
+          <h3>
+            매출
+              <span className={classes.tooltip}>
+                원가를 감하지 않은, 일일 매출 정산금과 온라인 결제 정산금 등을 포함한 총 매출액입니다.
+              </span>
+          </h3>
+          <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
+        </div>
+      </div>
+      <div className={classes.card}>
+        <div className={classes.icon}>📉</div>
+        <div className={classes.textContainer}>
+          <h3>
+            지출
+              <span className={classes.tooltip2}>
+                식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
+              </span>
+          </h3>
+          <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
+        </div>
+      </div>
+    </div>
 
           <div
             className={classes.chartContainer}
