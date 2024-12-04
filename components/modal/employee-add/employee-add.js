@@ -77,16 +77,21 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     };
 
     const handleAccountValidation = (isValid) => {
+        // isValid 값을 직접 설정
         setIsAccountValid(isValid);
-        console.log(isValid);
-        
-        if(isAccountValid) {
-            setFormErrors(prev => ({
+    
+        // 계좌 확인이 유효할 경우 에러 메시지 제거
+        if (isValid) {
+            setFormErrors((prev) => ({
+
                 ...prev,
-                accountNumber: '',
+                accountNumber: '', // accountNumber 에러 메시지 제거
             }));
         }
-    }
+    
+        // isAccountValid 값 출력 (비동기적으로 반영되므로, 아래의 콘솔 출력은 최신 상태를 바로 반영하지 않음)
+        console.log(isValid);
+    };
 
     const validateRules = {
         name: commonValidateRules.required,
@@ -300,7 +305,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     <div className={styles.formGroup}>
                         <label>4대 보험 여부</label>
                         <select
-                            value={formData.insuranceIncluded ? 'true' : 'false'}
+                             value={formData.employmentType === 1 || formData.employmentType === 3 ? 'true' : 'false'}
                             onChange={(e) => handleInsuranceChange(e.target.value)}
                             disabled={formData.employmentType === 1} // 월급 선택 시 비활성화
                         >

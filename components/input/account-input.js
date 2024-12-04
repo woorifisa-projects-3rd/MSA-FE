@@ -142,9 +142,9 @@ const AccountInputForm = ({
       console.log(response.data);
       
       if (response.data.success) {
-        setValidationMessage({text: '유효한 계좌입니다.', color:'green'});
+        setValidationMessage({text: '유효한 계좌입니다.', color:'green', fontSize: '0.8rem', marginTop: '5px'});
       } else {
-        setValidationMessage({text: '직원 명에 일치하는 계좌가 없습니다.', color:'red'});
+        setValidationMessage({text: '직원 명에 일치하는 계좌가 없습니다.', color:'red', fontSize: '0.8rem', marginTop: '5px'});
       }
       checkValidation(response.data.success);
     } catch (error) {
@@ -197,7 +197,9 @@ const AccountInputForm = ({
       </div>
 
       {validationMessage && (
-      <p style={{ color: validationMessage.color }}>
+      <p style={{ fontSize: validationMessage.fontSize || '1rem',
+                  color: validationMessage.color,
+                 marginTop: validationMessage.marginTop || '0px'}}>
           {validationMessage.text}
       </p>
       )}
