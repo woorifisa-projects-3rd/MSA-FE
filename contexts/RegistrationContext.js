@@ -147,18 +147,29 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 4-1: PIN 번호 등록 및 검증 -> PinStep에서 사용
     const registerPin = async () => {
         try {
-            const response = await nextClient.post('/store/registration/pinnumbercheck', {
-                email: verificationData.email,
-                pinNumber: verificationData.pinNumber
-            });
-            
-            if (response.data) {
-                setError("");
+            if(mode === 'first'){
+                const response = await nextClient.post('/store/registration/pinnumbercheck', {
+                    email: verificationData.email,
+                    pinNumber: verificationData.pinNumber
+                });
 
-                setIsPinVerified(true);
-                return true;
+                if (response.data) {
+                    setError("");
+                    setIsPinVerified(true);
+                    return true;
+                }
+            } else {
+                // 추가 등록용 PIN 확인 - pinNumber만 전송
+                const response = await nextClient.post('/store/registration/additionalemailcheck',{
+                    pinNumber: verificationData.pinNumber
+                })
+
+                if(response.data){
+                    setError("");
+                    setIsPinVerified(true);
+                    return true;
+                }
             }
-           
         } catch (error) {
             setError(error.response.data.error);
             return false;
@@ -200,6 +211,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
 
     // 모든 필수 데이터 검증 함수
     const validateAllData = () => {
+        console.log(formData)
         const requiredFields = {
             storeName: formData.storeName,
             businessNumber: formData.businessNumber,

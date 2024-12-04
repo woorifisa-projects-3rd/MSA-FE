@@ -185,7 +185,10 @@
                     onConfirm={handleFormSubmit}
                     showButtons={false}
                 >
-                    <AdditionalStoreRegistration />
+                    <AdditionalStoreRegistration 
+                        onClose={()=>setFirstRegistrationModalOpen(false)} 
+                        onSuccess={fetchStores}
+                    />
                 </ModalContainer>
 
                 {/* 사업장 최초 등록 모달 */}
