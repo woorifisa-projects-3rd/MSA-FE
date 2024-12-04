@@ -31,15 +31,16 @@ export default function AttendancePage() {
         }
         function isIphoneSafari() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            alert(userAgent)
             return /Safari/i.test(userAgent) && /Mobile/i.test(userAgent);
         }
     
         // 즉시 위치 권한 요청
         navigator.geolocation.getCurrentPosition(
             () => {
-                if(isIphoneSafari){
+                if(isIphoneSafari()) {  // 함수 호출 시 괄호 () 추가
                     setLocationPermission(true);
-                } 
+                }
                 else{
                     // 권한 허용 후 permissions API로 상태 관리
                     if ('permissions' in navigator) {
