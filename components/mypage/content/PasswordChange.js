@@ -26,7 +26,8 @@ export default function PasswordChange() {
             passwords.beforePassword.trim() !== '' &&
             validatePassword(passwords.newPassword) &&
             passwords.confirm.trim() !== '' &&
-            passwords.newPassword === passwords.confirm;
+            passwords.newPassword === passwords.confirm &&
+            passwords.beforePassword !== passwords.newPassword;  // 현재 비밀번호와 새 비밀번호가 다른지 확인
         setIsFormValid(isValid);
     }, [passwords]);
 
@@ -38,7 +39,9 @@ export default function PasswordChange() {
         }));
 
         if (name === 'newPassword') {
-            if (!validatePassword(value)) {
+            if (value === passwords.beforePassword) {
+                setPasswordError('현재 비밀번호로 변경할 수 없습니다.');
+            } else if (!validatePassword(value)) {
                 setPasswordError('비밀번호는 최소 8자리로 특수문자, 숫자, 영문자를 포함해 주세요.');
             } else {
                 setPasswordError('');
@@ -59,6 +62,7 @@ export default function PasswordChange() {
 
             if (response.status === 200) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
+                // router.push('/mypage');
             } 
         } catch (error) {
             const errorMessage = error.response?.data?.message || '서버 에러가 발생했습니다.';
