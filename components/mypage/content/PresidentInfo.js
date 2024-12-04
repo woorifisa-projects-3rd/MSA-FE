@@ -24,7 +24,10 @@ const PresidentInfo = () => {
         setName(data.name);
         setEmail(data.email);
         setBirthDate(data.birthDate);
-        setPhoneNumber(data.phoneNumber);
+        const formatPhoneNumber = (phoneNumber) => {
+          return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        }
+        setPhoneNumber(formatPhoneNumber(data.phoneNumber));
         setOriginalData({
           birthDate: data.birthDate,
           phoneNumber: data.phoneNumber
@@ -44,7 +47,7 @@ const PresidentInfo = () => {
       const year = numbers.substring(0, 4);
       const month = numbers.substring(4, 6);
       const day = numbers.substring(6, 8);
-      return `${year}년 ${month}월 ${day}일`;
+      return `${year}-${month}-${day}`;
     }
     return input;
   };
@@ -62,7 +65,7 @@ const PresidentInfo = () => {
   };
     
   const isValidPhoneNumber = (number) => {
-    const regex = /^010(-?\d{4}){2}$/; // 010XXXXXXXX
+    const regex = /^\d{10,11}$/; // 10-11자리 숫자
     return regex.test(number);
   };
 
@@ -84,7 +87,7 @@ const PresidentInfo = () => {
         return;
       }
 
-      if (!isValidPhoneNumber(phoneNumber)) {
+      if (!isValidPhoneNumber(phoneNumber.replace(/-/g, ''))) {
         setErrorMessage('유효한 전화번호를 입력해주세요.');
         return;
       }
