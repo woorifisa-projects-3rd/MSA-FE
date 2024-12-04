@@ -22,9 +22,14 @@ export async function POST(request) {
             return NextResponse.json({ success: false }, { status: 400 });
         }
     } catch (error) {
-        return NextResponse.json(
-            { error: error.message }, 
-            { status: 500 }
-        );
+        const errorMessage = error.response.data.message // 확인테스트
+        const statusCode = error.response?.status || 500;
+        console.log("2단계 오류메세지:", errorMessage)
+        return NextResponse.json({ 
+            success: false,
+            error: errorMessage 
+        }, { 
+            status: statusCode 
+        }); 
     }
 }
