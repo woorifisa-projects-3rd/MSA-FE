@@ -335,6 +335,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 </div>
 
                 <div className={styles.formSection}>
+                    <p className={styles.accountSection}>직원도 우리 계좌를 사용하면, 우리가 0.1% 더해 보내 드려요!</p>
                     <div className={styles.formRow}>
                         <AccountInputForm
                             name={formData.name}
