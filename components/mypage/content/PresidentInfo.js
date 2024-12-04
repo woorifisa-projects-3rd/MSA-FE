@@ -44,7 +44,7 @@ const PresidentInfo = () => {
       const year = numbers.substring(0, 4);
       const month = numbers.substring(4, 6);
       const day = numbers.substring(6, 8);
-      return `${year}년 ${month}월 ${day}일`;
+      return `${year}-${month}-${day}일`;
     }
     return input;
   };
