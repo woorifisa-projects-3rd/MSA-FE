@@ -1,7 +1,7 @@
 import { useRegistration } from "@/contexts/RegistrationContext";
 import styles from "../BusinessRegistration.module.css";
 
-export default function StepNavigation() {
+export default function StepNavigation({onClose, onSuccess}) {
     const {
         currentStep,
         setCurrentStep,
@@ -12,12 +12,13 @@ export default function StepNavigation() {
         validateEmailVerification,
         isEmailVerified,
         isPinVerified,
-        validateAllData
+        validateAllData,
+        isSubmitting,
     } = useRegistration();
+
 
     const maxSteps = mode === "first" ? 5 : 4;
 
-    console.log("step navigation 내 log mode?", mode)
     const handleNext = async () => {
         console.log(`Current Step: ${currentStep}`); // 현재 단계 로그 출력
 
@@ -42,7 +43,7 @@ export default function StepNavigation() {
                     if (!validateAllData()) {
                         return;
                     }
-                    validationSuccess = await finalizeRegistration();
+                    validationSuccess = await finalizeRegistration(onClose, onSuccess);
                     break;
                 default:
                     console.error("Invalid step.");
@@ -69,9 +70,12 @@ export default function StepNavigation() {
         setCurrentStep((prev) => prev - 1);
     };
 
+    
+
 
     // 다음 버튼 비활성화 조건 추가
     const isNextButtonDisabled = () => {
+        if (isSubmitting) return true; 
         if (currentStep === 3 && !isEmailVerified) {
             return true;
         }

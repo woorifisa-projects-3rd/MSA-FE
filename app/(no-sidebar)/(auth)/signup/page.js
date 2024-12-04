@@ -6,6 +6,7 @@ import PostcodeModal from '@/components/postcode-search/PostcodeModal';
 import { nextClient } from '@/lib/nextClient';
 import { useRouter } from 'next/navigation';
 import { validateForm, commonValidateRules } from "@/utils/validation";
+import Loading from '@/components/loading/Loading';
 
 export default function Signup() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function Signup() {
   const [emailSuccess, setEmailSuccess] = useState('');
   const [isEmailConfirmDisabled, setEmailConfirmDisabled] = useState(false);
   const [emailConfirmNumber, setEmailConfirmNumber] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +91,7 @@ export default function Signup() {
 
   const emailSendHandler = async (e) => {
     e.preventDefault();
-  
+    setLoading(true);
     try {
       // 이메일 전송 요청
       const response = await nextClient.post('/auth/signup/email', {
@@ -108,6 +110,7 @@ export default function Signup() {
         email: errorMessage,
       }));
     }
+    setLoading(false);
   };
   
 
@@ -160,6 +163,7 @@ export default function Signup() {
         termsAccept: false,
       };
 
+      setLoading(true);
       try {
         const response = await nextClient.post('/auth/signup', submissionData);
         console.log(submissionData);
@@ -176,12 +180,14 @@ export default function Signup() {
         setError(errorMessage);
         alert(errorMessage);
       }
+      setLoading(false);
     }
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
+      {loading && <Loading />}
         <h2 className={styles.title}>회원가입</h2>
         <form className={styles.form}>
           <div className={styles.formGrid}>
@@ -199,11 +205,13 @@ export default function Signup() {
               </div>
 
               <div className={styles.inputGroup}>
-                <input type="date"
+                <input type="text"
                 name="birthDate"
                 placeholder="생년월일"
                 value={formData.birthDate}
                 onChange={handleChange}
+                onFocus={(e) => (e.target.type = "date")}
+                onBlur={(e) => (e.target.type = "text")}
                  />
                  {formErrors.birthDate && (
                   <p className={styles.error}>{formErrors.birthDate}</p>

@@ -11,29 +11,23 @@ export default function FindPasswordPage() {
     // 임시 비밀번호 발송 버튼 핸들러
     const handleForwardingPassword = async () => {
         try {
-        // 사용자 입력값 가져오기 (email과 name은 폼 데이터에서 가져옴)
-        const email = document.getElementById('email').value; // 혹은 state로 관리된 값
-        const name = document.getElementById('name').value;   // 혹은 state로 관리된 값
+            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value;
     
-        // 요청 데이터 구성
-        const requestData = {
-            email: email,
-            name: name
-        };
+            const requestData = { email, name };
+            const response = await nextClient.post('/president/forwardingpassword', requestData);
     
-        // API 요청 보내기
-        const response = await nextClient.post('/president/forwardingpassword', requestData);
+            console.log("response 전체:", response);
+            console.log("response.data:", response.data);
     
-        // 요청 성공 시 사용자 알림
-        console.log("클라까지 다시온다data",response.data);
-        console.log("클라까지 다시온다success",response.data.success);
-        
-        if(response.data.success === true){
-            alert('임시 비밀번호가 이메일로 전송되었습니다.');
-        }
+            if (response.data) {
+                alert(response.data.message);
+                window.location.href = '/login'; // 리다이렉트
+            }
         } catch (error) {
-        console.error('임시 비밀번호 발송 실패:', error);
-        alert('임시 비밀번호 발송 중 오류가 발생했습니다.');
+    
+            const errorMessage = error.response?.data?.message || "서버와의 연결에 문제가 발생했습니다.";
+            alert(errorMessage);
         }
     };
   
