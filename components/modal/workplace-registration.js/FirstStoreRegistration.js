@@ -8,7 +8,7 @@ import VerificationStep from "./steps/VerificationStep";
 import PinStep from "./steps/PinStep";
 import AddressStep from "./steps/AddressStep";
 
-export function FirstStoreRegistrationContent(){
+export function FirstStoreRegistrationContent({onClose, onSuccess}){
     const {currentStep} = useRegistration();
     return(
         <div className={styles.container}>
@@ -21,16 +21,20 @@ export function FirstStoreRegistrationContent(){
                     {currentStep === 4 && <PinStep />}
                     {currentStep === 5 && <AddressStep />}
                 </div>
-                <StepNavigation />
+                <StepNavigation onClose={onClose} onSuccess={onSuccess} />
             </div>
         </div>
     )
 }
 
-export default function FirstStoreRegistration(){
+export default function FirstStoreRegistration({onClose, onSuccess}){
+   
     return(
         <RegistrationProvider mode="first">
-            <FirstStoreRegistrationContent />
+            <FirstStoreRegistrationContent 
+                onClose={onClose} 
+                onSuccess={onSuccess}
+            />
         </RegistrationProvider>
     )
 }
