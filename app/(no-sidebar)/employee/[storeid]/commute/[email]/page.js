@@ -29,22 +29,35 @@ export default function AttendancePage() {
             setLocationPermission(false);
             return;
         }
+        function isIphoneSafari() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            alert(userAgent)
+            return /Safari/i.test(userAgent) && /Mobile/i.test(userAgent);
+        }
     
         // 즉시 위치 권한 요청
         navigator.geolocation.getCurrentPosition(
             () => {
-                // 권한 허용 후 permissions API로 상태 관리
-                if ('permissions' in navigator) {
-                    navigator.permissions.query({ name: 'geolocation' })
-                        .then((result) => {
-                            setLocationPermission(result.state === 'granted');
-                            
-                            result.addEventListener('change', () => {
-                                setLocationPermission(result.state === 'granted');
-                            });
-                        });
-                } else {
+                if(isIphoneSafari()) {  // 함수 호출 시 괄호 () 추가
                     setLocationPermission(true);
+                }
+                else{
+                    // 권한 허용 후 permissions API로 상태 관리
+                    if ('permissions' in navigator) {
+                        navigator.permissions.query({ name: 'geolocation' })
+                            .then((result) => {
+                                setLocationPermission(result.state === 'granted');
+                                
+                                result.addEventListener('change', () => {
+                                    setLocationPermission(result.state === 'granted');
+                                });
+                            })
+                            .catch(() => {
+                                setLocationPermission(true); // Permissions API가 없을 경우 기본 허용
+                            });
+                    } else {
+                        setLocationPermission(true); // Permissions API 미지원
+                    }
                 }
             },
             (error) => {
