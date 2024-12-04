@@ -37,13 +37,15 @@ export default function PayRecords() {
               selectedMonth,
             },
           });
+
+          console.log('급여기록 데이터 : ',response.data);
           const data = response.data.data;
           const formattedData = data.map((item) => ({
             name: item.name,
             account: item.accountNumber,
             amount: item.amount === 0 ? "0" : item.amount,
             date: item.issuanceDate,
-            button: <BaseButton text="확인" />,
+            button: <BaseButton text="확인" onClick={() => handleViewStatement(item.payStatementId)}  />,
           }));
           setList(formattedData);
         } catch (error) {
@@ -53,6 +55,36 @@ export default function PayRecords() {
       loadPayStatementPageData();
     }
   }, [storeId, selectedYear, selectedMonth]);
+
+        // 확인 버튼 클릭 시 급여 명세서 보기
+        const handleViewStatement = async (payStatementId) => {
+            console.log(payStatementId);
+            try {
+                const response = await nextClient.get(`/attendance/paystatement`, {
+                    params: { paystatementid: payStatementId }, // Query Parameter로 전달
+                });
+
+                if (response.data.success && response.data.data) {
+                    const url = response.data.data;
+                    console.log("급여 명세서 URL:", url);
+
+                    // URL이 이미 절대 경로라면 그대로 사용
+                    if (url.startsWith("http")) {
+                        // URL이 절대 경로일 경우 그대로 사용
+                        window.open(url, "_blank");
+                    } else {
+                        console.error("유효하지 않은 URL 형식입니다.");
+                        alert("급여 명세서를 로드할 수 없습니다.");
+                    }
+                } else {
+                    console.error("유효하지 않은 URL 응답:", response.data);
+                    alert("급여 명세서를 로드할 수 없습니다.");
+                }
+            } catch (error) {
+                console.error("급여 명세서 로드 오류:", error.message);
+            }
+        };
+
 
   // 이벤트 핸들러
   const handleMonthChange = (newDate) => setSelectedDate(newDate);
