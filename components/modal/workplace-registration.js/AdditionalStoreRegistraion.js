@@ -7,7 +7,7 @@ import AccountStep from "./steps/AccountStep";
 import PinStep from "./steps/PinStep";
 import AddressStep from "./steps/AddressStep";
 
-export function AdditionalStoreRegistrationContent(){
+export function AdditionalStoreRegistrationContent({onClose, onSuccess}){
     const {currentStep} = useRegistration();
     return(
         <div className={styles.container}>
@@ -19,19 +19,21 @@ export function AdditionalStoreRegistrationContent(){
                 {currentStep === 3 && <PinStep />}
                 {currentStep === 4 && <AddressStep />}
             </div>
-            <StepNavigation />
+            <StepNavigation
+                 onClose={onClose} onSuccess={onSuccess}
+            />
             </div>
         </div>
     )
 }
 
-export default function AdditionalStoreRegistration(){
+export default function AdditionalStoreRegistration({onClose, onSuccess}){
     return(
         <RegistrationProvider 
             mode="additional"
             initialStep={1}
         >
-           <AdditionalStoreRegistrationContent />
+           <AdditionalStoreRegistrationContent onClose={onClose} onSuccess={onSuccess} />
         </RegistrationProvider>
     )
 }

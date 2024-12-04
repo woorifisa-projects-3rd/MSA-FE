@@ -9,20 +9,28 @@ export default function PasswordChange() {
         newPassword: '',
         confirm: ''
     });
+    
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [isFormValid, setIsFormValid] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
 
-    // 폼 유효성 검사
+    const validatePassword = (password) => {
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const hasDigit = /\d/.test(password);
+        const hasLetter = /[A-Za-z]/.test(password);
+        return password.length >= 8 && hasSpecialChar && hasDigit && hasLetter;
+    };
+
     useEffect(() => {
         const isValid =
             passwords.beforePassword.trim() !== '' &&
-            passwords.newPassword.trim() !== '' &&
+            validatePassword(passwords.newPassword) &&
             passwords.confirm.trim() !== '' &&
-            passwords.newPassword === passwords.confirm;
+            passwords.newPassword === passwords.confirm &&
+            passwords.beforePassword !== passwords.newPassword;  // 현재 비밀번호와 새 비밀번호가 다른지 확인
         setIsFormValid(isValid);
     }, [passwords]);
 
-    // 입력 값 업데이트
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
         setPasswords((prev) => ({
@@ -30,18 +38,22 @@ export default function PasswordChange() {
             [name]: value
         }));
 
-        if (name === 'confirm' || name === 'newPassword') {
-            if (name === 'newPassword') {
-                setPasswordMatch(value === passwords.confirm);
+        if (name === 'newPassword') {
+            if (value === passwords.beforePassword) {
+                setPasswordError('현재 비밀번호로 변경할 수 없습니다.');
+            } else if (!validatePassword(value)) {
+                setPasswordError('비밀번호는 최소 8자리로 특수문자, 숫자, 영문자를 포함해 주세요.');
             } else {
-                setPasswordMatch(value === passwords.newPassword);
+                setPasswordError('');
             }
+            setPasswordMatch(value === passwords.confirm);
+        } else if (name === 'confirm') {
+            setPasswordMatch(value === passwords.newPassword);
         }
     };
 
-    // 폼 제출 처리
     const handleSubmit = async (e) => {
-        e.preventDefault(); // 기본 폼 제출 방지
+        e.preventDefault();
         try {
             const response = await nextClient.put('/president/changepassword', {
                 beforePassword: passwords.beforePassword,
@@ -50,11 +62,11 @@ export default function PasswordChange() {
 
             if (response.status === 200) {
                 alert('비밀번호가 성공적으로 변경되었습니다.');
-            } else {
-                alert('비밀번호 변경에 실패했습니다. 다시 시도해 주세요.');
-            }
+                // router.push('/mypage');
+            } 
         } catch (error) {
-            alert('현재 비밀번호가 다릅니다. 다시 시도해 주세요.');
+            const errorMessage = error.response?.data?.message || '서버 에러가 발생했습니다.';
+            alert(errorMessage);
         }
     };
 
@@ -71,21 +83,26 @@ export default function PasswordChange() {
                     className={styles.input}
                     value={passwords.beforePassword}
                     onChange={handlePasswordChange}
-                    required // 필수 입력 필드로 설정
+                    required
                 />
             </div>
 
-            <div className={styles.inputGroup}>
+            <div className={`${styles.inputGroup} ${passwordError ? styles.hasError : ''}`}>
                 <label className={styles.label}>새로운 비밀번호</label>
-                <input
-                    type="password"
-                    name="newPassword"
-                    placeholder="********"
-                    className={styles.input}
-                    value={passwords.newPassword}
-                    onChange={handlePasswordChange}
-                    required
-                />
+                <div className={styles.inputWrapper}>
+                    <input
+                        type="password"
+                        name="newPassword"
+                        placeholder="********"
+                        className={styles.input}
+                        value={passwords.newPassword}
+                        onChange={handlePasswordChange}
+                        required
+                    />
+                    {passwordError && (
+                        <div className={styles.errorMessage}>{passwordError}</div>
+                    )}
+                </div>
             </div>
 
             <div className={styles.inputGroup}>
@@ -107,9 +124,9 @@ export default function PasswordChange() {
             </div>
 
             <button
-                type="submit" // 폼 제출 버튼
+                type="submit"
                 className={`${styles.button} ${!isFormValid ? styles.buttonDisabled : ''}`}
-                disabled={!isFormValid} // 폼이 유효하지 않으면 비활성화
+                disabled={!isFormValid}
             >
                 저장
             </button>

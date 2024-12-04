@@ -7,7 +7,7 @@ import { nextClient } from '@/lib/nextClient';
 export default function AttendancePage() {
     const [loading, setLoading] = useState(false);
     const [locationPermission, setLocationPermission] = useState(false);
-    const [isDesktop, setIsDesktop] = useState(true);
+    const [isDesktop, setIsDesktop] = useState(false);
 
 
     const params = useParams();
@@ -18,10 +18,8 @@ export default function AttendancePage() {
         // 브라우저가 geolocation을 지원하지 않는 경우 체크
         const checkIsDesktop = () => {
             const userAgent = navigator.userAgent.toLowerCase();
-            console.log(navigator.userAgent.toLowerCase());
-            
             // alert(navigator.userAgent.toLowerCase())
-            return userAgent.includes('windows') || userAgent.includes('macintosh');
+            return userAgent.includes('windows');
             
         };
         setIsDesktop(checkIsDesktop());
@@ -31,22 +29,35 @@ export default function AttendancePage() {
             setLocationPermission(false);
             return;
         }
+        function isIphoneSafari() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            alert(userAgent)
+            return /Safari/i.test(userAgent) && /Mobile/i.test(userAgent);
+        }
     
         // 즉시 위치 권한 요청
         navigator.geolocation.getCurrentPosition(
             () => {
-                // 권한 허용 후 permissions API로 상태 관리
-                if ('permissions' in navigator) {
-                    navigator.permissions.query({ name: 'geolocation' })
-                        .then((result) => {
-                            setLocationPermission(result.state === 'granted');
-                            
-                            result.addEventListener('change', () => {
-                                setLocationPermission(result.state === 'granted');
-                            });
-                        });
-                } else {
+                if(isIphoneSafari()) {  // 함수 호출 시 괄호 () 추가
                     setLocationPermission(true);
+                }
+                else{
+                    // 권한 허용 후 permissions API로 상태 관리
+                    if ('permissions' in navigator) {
+                        navigator.permissions.query({ name: 'geolocation' })
+                            .then((result) => {
+                                setLocationPermission(result.state === 'granted');
+                                
+                                result.addEventListener('change', () => {
+                                    setLocationPermission(result.state === 'granted');
+                                });
+                            })
+                            .catch(() => {
+                                setLocationPermission(true); // Permissions API가 없을 경우 기본 허용
+                            });
+                    } else {
+                        setLocationPermission(true); // Permissions API 미지원
+                    }
                 }
             },
             (error) => {
@@ -58,6 +69,7 @@ export default function AttendancePage() {
             { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
         );
     }, []);
+    
     const getCurrentLocation = async () => {
         const getPosition = async (options) => {
             return new Promise((resolve, reject) => {
@@ -100,7 +112,7 @@ export default function AttendancePage() {
                     lastError = new Error('낮은 정확도');
                     continue;
                 }
-
+                alert(`Latitude: ${position.lat}\nLongitude: ${position.lng}\nAccuracy: ${position.accuracy}`);
                 console.log(`위치 정확도: ${position.accuracy}m`);
                 return position;
 
@@ -131,12 +143,10 @@ export default function AttendancePage() {
             setLoading(true)
             
             const location = await getCurrentLocation()
-            console.log('Current location:', location)
-            console.log(endpoint)
 
             const   latitude= location.lat;
             const longitude= location.lng;
-            const endpoint = type === 'go' ? 'go-to-work' : 'leave-work'
+            const endpoint = (type === 'go') ? 'go-to-work' : 'leave-work'
 
             const serverResponse = await nextClient.post('/attendance/employee/commute', {
                 latitude,
