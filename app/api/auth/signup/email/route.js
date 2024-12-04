@@ -12,7 +12,7 @@ export async function POST(request) {
         email
        });
 
-       const pinNumber = response.data;
+      const pinNumber = response.data;
        
       // 성공 응답 반환
       return NextResponse.json({ success: true, pin: pinNumber });
