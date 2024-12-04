@@ -10,12 +10,6 @@ import "./calendar.css";
 import { nextClient } from '@/lib/nextClient';
 import { useAuth } from '@/contexts/AuthProvider';
 
-const statusColors = {
-  '퇴근완료': '#808080',  // 회색
-  '출근중': '#8CD3C5',    // 초록색
-  '미퇴근': '#FF6B6B',    // 빨간색
-};
-
 export default function Calendar() {
   const router = useRouter();
   const [events, setEvents] = useState([]);
@@ -33,8 +27,8 @@ export default function Calendar() {
         id: String(item.id || Math.random()), // 고유 ID
         title: item.name, // 직원 이름
         date: item.commuteDate, // 날짜
-        backgroundColor: statusColors[item.status] || statusColors['퇴근완료'], // 기본값은 퇴근완료
-        borderColor: statusColors[item.status] || statusColors['퇴근완료']
+        backgroundColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
+        borderColor: item.status === '퇴근완료' ? '#808080' : '#8CD3C5',
       }));
       setEvents(calendarEvents);
     } catch (error) {
@@ -67,43 +61,23 @@ export default function Calendar() {
 
   return (
     <div className={classes.calendarWrapper}>
-      <div className={classes.legendContainer}>
-       {Object.entries(statusColors).map(([status, color]) => (
-         <div key={status} className={classes.legendItem}>
-           <div 
-             className={classes.colorBox} 
-             style={{ backgroundColor: color }}
-           />
-           <span>{status}</span>
-         </div>
-       ))} </div>
-      <div>
       <FullCalendar
-  plugins={[dayGridPlugin, interactionPlugin]}
-  initialView="dayGridMonth"
-  headerToolbar={{
-    left: '',
-    center: 'prev title next',
-    right: ''
-  }}
-  editable={true}
-  selectable={true}
-  events={events}
-  datesSet={handleDatesSet}
-  select={handleDateSelect}
-  locale="ko"
-  dayMaxEvents={3} // 한 셀에 최대 3개까지만 표시
-  moreLinkContent={(args) => `+${args.num}  `} // 더보기 텍스트 커스텀
-  moreLinkClick="popover" // 팝업으로 추가 이벤트 표시
-  showNonCurrentDates={false}
-  eventDisplay="block" // 블록 형태로 표시
-  eventTimeFormat={{ // 시간 표시 형식
-    hour: '2-digit',
-    minute: '2-digit',
-    meridiem: false
-  }}
-/>
-</div>
+        plugins={[dayGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        headerToolbar={{
+          left: '',
+          center: 'prev title next',
+          right: ''
+        }}
+        editable={true}
+        selectable={true}
+        events={events} // 이벤트 데이터 설정
+        datesSet={handleDatesSet} // 날짜 범위 변경 이벤트 연결
+        select={handleDateSelect} // 날짜 선택 이벤트 연결
+        locale="ko" // 한글화
+        dayMaxEvents={6} // 최대 표시 이벤트 수 제한
+        showNonCurrentDates={false} // 현재 달 외의 날짜를 숨김
+      />
     </div>
   );
 

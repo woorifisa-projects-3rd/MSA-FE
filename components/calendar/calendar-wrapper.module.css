@@ -2,21 +2,3 @@
     /* max-width: 1700px;  */
     margin: 0 auto;
 }
-
-.legendContainer {
-    display: flex;
-    gap: 20px;
-    padding: 10px 0;
-}
-
-.legendItem {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.colorBox {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-}
