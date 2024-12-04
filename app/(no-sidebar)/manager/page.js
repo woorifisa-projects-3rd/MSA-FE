@@ -34,7 +34,13 @@ export default function Home() {
       setUsers([]);  // 오류 발생 시 빈 배열 설정
     }
   };
-  
+
+  // 전화번호 포맷팅 함수
+  const formatPhoneNumber = (phoneNumber) => {
+    // 전화번호가 문자열 형태로 올바른지 확인 후 포맷팅
+    if (!phoneNumber) return phoneNumber;
+    return phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+  };
 
   // 삭제 요청 처리
   const handleDeleteClick = async (presidentId) => {
@@ -55,7 +61,6 @@ export default function Home() {
       setError(error.response?.data?.error || error.message);
     }
   };
-  
 
   return (
     <div className={styles.container}>
@@ -73,13 +78,13 @@ export default function Home() {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.name}</td>
-              <td>{user.phoneNumber}</td>
+              <td>{formatPhoneNumber(user.phoneNumber)}</td>  {/* 전화번호 포맷팅 적용 */}
               <td>{user.email}</td>
               <td>
-              <PrimaryButton
-                text="삭제"
-                onClick={() => handleDeleteClick(user.presidentid)}
-            />
+                <PrimaryButton
+                  text="삭제"
+                  onClick={() => handleDeleteClick(user.presidentid)}
+                />
               </td>
             </tr>
           ))}
