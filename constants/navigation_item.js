@@ -39,7 +39,7 @@ export const NAVIGATION_ITEMS = [
         subTitles:[
             {text:"직원 출ㆍ퇴근 캘린더", path:"/attendance/calendar"}, 
             {
-                text:"당일 출근자 조회/수정", 
+                text:"출근자 조회/수정", 
                 path:"/attendance/daily-attendance",
                 isDailyAttendance: true // 이 플래그로 특별 처리가 필요한 항목 구분
             }
