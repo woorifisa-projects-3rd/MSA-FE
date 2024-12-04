@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import styles from './business-dropdown.module.css';
 import { nextClient } from '@/lib/nextClient';
 import { useAuth } from '@/contexts/AuthProvider';
+import { useRouter } from 'next/navigation' ;
 
 const BusinessSelectDropdown = () => {
     const [allBusinesses, setAllBusinesses] = useState([]);
@@ -11,12 +12,19 @@ const BusinessSelectDropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const {storeId, setStoreId} = useAuth();
+    const router = useRouter();
 
     useEffect(()=>{
         async function fetchStores() {
             try{
                 const response = await nextClient.get('/store/storelist');
                 console.log("api 응답 데이터:",response.data);
+
+                if (response.data.length === 0) {
+                    console.log("가게 목록이 없음, 마이페이지로 이동");
+                    router.push('/mypage');
+                    return;
+                }
                 // 필요한 데이터만 추출
                 const business = response.data.map(({id,storeName}) =>({
                     storeId: id,
@@ -35,8 +43,16 @@ const BusinessSelectDropdown = () => {
             }
         }
         fetchStores();
-    }, [setStoreId]);
+    }, [setStoreId, router]);
 
+    const handleButtonClick = () => {
+        if (allBusinesses.length === 0) {
+            console.log("데이터 없음, 마이페이지로 이동");
+            router.push('/mypage');
+            return;
+        }
+        setIsOpen(!isOpen);
+    };
 
     const filteredBusinesses = allBusinesses.filter(business => business !== selectedBusiness);
 
@@ -51,7 +67,7 @@ const BusinessSelectDropdown = () => {
         <div className={styles.dropdown}>
             <button 
                 className={`${styles.dropbtn} ${isOpen ? styles.active : ''}`}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleButtonClick}
             >
                 <span className={styles.businessName}>
                     {selectedBusiness?selectedBusiness.storeName : '가게를 선택하세요'}

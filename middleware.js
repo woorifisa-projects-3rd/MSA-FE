@@ -16,24 +16,24 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
 
 
   // 공개 경로 (no-sidebar) - 항상 접근 가능
-  const publicPaths = [
-    '/(auth)/login',
-    '/(auth)/signup',
-    '/(auth)/change-password',
-    // '/employee/[storeid]/commute', -> 동적 경로 나중에 처리 
-  ]
+  // const publicPaths = [
+  //   '/(auth)/login',
+  //   '/(auth)/signup',
+  //   '/(auth)/change-password',
+  //   '/employee/[storeid]/commute/[email]',
+  // ]
 
 
   // 보호된 경로 (with-sidebar) - 토큰 필요
   const protectedPaths = [
     '/attendance',
-    '/employee',
+    '/employee/management',
     '/financial-products',
     '/mypage',
     '/payroll-auto-transfer',
     '/transactions'
   ]
-
+  
 
   // 토큰이 없는 경우
   if (!token) {
@@ -43,7 +43,7 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
     }
   }
 
-   // 3. 토큰이 있는 경우
+   // 3. 토큰이 있는 경우 
    if (token) {
     // 이미 로그인한 사용자가 onboarding 페이지 접근 시도하면 mypage로 리다이렉트
     if (pathname === '/onboarding') {
@@ -56,7 +56,6 @@ export function middleware(request) { // next.js가 자동으로 request 객체�
 }
 
 
-// 미들웨어를 적용할 경로 설정
 // 미들웨어를 적용할 경로 설정
 export const config = {
   matcher: [

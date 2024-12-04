@@ -11,7 +11,7 @@ export async function POST(request) {
         const response = await springClient.post('/user/store/businesscheck', { storeName, businessNumber });
 
         // 응답 처리
-        if (response.data === 'ok') {
+        if (response.data.message === 'ok') {
             return NextResponse.json({ success: true }, { status: 200 });
         } 
     } catch (error) {

@@ -5,7 +5,7 @@ import { getGeocode } from "@/utils/getGeocode";
 import { useState } from "react";
 
 export default function AddressStep(){
-    const { formData, setFormData, error } = useRegistration();
+    const { formData, setFormData, error, success } = useRegistration();
     const [selectedAddress, setSelectedAddress] = useState('');
 
     const handleAddressComplete = async (postcodeAddress) => {
@@ -50,6 +50,18 @@ export default function AddressStep(){
                 initialPostcodeAddress=""
                 initialDetailAddress=""
             />
+
+            {success && (
+                <div className={styles.successText}>
+                    {success}
+                </div>
+            )}
+
+            {error && (
+                <div className={styles.errorText}>
+                    {error}
+                </div>
+            )}
         </div>
     )
 }

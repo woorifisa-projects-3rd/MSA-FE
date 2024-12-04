@@ -84,6 +84,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         // 계좌 확인이 유효할 경우 에러 메시지 제거
         if (isValid) {
             setFormErrors((prev) => ({
+
                 ...prev,
                 accountNumber: '', // accountNumber 에러 메시지 제거
             }));
@@ -205,7 +206,9 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                     Router.push('/employee/management');
                 }
             } catch (error) {
-                setError(error.response?.data?.error || error.message);
+                const errorMessage = error.response?.data?.error || error.message;
+                setError(errorMessage);
+                alert(errorMessage);
             }
         }
     };
