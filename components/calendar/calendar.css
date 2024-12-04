@@ -11,37 +11,45 @@
     padding: 10px;
     font-weight: bold;
 }
+
 /* 기본 셀 높이 고정 */
 .fc .fc-daygrid-day {
     height: 90px !important; 
     max-height: 90px;
+    cursor: pointer !important;
 }
-/* 셀 내부 프레임  */
-.fc .fc-daygrid-day-frame{
+
+.fc .fc-daygrid-day:hover .fc-daygrid-day-frame {
+    background-color: rgba(33, 107, 165, 0.1) !important;  /* FullCalendar의 기본 선택 색상 */
+}
+
+/* 셀 내부 프레임 */
+.fc .fc-daygrid-day-frame {
     height: 100% !important;
     max-height: 100% !important;
     display: flex;
     flex-direction: column;
     background-color: white;
 }
-.fc .fc-daygrid-day-top{
+
+.fc .fc-daygrid-day-top {
     padding: 0 5px;
 }
 
-/* 그리드로 2열 만든 버전  */
-.fc .fc-daygrid-day-events{
+/* 그리드로 2열 만든 버전 */
+.fc .fc-daygrid-day-events {
     display: grid;
-    grid-template-columns: repeat(2, calc(50% - 4px)) !important; /* 2열, gap 고려한 너비 */
-    grid-template-rows: repeat(3, 25px) !important; /* 4행, 각 행 높이 25px로 고정 */
+    grid-template-columns: repeat(2, calc(50% - 4px)) !important;
+    grid-template-rows: repeat(3, 25px) !important;
     grid-auto-flow: row !important;
     gap: 4px !important;
     padding: 4px 10px !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important; /* 넘치는 내용 숨김 */
+    overflow: hidden !important;
     min-height: unset !important;
-    max-height: calc(100px + 8px) !important; /* 4행 * 25px + padding */
+    max-height: calc(100px + 8px) !important;
 }
 
 .fc .fc-daygrid-day-events::before {
@@ -49,18 +57,10 @@
     content: none !important;
 }
 
-/* 스크롤 동기화 관련 */
-/* .fc .fc-scrollgrid-sync-inner {
-    height: 100% !important;
-    max-height: 100% !important;
-    min-height: unset !important;
-} */
-
 /* 개별 이벤트 스타일 */
 .fc-daygrid-event {
-    /* 여기서부터 추가 */
     width: 100% !important;
-    height: 25px !important; /* 높이 고정 */
+    height: 25px !important;
     min-height: 25px !important;
     max-height: 25px !important;
     margin: 0 !important;
@@ -68,7 +68,7 @@
     box-sizing: border-box !important;
     overflow: hidden !important;
 }
-/* 이벤트 전체 내용을 한 줄로 제한 */
+
 .fc-event-main {
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -77,55 +77,82 @@
 
 .fc-event-title {
     overflow: hidden !important;
-    text-overflow: ellipsis !important; /* 말줄임표 표시 */
-    white-space: nowrap !important; /* 텍스트 줄바꿈 방지 */
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
     width: 100% !important;
 }
 
-/* 또는 더 확실하게 */
-.fc-daygrid-day-frame .fc-scrollgrid-sync-inner {
-    display: none !important;
+/* 더보기 관련 스타일링 */
+.fc .fc-daygrid-day-bottom {
+    grid-column: 2 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
 }
 
-
-/* 더보기 (+more) 버튼 위치 조정 */
 .fc .fc-daygrid-more-link {
-    /* position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: 100% !important;
-    background: rgba(255, 255, 255, 0.9) !important; */
+    height: 25px !important;
+    min-height: 25px !important;
+    max-height: 25px !important;
+    line-height: 21px !important;
+    margin: 0 !important;
+    padding: 2px 4px !important;
+    background-color: #f0f0f0 !important;
+    border-radius: 3px !important;
+    color: #666 !important;
+    font-size: 12px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
 }
 
-
-.fc-toolbar-title {
-    font-size: 1.5em !important;
-    font-weight: bold;
+.fc .fc-daygrid-more-link:hover {
+    background-color: #e8e8e8 !important;
+    color: #333 !important;
 }
 
+/* 더보기 팝업 스타일링 */
+.fc-more-popover {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+}
 
+.fc-more-popover .fc-popover-body {
+    padding: 8px !important;
+}
 
-/* 버튼 색 */
+.fc-more-popover .fc-daygrid-event-harness {
+    margin: 4px 0 !important;
+}
 
-/* 일요일 스타일링 */
+/* 요일별 색상 스타일링 */
 .fc .fc-day-sun, 
 .fc .fc-day-sun .fc-daygrid-day-number {
     color: red !important;
 }
-/* 토요일 스타일링 */
+
 .fc .fc-day-sat,
 .fc .fc-day-sat .fc-daygrid-day-number {
     color: blue !important;
 }
-/* 공휴일 스타일링 - 공휴일 클래스를 추가해야 함 */
+
 .fc .fc-day-holiday,
 .fc .fc-day-holiday .fc-daygrid-day-number {
     color: red !important;
 }
 
-
-/* 헤더 관련 스타일링  */
-/* 헤더 전체 컨테이너 */
+/* 헤더 관련 스타일링 */
 .fc .fc-toolbar {
     display: flex !important;
     justify-content: center !important;
@@ -133,30 +160,31 @@
     padding-bottom: 20px;
 }
 
-/* 타이틀(2024년 11월) 영역 */
 .fc .fc-toolbar-title {
-    margin: 0 15px !important; /* prev, next 버튼과의 간격 */
+    margin: 0 15px !important;
     font-size: 20px !important;
-    order: 2 !important; /* 가운데 위치하도록 */
+    order: 2 !important;
 }
 
-/* 이전/다음 버튼 컨테이너 */
 .fc .fc-toolbar-chunk {
     display: flex !important;
     align-items: center !important;
 }
 
-/* 이전 버튼 */
 .fc .fc-prev-button {
     order: 1 !important;
 }
 
-/* 다음 버튼 */
 .fc .fc-next-button {
     order: 3 !important;
 }
 
-/* 불필요한 여백 제거 */
 .fc .fc-toolbar.fc-header-toolbar {
     margin-bottom: 0 !important;
+}
+
+/* 추가: 이벤트 컨테이너의 높이를 명시적으로 설정 */
+.fc .fc-daygrid-day-events .fc-daygrid-event-harness {
+    height: 25px !important;
+    margin: 0 !important;
 }
