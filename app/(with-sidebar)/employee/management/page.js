@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { nextClient } from "@/lib/nextClient";
 import { useAuth } from "@/contexts/AuthProvider";
 import NameSearch from "@/components/namesearch/name-search";
+import DeleteModal from "@/components/modal/delete-commute-modal/delete-commute-modal";
 
 const edit = "수정";
 const del = "삭제";
@@ -16,10 +17,12 @@ const del = "삭제";
 export default function SalesExpenses() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 여부
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null); // 선택된 직원 데이터
     const [employees, setEmployees] = useState([]); // 직원 리스트
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null);
+    const [deleteEmployeeId, setdeleteEmployeeId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const employeeFormRef = useRef(null);
     
@@ -27,7 +30,7 @@ export default function SalesExpenses() {
     console.log("storeId?",storeId)
 
     const fetchEmployees = async () => {
-        console.log("직원 리스트 요청 가게 아이디:", storeId)
+        console.log("직원 리스트 요청")
         setLoading(true);
         setError(null);
         try {
@@ -35,7 +38,7 @@ export default function SalesExpenses() {
             console.log(response.data)
             setEmployees(response.data);
         } catch (error) {
-            console.error("직원 데이터를 가져오는데 실패했습니다.", error.response.data.error);
+            console.error("직원 데이터를 가져오는데 실패했습니다.", error);
             setEmployees([]);
             setError(error.response?.data?.error || error.message);
         } finally {
@@ -90,19 +93,31 @@ export default function SalesExpenses() {
     };
 
     // 삭제 버튼 클릭 시
-    const handleDeleteClick = async (employee) => {
+    const handleDeleteClick = (employee) => {
+        setdeleteEmployeeId(employee.id);
+        setDeleteModalOpen(true);
+    }
+
+    const handleDeleteConfirm = async () => {
+        if (!deleteEmployeeId) return;
+
+        setDeleteModalOpen(true);
         try {
             const response = await nextClient.delete('/employee', {
-                data: {seid: employee.id },
+                data: {seid: deleteEmployeeId },
             });
             if (response.data.success) {
                 alert('직원이 삭제되었습니다.');
                 fetchEmployees();
-            } else {
-                throw new Error(response.data.error || '직원 삭제 실패');
             }
+            setDeleteModalOpen(false);
         } catch (error) {
-            setError(error.response?.data?.error || error.message);
+            const errorMessage = error.response?.data?.error || error.message;
+            setError(errorMessage);
+            alert(errorMessage);
+        } finally {
+            setDeleteModalOpen(false);
+            setdeleteEmployeeId(null);
         }
     }
 
@@ -115,7 +130,7 @@ export default function SalesExpenses() {
     };
 
     const filteredEmployees = Object.values(employees).filter(employee =>
-        employee.name.includes(searchQuery) && employee.employmentType !== 10
+        employee.name.includes(searchQuery) && employee.employmentType !== 10 && employee.employmentType !== 11
     );
 
     const enrichedList = filteredEmployees.map(employee => ({
@@ -165,6 +180,15 @@ export default function SalesExpenses() {
                     />
                 </ModalContainer>
             )}
+
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onDelete={handleDeleteConfirm}
+          deleteId={deleteEmployeeId}
+          title="직원 삭제"
+          text="해당 직원을 정말 삭제하시겠습니까?"
+        />
         </div>
     );
 }
