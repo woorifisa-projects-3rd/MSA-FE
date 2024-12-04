@@ -4,7 +4,7 @@ import styles from "../BusinessRegistration.module.css"
 import { useState } from "react";
 
 export default function PinStep(){
-    const { verificationData, setVerificationData, setCurrentStep, registerPin } = useRegistration();
+    const { verificationData, setVerificationData, setCurrentStep, registerPin, error } = useRegistration();
     const [isPinComplete, setIsPinComplete] = useState(false);
     const [verificationSuccess, setVerificationSuccess] = useState(false);
 
@@ -38,7 +38,12 @@ export default function PinStep(){
                     PIN 번호 인증하기
                 </button>
             )}
-               {verificationSuccess && (
+            {error && (
+                    <div className={styles.errorText}>
+                        {error}
+                    </div>
+            )}
+            {verificationSuccess && (
                 <div className={styles.successText}>
                     PIN 번호 인증에 성공했습니다!
                 </div>

@@ -11,10 +11,11 @@ export async function POST(request) {
         const response = await springClient.post('/user/core/account/email/pin', { emailPinNumber, email });
         console.log('Spring Boot 에서 왔다.:', response.data);
 
-        if (response.data === true) {
+        if (response.data.message === 'ok') {
             return NextResponse.json({ success: true }, { status: 200 });
         }
     } catch (error) {
+        console.log(error.response.data.message)
         const errorMessage = error.response?.data.message || '서버 에러가 발생했습니다.';
         const statusCode = error.response?.status || 500;
        

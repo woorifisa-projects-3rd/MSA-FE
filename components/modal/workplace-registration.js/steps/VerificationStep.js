@@ -11,7 +11,8 @@ export default function VerificationStep(){
         isEmailSent, 
         verifyEmailCode, 
         error,
-        success
+        success,
+        isEmailErrored
     } = useRegistration()
 
     // 성공 메시지를 위한 상태 추가
@@ -24,6 +25,7 @@ export default function VerificationStep(){
             setVerificationSuccess(true);
         }
     };
+    console.log("3단계", success)
     
     return(
         <div className={styles.formContainer}>
@@ -67,11 +69,7 @@ export default function VerificationStep(){
                             인증 메일 발송
                         </button>
                     )}
-                    {success && (
-                        <div className={styles.successText}>
-                        {success}
-                        </div>
-                    )}
+                   
                     {error && (
                         <div className={styles.errorText}>
                             {error}
@@ -81,18 +79,30 @@ export default function VerificationStep(){
                 {isEmailSent && (
                     <>
                       <div className={styles.formGroup}>
-                          <label className={styles.label}>인증 코드</label>
-                          <input
-                              type="text"
-                              value={verificationData.verificationCode}
-                              onChange={(e) => setVerificationData(prev => ({
-                                  ...prev,
-                                  verificationCode: e.target.value
-                              }))}
-                              className={styles.input}
-                              placeholder="인증 코드 6자리"
-                              maxLength={6}
-                          />
+                       
+                        <button
+                            onClick={sendVerificationEmail}
+                            className={`${styles.button} ${styles.primaryButton}`}
+                        >
+                            인증번호 재발송
+                        </button>
+                        {success && (
+                            <div className={styles.successText}>
+                                {success}
+                            </div>
+                        )}
+                        <label className={styles.label}>인증 코드</label>
+                        <input
+                            type="text"
+                            value={verificationData.verificationCode}
+                            onChange={(e) => setVerificationData(prev => ({
+                                ...prev,
+                                verificationCode: e.target.value
+                            }))}
+                            className={styles.input}
+                            placeholder="인증 코드 6자리"
+                            maxLength={6}
+                        />
                       </div>
               
                       <button
@@ -101,14 +111,9 @@ export default function VerificationStep(){
                       >
                           확인
                       </button>
-                        {success && (
-                            <div className={styles.successText}>
-                              {success}
-                            </div>
-                        )}
-                        {error && (
+                        {isEmailErrored && (
                             <div className={styles.errorText}>
-                                {error}
+                                {isEmailErrored}
                             </div>
                         )}
                     </>
