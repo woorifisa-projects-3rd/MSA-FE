@@ -3,7 +3,7 @@ export const REQUIRED_ERROR = "필수 항목입니다.";
 export const DATE_ERROR = "잘못된 날짜입니다.";
 export const PAYMENT_DATE_ERROR = "1부터 28 사이의 숫자를 입력해주세요.";
 export const EMAIL_ERROR = "유효한 이메일을 입력해주세요. 예) abc@gmail.com"
-export const PHONE_ERROR = "유효한 전화번호를 입력해주세요. 예) 010-1111-2222 또는 01011112222";
+export const PHONE_ERROR = "유효한 전화번호를 입력해주세요. 예) 01011112222";
 export const PASSWORD_ERROR = '비밀번호는 최소 8자리로 특수문자(!@#$%^&*(),.?":{}|<></>), 숫자, 영문자를 포함해야 합니다.';
 export const PASSWORD_MISMATCH_ERROR = "비밀번호가 일치하지 않습니다.";
 
@@ -17,7 +17,7 @@ export const commonValidateRules = {
       : EMAIL_ERROR,
 
   phoneNumber: (value) =>
-    /^(\d{3}\d{7,8}|\d{3}-\d{3,4}-\d{4})$/.test(value)
+    /^\d{10,11}$/.test(value)
       ? ""
       : PHONE_ERROR,
 

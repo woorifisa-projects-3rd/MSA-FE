@@ -10,6 +10,7 @@ import { nextClient } from '@/lib/nextClient';
 import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
 import BaseButton from '@/components/button/base-button';
 import classes from "./page.module.css";
+import Loading from '@/components/loading/Loading';
 
 export default function Form() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -211,6 +212,7 @@ export default function Form() {
   
     console.log("서버로 보낼 데이터:", requestData, "id", editModalData.commuteId);
   
+    setIsLoading(true);
     try {
       const response = await nextClient.put(
         `/attendance/commute?commuteid=${editModalData.commuteId}`,
@@ -228,6 +230,8 @@ export default function Form() {
     } catch (error) {
       console.error("수정 중 오류 발생:", error.response?.data || error.message);
       setFormError('수정 중 오류가 발생했습니다');
+    } finally {
+      setIsLoading(false);
     }
   };
   
@@ -238,6 +242,7 @@ export default function Form() {
   };
 
   const handleDeleteConfirm = async () => {
+    setIsLoading(true);
     try {
       const response = await nextClient.delete(
         `/attendance/daily-attendance?commuteid=${deleteCommuteId}`
@@ -251,6 +256,8 @@ export default function Form() {
       setDeleteModalOpen(false);
     } catch (error) {
       console.error('Error deleting commute:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -262,6 +269,7 @@ export default function Form() {
 
   return (
     <>
+      {isLoading && <Loading />}
       <div className={classes.attendanceHeader}>
         <div className={classes.selectedDate}>{selectedDate}</div>
         <BaseButton onClick={() => setIsModalOpen(true)} text="기록 추가"/>
