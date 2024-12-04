@@ -67,6 +67,17 @@ export default function Calendar() {
 
   return (
     <div className={classes.calendarWrapper}>
+      <div className={classes.legendContainer}>
+       {Object.entries(statusColors).map(([status, color]) => (
+         <div key={status} className={classes.legendItem}>
+           <div 
+             className={classes.colorBox} 
+             style={{ backgroundColor: color }}
+           />
+           <span>{status}</span>
+         </div>
+       ))} </div>
+      <div>
       <FullCalendar
   plugins={[dayGridPlugin, interactionPlugin]}
   initialView="dayGridMonth"
@@ -75,14 +86,14 @@ export default function Calendar() {
     center: 'prev title next',
     right: ''
   }}
-  editable={false}
+  editable={true}
   selectable={true}
   events={events}
   datesSet={handleDatesSet}
   select={handleDateSelect}
   locale="ko"
   dayMaxEvents={3} // 한 셀에 최대 3개까지만 표시
-  moreLinkContent={(args) => `+${args.num}건`} // 더보기 텍스트 커스텀
+  moreLinkContent={(args) => `+${args.num}  `} // 더보기 텍스트 커스텀
   moreLinkClick="popover" // 팝업으로 추가 이벤트 표시
   showNonCurrentDates={false}
   eventDisplay="block" // 블록 형태로 표시
@@ -92,6 +103,7 @@ export default function Calendar() {
     meridiem: false
   }}
 />
+</div>
     </div>
   );
 
