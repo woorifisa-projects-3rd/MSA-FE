@@ -187,7 +187,7 @@ export default function SalesExpenses() {
           onDelete={handleDeleteConfirm}
           deleteId={deleteEmployeeId}
           title="직원 삭제"
-          text="해당 직원을 정말 삭제하시겠습니까??"
+          text="해당 직원을 정말 삭제하시겠습니까?"
         />
         </div>
     );
