@@ -7,6 +7,7 @@ import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
 import { validateForm, commonValidateRules } from "@/utils/validation";
 import { useAuth } from '@/contexts/AuthProvider';
+import Loading from '@/components/loading/Loading';
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
@@ -36,6 +37,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     });
     const [error, setError] = useState('');
     const [isAccountValid, setIsAccountValid] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     // initialData가 변경될 때 formData를 업데이트 (수정 모드)
     useEffect(() => {
@@ -187,7 +189,8 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 address: `${postcodeAddress}, ${detailAddress}`,
                 storeId
             };
-    
+
+            setLoading(true);
             try {
                 let response;
                 if (mode === 'edit') {
@@ -203,12 +206,18 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     
                 if (response.data.success) {
                     if (onSubmit) onSubmit(updatedFormData);
-                    Router.push('/employee/management');
                 }
             } catch (error) {
-                const errorMessage = error.response?.data?.error || error.message;
+                let errorMessage;
+                if (error?.response?.status == '400') {
+                    errorMessage = '가게에 이미 등록된 이메일입니다.'
+                } else {
+                    errorMessage = error.response?.data?.error || error.message;
+                }
                 setError(errorMessage);
                 alert(errorMessage);
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -225,6 +234,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
     return (
         <div className={styles.formContainer}>
+            {loading && <Loading />}
             <h2 className={styles.formTitle}>{mode === 'edit' ? '직원 수정' : '직원 추가'}</h2>
             <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>

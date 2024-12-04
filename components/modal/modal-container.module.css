@@ -11,6 +11,7 @@
     align-items: center;
     overflow: hidden; /* 오버레이 자체에는 스크롤을 하지 않음 */
     padding: 20px; /* 화면 끝과 여백을 두기 위해 패딩 추가 */
+    z-index: 9999;
   }
   
   .modalContent {
