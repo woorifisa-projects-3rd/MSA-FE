@@ -199,11 +199,13 @@ export default function Signup() {
               </div>
 
               <div className={styles.inputGroup}>
-                <input type="date"
+                <input type="text"
                 name="birthDate"
                 placeholder="생년월일"
                 value={formData.birthDate}
                 onChange={handleChange}
+                onFocus={(e) => (e.target.type = "date")}
+                onBlur={(e) => (e.target.type = "text")}
                  />
                  {formErrors.birthDate && (
                   <p className={styles.error}>{formErrors.birthDate}</p>
