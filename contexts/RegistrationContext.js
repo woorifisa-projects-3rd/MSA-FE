@@ -32,6 +32,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // 3단계 인증 관련 state
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [isEmailVerified, setIsEmailVerified] = useState(false);
+    // 3-2 email 관련 에러 메세지 
+    const [isEmailErrored, setIsEmailErrored] = useState(false);
     // 4단계 인증 관련 state
     const [isPinVerified, setIsPinVerified] = useState(false);
 
@@ -96,6 +98,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             console.log("스프링에서 프론트까지 전달",response.data);
             
             if (response.data) {
+                setError("");
                 setSuccess("이메일로 전송된 6자리 인증번호를 입력해주세요.");
                 return setIsEmailSent(true);
             }
@@ -112,14 +115,14 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 email: verificationData.email,
                 emailPinNumber: verificationData.verificationCode
             });
-            if (response.data) {
+            if (response.data.success) {
                 setSuccess("이메일 인증이 성공했습니다!");
                 setIsEmailVerified(true);
                 return true;
             }
            
         } catch (error) {
-            setError(error.response.data.error);
+            setIsEmailErrored(error.response.data.error)
             return false;
         }
     };
@@ -164,12 +167,12 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             
             if (response.data) {
                 setError("");
+                setSuccess("계좌 등록에 성공했습니다!")
                 return true;
             }
-            setError("가게 등록에 실패했습니다.");
-            return false;
+        
         } catch (error) {
-            setError("서버 오류가 발생했습니다.");
+            setError(error.response.data.error);
             return false;
         }
     };
@@ -221,7 +224,9 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             validateEmailVerification,
             isEmailVerified,
             isPinVerified,
-            validateAllData
+            validateAllData,
+            success,
+            isEmailErrored
         }}>
             {children}
         </RegistrationContext.Provider>
