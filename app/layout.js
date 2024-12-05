@@ -2,7 +2,7 @@ import "./globals.css";
 export const metadata = {
   language: "ko-KR", // 언어
   keywords: "매출 지출 관리, 소상공인, 직원관리, 우리은행", // 키워드
-  author: "정성윤TV", //사이트 작성자 정보
+  author: "우리FISA-집계리아팀", //사이트 작성자 정보
 
    title: "집계사장 - 소상공인 통합 플랫폼", //여기서 탭 네임 변경
 
