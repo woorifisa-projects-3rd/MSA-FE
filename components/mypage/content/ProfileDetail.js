@@ -28,7 +28,7 @@
         return bank ? bank.logoUrl : null;
     };
 
-    export default function ProfileDetail({ content, refreshStores }) {
+    export default function ProfileDetail({ content, refreshStores, fetchStores }) {
         const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
         const [isEditModalOpen, setEditModalOpen] = useState(false);
         const [isFirstRegistrationModalOpen, setFirstRegistrationModalOpen] = useState(false);
@@ -185,17 +185,23 @@
                     onConfirm={handleFormSubmit}
                     showButtons={false}
                 >
-                    <AdditionalStoreRegistration />
+                    <AdditionalStoreRegistration 
+                        onClose={()=>setFirstRegistrationModalOpen(false)} 
+                        onSuccess={fetchStores}
+                    />
                 </ModalContainer>
 
                 {/* 사업장 최초 등록 모달 */}
                 <ModalContainer
                     title="사업장 등록"
                     isOpen={isFirstRegistrationModalOpen}
-                    onClose={()=>setFirstRegistrationModalOpen(false)}
                     showButtons={false}
+                    onClose={()=>setFirstRegistrationModalOpen(false)} 
                 >
-                    <FirstStoreRegistration />
+                    <FirstStoreRegistration 
+                        onClose={()=>setFirstRegistrationModalOpen(false)} 
+                        onSuccess={fetchStores}
+                    />
                 </ModalContainer>
 
                 {/* 사업장 수정 모달 - 12/3에 반영하겠음 */}
@@ -205,14 +211,7 @@
                     onClose={() => setEditModalOpen(false)}
                     onConfirm={handleFormSubmit}
                 >
-                    {/* <WorkplaceModal
-                        mode="edit"
-                        workplaceData={selectedWorkplace}
-                        ref={workplaceModalRef}
-                        onSubmit={(formData) => {
-                            setEditModalOpen(false);
-                        }}
-                    /> */}
+                  
                 </ModalContainer>
                 <DeleteModal
                     isOpen={isDeleteModalOpen}

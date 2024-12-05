@@ -6,12 +6,84 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.card {
+  background-color: #1a1a3d;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #2b2b5d;
+}
+
+.card:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.card:hover .tooltip2 {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  left: 30%;
+  transform: translateX(-12%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1000;
+  bottom: calc(100% + 10px); /* 위로 약간 띄움 */
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  width: max-content;
+}
+
+.tooltip2 {
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-90%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1000;
+  bottom: calc(100% + 10px); /* 위로 약간 띄움 */
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  width: max-content;
+}
+
+.titleContainer {
+  position: relative;
+  display: inline-block;
+}
+
 .selectContainer {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
 .selectContainer select {
   padding: 8px 16px;
   font-size: 20px;
@@ -19,17 +91,20 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
 .gridContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   padding: 20px;
-  border:  1px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
   border-radius: 20px;
   min-height: 78vh;
   flex: 1;
   background-color: white;
+  position: relative;
 }
+
 .leftSection {
   display: flex;
   flex-direction: column;
@@ -37,6 +112,7 @@
   justify-content: center;
   border-right: 1px solid #e5e7eb;
   padding-right: 1rem;
+  position: relative;
 }
 
 .chartContainer {
@@ -65,28 +141,12 @@
   align-items: center;
 }
 
-
-
 .summaryContainer {
   display: flex;
   gap: 2rem;
-}
-
-.card {
-  background-color: #1a1a3d;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 1.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  min-width: 300px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  justify-content: center;
+  position: relative;
+  width: 100%;
 }
 
 .icon {
@@ -103,8 +163,6 @@
 .textContainer h3 {
   font-size: 20px;
 }
-
-
 
 .reportsContainer {
   height: 3rem;
@@ -159,7 +217,6 @@
   }
 }
 
-/* 매우 작은 화면에서의 추가 조정 */
 @media (max-width: 480px) {
   .selectContainer {
     align-items: center;

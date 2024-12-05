@@ -32,10 +32,14 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // 3단계 인증 관련 state
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [isEmailVerified, setIsEmailVerified] = useState(false);
-    // 3-2 email 관련 에러 메세지 
-    const [isEmailErrored, setIsEmailErrored] = useState(false);
+    // 3-2 email 관련 에러/성공 메세지 
+    const [isEmailErrored, setIsEmailErrored] = useState("");
+    const [isEmailNumSuccess, setIsEmailNumSuccess] = useState("")
     // 4단계 인증 관련 state
     const [isPinVerified, setIsPinVerified] = useState(false);
+
+    // 5단계 등록 상태 state
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
   
     // currentStep이 변경될 때마다 실행되는 useEffect 추가
@@ -116,13 +120,16 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
                 emailPinNumber: verificationData.verificationCode
             });
             if (response.data.success) {
-                setSuccess("이메일 인증이 성공했습니다!");
+                setIsEmailErrored("");
+                setIsEmailNumSuccess("이메일 인증이 성공했습니다!")
                 setIsEmailVerified(true);
                 return true;
             }
            
         } catch (error) {
+            if(!error.response.data.success)
             setIsEmailErrored(error.response.data.error)
+            console.log("3-2 이메일 pinNumber 에러메세지", isEmailErrored)
             return false;
         }
     };
@@ -130,6 +137,7 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 3-3: 이메일 인증 완료 후 다음 단계 검증
     const validateEmailVerification = async () => {
         if (isEmailVerified) {
+            setSuccess("");
             return true;
         }
         setError("이메일 인증을 먼저 완료해주세요.");
@@ -139,16 +147,29 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     // Step 4-1: PIN 번호 등록 및 검증 -> PinStep에서 사용
     const registerPin = async () => {
         try {
-            const response = await nextClient.post('/store/registration/pinnumbercheck', {
-                email: verificationData.email,
-                pinNumber: verificationData.pinNumber
-            });
-            
-            if (response.data) {
-                setIsPinVerified(true);
-                return true;
+            if(mode === 'first'){
+                const response = await nextClient.post('/store/registration/pinnumbercheck', {
+                    email: verificationData.email,
+                    pinNumber: verificationData.pinNumber
+                });
+
+                if (response.data) {
+                    setError("");
+                    setIsPinVerified(true);
+                    return true;
+                }
+            } else {
+                // 추가 등록용 PIN 확인 - pinNumber만 전송
+                const response = await nextClient.post('/store/registration/additionalemailcheck',{
+                    pinNumber: verificationData.pinNumber
+                })
+
+                if(response.data){
+                    setError("");
+                    setIsPinVerified(true);
+                    return true;
+                }
             }
-           
         } catch (error) {
             setError(error.response.data.error);
             return false;
@@ -157,8 +178,9 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
 
   
     // Step 5: 최종 가게 등록
-    const finalizeRegistration = async () => {
+    const finalizeRegistration = async (onClose, onSuccess) => {
         try {
+            setIsSubmitting(true);
             console.log("최초가게등록 next-server로 요청할 데이터", formData)
             const response = await nextClient.post('/store/registration/final-registration', {
                 ...formData,
@@ -167,18 +189,29 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             
             if (response.data) {
                 setError("");
-                setSuccess("계좌 등록에 성공했습니다!")
+                setSuccess("가게 등록에 성공했습니다!")
+                setTimeout(() => {
+                    if(onSuccess){
+                        onSuccess();
+                    }
+                    if (onClose) {
+                        onClose();
+                    }
+                    setIsSubmitting(false);
+                }, 1000); // 2초 후 모달 닫기
                 return true;
             }
         
         } catch (error) {
             setError(error.response.data.error);
+            setIsSubmitting(false);
             return false;
         }
     };
 
     // 모든 필수 데이터 검증 함수
     const validateAllData = () => {
+        console.log(formData)
         const requiredFields = {
             storeName: formData.storeName,
             businessNumber: formData.businessNumber,
@@ -226,7 +259,9 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             isPinVerified,
             validateAllData,
             success,
-            isEmailErrored
+            isEmailErrored,
+            isEmailNumSuccess,
+            isSubmitting,
         }}>
             {children}
         </RegistrationContext.Provider>
