@@ -76,22 +76,6 @@ export default function LoginPage() {
                         <p className={styles.subTitle}>
                             이제는 <span className={styles.highlight}>자동화</span>된 시스템으로 편하게 관리하세요
                         </p>
-                        {/* <div className={styles.features}>
-                            <div className={styles.feature}>
-                                <p className={styles.featureText}>✓ 매출/지출 자동 연동으로 실시간 정산</p>
-                                <p className={styles.featureText}>✓ 직원 급여와 근태관리 자동화</p>
-                                <p className={styles.featureText}>✓ 언제 어디서나 웹으로 간편하게</p>
-                            </div>
-                        </div> */}
-                        {/* <div className={styles.imageContainer}>
-                        <Image 
-                            src="/images/hero-charts.png"
-                            alt="대시보드 미리보기"
-                            width={500}
-                            height={350}
-                            className={styles.illustration}
-                        />
-                        </div> */}
                     </div>    
                 </div>
 

@@ -16,8 +16,8 @@
   }
   
   .navButton {
-    background-color: grey;
-    color: #fff;
+    /* background-color: grey; */
+    color: black;
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
@@ -28,7 +28,7 @@
   }
   
   .navButton:hover {
-    background-color: black;
+    background-color: grey;
   }
   
   .navButton:active {

@@ -11,7 +11,7 @@
     align-items: center; 
     justify-content: space-between; 
     height: 100%;
-    padding: 0 2rem;
+    padding: 0 3rem 0 3.5rem;
 }
 
 .header_left{
@@ -23,7 +23,7 @@
 }
 
 .logoBox{
-    width: 200px !important;
+    width: 160px !important;
     height: auto !important;
     object-fit: contain;
 }
@@ -54,7 +54,7 @@
 }
 
 .signup_button {
-    background-color: var(--main-woori-blue);
+    background-color: var(--main-orange);
     padding: 8px 14px;
     border-radius: 10px;
     font-size: 14px;
@@ -64,7 +64,7 @@
 }
 
 .signup_button:hover {
-    background-color: var(--woori-deep-blue);
+    background-color: var(--light-orange);
 }
 
 .bell_icon {

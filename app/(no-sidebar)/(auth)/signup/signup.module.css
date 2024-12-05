@@ -53,7 +53,7 @@
 
 .inputGroup input:focus {
     outline: none;
-    border-color: var(--main-woori-blue);
+    border-color: var(--main-orange);
     box-shadow: 0 0 0 3px rgba(123, 156, 255, 0.1);
 }
 
@@ -73,7 +73,7 @@
 
 .verifyButton:hover,
 .addressButton:hover {
-    background-color: var(--main-woori-blue);
+    background-color: var(--main-orange);
     color: #fff;
 }
 
@@ -92,7 +92,7 @@
 .linkButton {
     background: none;
     border: none;
-    color: var(--main-woori-blue);
+    color: var(--main-orange);
     text-decoration: underline;
     cursor: pointer;
     margin-left: 0.5rem;
@@ -102,7 +102,7 @@
     width: 100%;
     max-width: 400px;
     padding: 1rem;
-    background-color: var(--main-woori-blue);
+    background-color: var(--main-orange);
     color: white;
     border: none;
     border-radius: 8px;

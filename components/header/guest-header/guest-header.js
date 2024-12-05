@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from "next/image";
 
 export default function GuestHeader () {
-    const logoWidth = 200;
+    const logoWidth = 150;
 
     return (
         <header className={classes.header_box}>

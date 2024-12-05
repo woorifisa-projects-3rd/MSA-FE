@@ -1,11 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react';
+import { useRouter} from 'next/navigation'
 import styles from './page.module.css'
 
 export default function OnboardingPage() {
-  const router = useRouter()
+  const router = useRouter();
+  const [textIndex, setTextIndex] = useState(0);
+  const texts = ["정산을", "직원 관리를", "매/지출 관리를", "급여기록을", "명세서 발송을", "장부 작성을"];
 
   const handleSignupClick = () => {
     router.push('/signup')
@@ -15,16 +18,24 @@ export default function OnboardingPage() {
     window.open('https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131', '_blank')
   }
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
   return (
       <div className={styles.container}>
 
         <main className={styles.main}>
           <section className={styles.hero}>
             <div className={styles.heroContent}>
-              <h1>
-                계좌를 연동하고<br />
-                재무와 직원 관리를<br />
-                <span className={styles.highlight}>한 번에</span> 해결하세요!
+            <h1 className={styles.mainTitle}>
+                  계좌를 연동하고<br />
+                  <span className={styles.highlight}>{texts[textIndex]}</span>
+                  <br/> 한 번에<br /> 해결하세요!
               </h1>
               <p>대한민국 소상공인/자영업자 사장님들을 위한<br/>단 하나의 통합 플랫폼</p>
               <div className={styles.buttonGroup}>

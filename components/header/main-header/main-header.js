@@ -23,10 +23,8 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
     const [notifications, setNotifications] = useState(initialNotifications);
     const bellRef = useRef();
     const modalRef = useRef();
-    const logoWidth = 200;
+    const logoWidth = 160;
     const pathname = usePathname();
-    
-   
 
     // 읽지 않은 알림의 개수
     const unreadNotificationCount = notifications.filter(notification => !notification.read).length;

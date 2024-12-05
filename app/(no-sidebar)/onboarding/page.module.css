@@ -24,7 +24,7 @@
 }
 
 .highlight {
-    color: var(--main-woori-blue);
+    color: var(--main-orange);
 }
 
 .heroContent p {
@@ -50,15 +50,15 @@
 }
 
 .primaryButton {
-    background: var(--main-woori-blue);
+    background: var(--main-orange);
     color: white;
     border: none;
 }
 
 .secondaryButton {
     background: white;
-    color: var(--main-woori-blue);
-    border: 1px solid var(--main-woori-blue);
+    color: var(--main-orange);
+    border: 1px solid var(--main-orange);
 }
 
 .dashboardImage {
@@ -120,7 +120,7 @@
 }
 
 .moreButton, .startButton {
-    background: var(--main-woori-blue);
+    background: var(--main-orange);
     color: white;
     border: none;
     padding: 1rem 3rem;
