@@ -6,6 +6,7 @@ import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
+import Workplace from "@/components/mypage/content/Workplace";
 
 const tabs = [
   { 
@@ -58,10 +59,10 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
-        //   case 1:
-        //       return <AlarmSetting content={tabs[selectedTab]} />;
+              return <Workplace content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
           case 1:
+              return <ProfileDetail />;
+          case 2:
               return <PasswordChange content={tabs[selectedTab]} />;
           default:
               return null;
