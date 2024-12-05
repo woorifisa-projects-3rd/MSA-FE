@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Script from 'next/script';
 import { useRegistration } from "@/contexts/RegistrationContext";
 import { NextResponse } from "next/server";
+import BaseButton from "@/components/button/base-button";
 
 export const KakaoMap = ({latAndLng}) => {
     const {setFormData} =  useRegistration();
