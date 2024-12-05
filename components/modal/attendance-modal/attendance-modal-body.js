@@ -107,7 +107,7 @@ export default function AttendanceModalBody({
                 onChange={handleChange}
                 className={styles.select}
               >
-                <option value="">직원명</option>
+                <option value="">직원 선택</option>
                 {employees
                 .filter((employee) => employee.employmentType !== 10 && employee.employmentType !== 11)
                 .map((employee) => (
@@ -138,6 +138,7 @@ export default function AttendanceModalBody({
               type="date"
               name="date"
               value={formData.date}
+              onClick={(e) => e.target.showPicker && e.target.showPicker()} // 클릭 시 강제로 달력 열기
               onChange={handleChange}
               className={styles.dateInput}
             />

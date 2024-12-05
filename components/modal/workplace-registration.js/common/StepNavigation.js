@@ -14,10 +14,12 @@ export default function StepNavigation({onClose, onSuccess}) {
         isPinVerified,
         validateAllData,
         isSubmitting,
+        updateStoreInfo,
+        validateEditData
     } = useRegistration();
 
 
-    const maxSteps = mode === "first" ? 5 : 4;
+    const maxSteps = mode === 'edit' ? 2 : mode === "first" ? 5 : 4;
 
     const handleNext = async () => {
         console.log(`Current Step: ${currentStep}`); // 현재 단계 로그 출력
@@ -45,6 +47,21 @@ export default function StepNavigation({onClose, onSuccess}) {
                             return;
                         }
                         validationSuccess = await finalizeRegistration(onClose, onSuccess);
+                        break;
+                    default:
+                        console.error("Invalid step.");
+                        return;
+                }
+            } else if(mode === 'edit'){
+                switch (currentStep) {
+                    case 1:
+                        validationSuccess = isPinVerified;  // PIN 인증만 확인
+                        break;
+                    case 2:
+                        if (!validateEditData()) {
+                            return;
+                        }
+                        validationSuccess = await updateStoreInfo(onClose, onSuccess);
                         break;
                     default:
                         console.error("Invalid step.");
@@ -107,13 +124,14 @@ export default function StepNavigation({onClose, onSuccess}) {
             if (currentStep === 4 && !isPinVerified) {
                 return true;
             }
+        } else if(mode === 'edit'){
+            if (currentStep === 1 && !isPinVerified) return true;
         } else {
             // 추가 등록 시 검증
             if (currentStep === 3 && !isPinVerified) {
                 return true;
             }
         }
-       
         return false;
     };
 

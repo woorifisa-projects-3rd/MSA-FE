@@ -12,6 +12,7 @@
     import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
     import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
     import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
+import EditStoreRegistration from '@/components/modal/workplace-registration.js/EditStoreRegistration';
 
 
     const tableName = '보유하신 사업장';
@@ -28,7 +29,7 @@
         return bank ? bank.logoUrl : null;
     };
 
-    export default function ProfileDetail({ content, refreshStores, fetchStores }) {
+    export default function ProfileDetail({ content,  fetchStores }) {
         const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
         const [isEditModalOpen, setEditModalOpen] = useState(false);
         const [isFirstRegistrationModalOpen, setFirstRegistrationModalOpen] = useState(false);
@@ -114,6 +115,9 @@
             ),
         }));
 
+        console.log("마이페이지 사업장 리스트",  workplaceInfo)
+        console.log("선택한 사업장 정보", selectedWorkplace)
+
         return (
             <div className={classes.container}>
                 <div className={classes.otherComponent}>
@@ -177,7 +181,20 @@
                 </div>
                 )}
 
-                {/* 등록 모달 */}
+                 {/* 사업장 최초 등록 모달 */}
+                 <ModalContainer
+                    title="사업장 등록"
+                    isOpen={isFirstRegistrationModalOpen}
+                    showButtons={false}
+                    onClose={()=>setFirstRegistrationModalOpen(false)} 
+                >
+                    <FirstStoreRegistration 
+                        onClose={()=>setFirstRegistrationModalOpen(false)} 
+                        onSuccess={fetchStores}
+                    />
+                </ModalContainer>
+
+                {/* 사업장 추가 등록 모달 */}
                 <ModalContainer
                     title="사업장 등록"
                     isOpen={isRegistrationModalOpen}
@@ -191,28 +208,20 @@
                     />
                 </ModalContainer>
 
-                {/* 사업장 최초 등록 모달 */}
-                <ModalContainer
-                    title="사업장 등록"
-                    isOpen={isFirstRegistrationModalOpen}
-                    showButtons={false}
-                    onClose={()=>setFirstRegistrationModalOpen(false)} 
-                >
-                    <FirstStoreRegistration 
-                        onClose={()=>setFirstRegistrationModalOpen(false)} 
-                        onSuccess={fetchStores}
-                    />
-                </ModalContainer>
-
                 {/* 사업장 수정 모달 - 12/3에 반영하겠음 */}
                 <ModalContainer
                     title="사업장 수정"
                     isOpen={isEditModalOpen}
+                    showButtons={false}
                     onClose={() => setEditModalOpen(false)}
-                    onConfirm={handleFormSubmit}
                 >
-                  
+                  <EditStoreRegistration
+                    onClose={()=>setEditModalOpen(false)} 
+                    onSuccess={fetchStores}
+                    initialData={selectedWorkplace}
+                  />
                 </ModalContainer>
+
                 <DeleteModal
                     isOpen={isDeleteModalOpen}
                     onClose={() => setDeleteModalOpen(false)}

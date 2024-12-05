@@ -3,7 +3,7 @@ import { nextClient } from "@/lib/nextClient";
 
 export const RegistrationContext = createContext();
 
-export const RegistrationProvider = ({ children, mode = "first"}) => {
+export const RegistrationProvider = ({ children, mode}) => {
     const [formData, setFormData] = useState({
         storeName: "",
         businessNumber: "",
@@ -16,11 +16,37 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [storeId, setStoreId] = useState(null); 
 
-    const steps = mode === 'first' 
-    ? ['business', 'account', 'verification', 'pin', 'address']
-    : ['business', 'account', 'pin', 'address'];
-    
+    const getSteps = (mode) => {
+        switch (mode) {
+            case 'first':
+                return ['사업자정보 입력', '계좌정보 입력', '본인 인증', 'PIN번호 입력', '주소등록'];
+            case 'edit':
+                return ['PIN번호 입력', '사업장정보 편집'];
+            default:  // 추가 등록 모드
+                return ['사업자정보 입력', '계좌정보 입력', 'PIN번호 입력', '주소등록'];
+        }
+    };
+
+    const steps = getSteps(mode);
+
+    // 수정 모드를 위한 초기 데이터 설정 함수 추가
+    const  initializeEditStore = (store) => {
+        if (store) {
+            setStoreId(store.storeId);
+            setFormData({
+                storeName: store.storeName,
+                businessNumber: store.businessNumber,
+                accountNumber: store.accountNumber,
+                location: store.location,
+                latitude: store.latitude,
+                longitude: store.longitude
+            });
+        }
+    };
+
+
     const [verificationData, setVerificationData] = useState({
         name: "",
         email: "",
@@ -209,6 +235,35 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
         }
     };
 
+    //  사업장 수정 API 호출 함수
+    const updateStoreInfo = async (onClose, onSuccess) => {
+        try{
+            setIsSubmitting(true);
+            const { businessNumber, bankCode, ...filteredFormData } = formData;
+
+            console.log("가게 정보 수정 요청 데이터", filteredFormData);
+
+            const response = await nextClient.put(`/store/edit?storeid=${storeId}`, {
+                ...filteredFormData
+            })
+
+            if (response.data) {
+                setError("");
+                setSuccess("가게 정보가 수정되었습니다!");
+                setTimeout(() => {
+                    if(onSuccess) onSuccess();
+                    if(onClose) onClose();
+                    setIsSubmitting(false);
+                }, 1000);
+                return true;
+            }
+        } catch(error){
+            setError(error.response.datass.error || "수정 중 오류가 발생했습니다");
+            setIsSubmitting(false);
+            return false;
+        }
+    }
+
     // 모든 필수 데이터 검증 함수
     const validateAllData = () => {
         console.log(formData)
@@ -233,6 +288,27 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
         return true;
     };
 
+    // Edit 모드에서만 사용하는 데이터 검증 함수
+    const validateEditData = () => {
+        console.log(formData);
+        const requiredFields = {
+            storeName: formData.storeName,
+            accountNumber: formData.accountNumber,
+            location: formData.location,
+            latitude: formData.latitude,
+            longitude: formData.longitude,
+        };
+
+        const emptyFields = Object.entries(requiredFields)
+            .filter(([_, value]) => !value)
+            .map(([key]) => key);
+
+        if (emptyFields.length > 0) {
+            setError(`다음 항목을 모두 입력해주세요: ${emptyFields.join(', ')}`);
+            return false;
+        }
+        return true;
+    };
 
     return (
         <RegistrationContext.Provider value={{
@@ -262,6 +338,10 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
             isEmailErrored,
             isEmailNumSuccess,
             isSubmitting,
+            updateStoreInfo,
+            storeId,
+            initializeEditStore,
+            validateEditData
         }}>
             {children}
         </RegistrationContext.Provider>
