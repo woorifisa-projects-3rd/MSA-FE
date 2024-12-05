@@ -4,7 +4,6 @@ import styles from './sorting.module.css';
 export default function Sorting({ onChange, selectedOption }) {
     return (
         <div className={styles.sortContainer}>
-            <span className={styles.sortCriteria}>정렬 기준: </span>
             <select 
                 className={styles.sortSelect} 
                 onChange={onChange} 
