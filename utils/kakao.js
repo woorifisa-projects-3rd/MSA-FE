@@ -122,13 +122,13 @@ export const KakaoMap = ({latAndLng,isChange = false }) => {
     return (
         <>
             <Script
-               strategy="beforeInteractive"
-               src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false`}
-               onLoad={() => {
-                   window.kakao?.maps?.load(() => {
-                       initializeMap();
-                   });
-               }}
+                strategy="lazyOnload"
+                src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false`}
+                onLoad={() => {
+                    window.kakao?.maps?.load(() => {
+                        initializeMap();
+                    });
+                }}
            />
             <div>
                 <div ref={mapContainer} style={{ width: '500px', height: '400px' }} />
