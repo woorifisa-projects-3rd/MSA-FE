@@ -41,7 +41,6 @@
 .headerTitle{
     font-size: 20px; 
     font-weight: 600;
-    color: var(--woori-deep-blue);
     padding-left: 50px;
 }
 .headerMenu{
@@ -81,11 +80,11 @@
     justify-content: center;
     cursor: pointer; /* 클릭 가능성 강조 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
-    color: #0180CD; /* 아이콘 기본 색상 */
+    color: var(--gray); /* 아이콘 기본 색상 */
 }
 
 .bell_icon:hover {
-    color: #38BEEF;
+    color: black;
 }
 
 .notificationCnt {

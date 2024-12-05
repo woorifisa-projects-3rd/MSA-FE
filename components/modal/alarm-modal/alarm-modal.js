@@ -1,9 +1,10 @@
 import styles from './alarm-modal.module.css';
+import { forwardRef } from 'react';
 
-export default function AlarmModal({ modalRef, notifications }) {
+const AlarmModal = forwardRef(({ notifications }, ref) => {
 
   return (
-    <div ref={modalRef} id="notification-modal" className={styles.notificationModal}>
+    <div ref={ref} id="notification-modal" className={styles.notificationModal}>
       <div className={styles.notificationHeader}>
         <span>알람 설정</span>
         <label className={styles.switch}>
@@ -22,4 +23,6 @@ export default function AlarmModal({ modalRef, notifications }) {
       </ul>
     </div>
   );
-}
+});
+
+export default AlarmModal;
