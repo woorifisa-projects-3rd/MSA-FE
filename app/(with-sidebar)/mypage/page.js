@@ -56,7 +56,7 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
+              return <ProfileDetail content={stores} fetchStores={fetchStores}/>;
         //   case 1:
         //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:
