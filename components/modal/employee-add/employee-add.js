@@ -314,7 +314,10 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                             value={formData.paymentDate}
 
                             onChange={(e) => {
+                                 const value = e.target.value;
+                                 if ( value >= 1) {  // 급여일이 1일 이상으로만 입력 되도록
                                 handleInputChange('paymentDate', e.target.value);
+                                 }
                             }}
                         />
                         {formErrors.paymentDate && <span className={styles.error}>{formErrors.paymentDate}</span>}
