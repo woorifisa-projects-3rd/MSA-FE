@@ -91,7 +91,7 @@
 
 .formTitle {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 2rem;
   color: #111827;
 }
@@ -204,6 +204,7 @@
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .errorText {

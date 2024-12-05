@@ -18,8 +18,8 @@ export const RegistrationProvider = ({ children, mode = "first"}) => {
     const [success, setSuccess] = useState("");
 
     const steps = mode === 'first' 
-    ? ['business', 'account', 'verification', 'pin', 'address']
-    : ['business', 'account', 'pin', 'address'];
+    ? ['사업자정보 입력', '계좌정보 입력', '본인 인증', 'PIN번호 입력', '주소등록']
+    : ['사업자정보 입력', '계좌정보 입력', 'PIN번호 입력', '주소등록'];
     
     const [verificationData, setVerificationData] = useState({
         name: "",
