@@ -97,14 +97,18 @@ export default function Signup() {
       const response = await nextClient.post('/auth/signup/email', {
         email: formData.email,
       });
-  
+
       // 성공 응답 처리
-      setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
-      setEmailConfirmNumber(response.data.pin); // PIN 설정
-      setError(''); // 에러 상태 초기화
+      if(response.data.success){
+        setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
+        setEmailConfirmNumber(response.data.pin); // PIN 설정
+        console.log("email로 받은 pinNumber",response.data.pin)
+        setError(''); // 에러 상태 초기화
+      }
+  
     } catch (error) {
       // 에러 처리
-      const errorMessage = error.response?.data?.error || error.message;
+      const errorMessage = error.response.data.error
       setFormErrors((prevErrors) => ({
         ...prevErrors,
         email: errorMessage,

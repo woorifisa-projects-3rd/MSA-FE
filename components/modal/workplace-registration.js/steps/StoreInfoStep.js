@@ -12,7 +12,7 @@ export default function StoreInfoStep(){
 
     return(
         <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>사업자 정보 입력</h2>
+            <h2 className={styles.formTitle}>사업자정보 입력</h2>
             <div className={styles.formGroup}>
               <label className={styles.label}>사업장 상호명</label>
               <input
