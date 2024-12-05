@@ -138,6 +138,7 @@ export default function AttendanceModalBody({
               type="date"
               name="date"
               value={formData.date}
+              onClick={(e) => e.target.showPicker && e.target.showPicker()} // 클릭 시 강제로 달력 열기
               onChange={handleChange}
               className={styles.dateInput}
             />
