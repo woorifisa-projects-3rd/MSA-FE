@@ -7,6 +7,11 @@ import AddressSearch from '@/components/addsearch/AddressSearch';
 import { nextClient } from '@/lib/nextClient';
 import { validateForm, commonValidateRules } from "@/utils/validation";
 import { useAuth } from '@/contexts/AuthProvider';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
+import ko from 'date-fns/locale/ko';
+import './employeeAdd.css';
 
 const REQUIRED_ERROR = "필수 항목입니다.";
 
@@ -14,7 +19,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        birthDate: '',
+        birthDate: new Date(),
         sex: true,
         phoneNumber: '',
         employmentType: 2,
@@ -156,6 +161,7 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
                 address: `${postcodeAddress}, ${detailAddress}`,  // address로 결합해서 제출
                 storeId
             };
+            console.log('직원 수정 데이터: ',formData);
 
             try {
                 let response;
@@ -196,11 +202,29 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
         handleSubmit,
     }));
 
-    // 입력 시 오류 제거
     const handleInputChange = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-        setFormErrors(prev => ({ ...prev, [field]: '' })); // 입력 시 오류 제거
+        // 입력 값에서 모든 공백을 제거
+        const sanitizedValue = value.replace(/\s/g, '');
+    
+        setFormData(prev => ({
+            ...prev,
+            [field]: sanitizedValue
+        }));
+    
+        setFormErrors(prev => ({
+            ...prev,
+            [field]: ''
+        }));
     };
+      
+    const handleDateChange = (date) => {
+        const formattedDate = format(date, 'yyyy-MM-dd');
+        setFormData(prev => ({
+          ...prev,
+          birthDate: formattedDate
+        }));
+        console.log('Formatted Date:', formattedDate);
+      };
 
     return (
         <div className={styles.formContainer}>
@@ -253,11 +277,20 @@ const EmployeeForm = forwardRef(({ mode, initialData, onSubmit }, ref) => {
 
                     <div className={styles.formGroup}>
                         <label>생년월일</label>
-                        <input
-                            type="date"
-                            value={formData.birthDate}
-                            onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                        <ReactDatePicker
+                            locale={ko}
+                            selected={formData.birthDate ? new Date(formData.birthDate) : null}
+                            onChange={handleDateChange}
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="날짜를 선택하세요"
+                            showYearDropdown
+                            showMonthDropdown
+                            scrollableYearDropdown
+                            yearDropdownItemNumber={100} 
+                            minDate={new Date(1930, 0, 1)} // 시작 연도 설정
+                            maxDate={new Date()} // 현재 날짜까지 설정
                         />
+                      
                         {formErrors.birthDate && <span className={styles.error}>{formErrors.birthDate}</span>}
                     </div>
                 </div>

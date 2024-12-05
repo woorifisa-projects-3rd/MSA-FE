@@ -72,18 +72,18 @@ const AccountInputForm = ({
     }
   };
 
-  // 계좌번호 변경 핸들러
   const handleAccountNumberChange = (e) => {
-    const value = e.target.value;
+    // 입력 값에서 모든 공백을 제거
+    const value = e.target.value.replace(/\s/g, '');
     setAccountNumber(value);
     if (onChange) {
-      onChange({
-        bankCode: selectedBank.code,
-        bankName: selectedBank.name,
-        accountNumber: value
-      });
+        onChange({
+            bankCode: selectedBank.code,
+            bankName: selectedBank.name,
+            accountNumber: value
+        });
     }
-  };
+};
 
   const BankSelector = isPresident ? (
     <div className={styles.bankSelector}>
