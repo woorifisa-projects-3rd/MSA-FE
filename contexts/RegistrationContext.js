@@ -21,11 +21,11 @@ export const RegistrationProvider = ({ children, mode}) => {
     const getSteps = (mode) => {
         switch (mode) {
             case 'first':
-                return ['business', 'account', 'verification', 'pin', 'address'];
+                return ['사업자정보 입력', '계좌정보 입력', '본인 인증', 'PIN번호 입력', '주소등록'];
             case 'edit':
-                return ['pin', 'edit'];
+                return ['PIN번호 입력', '사업장정보 편집'];
             default:  // 추가 등록 모드
-                return ['business', 'account', 'pin', 'address'];
+                return ['사업자정보 입력', '계좌정보 입력', 'PIN번호 입력', '주소등록'];
         }
     };
 
@@ -46,7 +46,7 @@ export const RegistrationProvider = ({ children, mode}) => {
         }
     };
 
-    
+
     const [verificationData, setVerificationData] = useState({
         name: "",
         email: "",
