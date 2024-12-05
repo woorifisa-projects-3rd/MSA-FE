@@ -6,6 +6,11 @@ import AddressStep from "./AddressStep";
 export default function EditStoreForm() {
     const { formData, setFormData, error } = useRegistration();
 
+    const initialLatLng = {
+        lat: formData.latitude,
+        lng: formData.longitude
+    };
+
     // 입력값 변경 핸들러
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -93,7 +98,7 @@ export default function EditStoreForm() {
 
             {/* 주소 정보 영역 */}
             <div className={styles.formSection}>
-                <AddressStep mode="edit" />
+                <AddressStep mode="edit" initialLatLng={initialLatLng} initialAddress={formData.location}  />
             </div>
 
             {error && (
