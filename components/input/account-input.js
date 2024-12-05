@@ -64,6 +64,7 @@ const AccountInputForm = ({
     setSelectedBank(bank);
     setShowBankList(false);
     if (onChange) {
+      console.log("handleBankChange called:", bank, accountNumber);
       onChange({
         bankCode: bank.code,
         bankName: bank.name,
@@ -77,6 +78,7 @@ const AccountInputForm = ({
     const value = e.target.value.replace(/\s/g, '');
     setAccountNumber(value);
     if (onChange) {
+        console.log("handleAccountNumberChange called:", selectedBank, value);
         onChange({
             bankCode: selectedBank.code,
             bankName: selectedBank.name,
@@ -110,41 +112,60 @@ const AccountInputForm = ({
   // POST 요청 처리 함수 (사업장 및 추가 사업장 수정)
   const presidentSubmit = async () => {
     try {
-      const response = await nextClient.post('/user/account-check', {
-        bankCode: "020",
-        accountNumber
-      });
-      console.log("사장", bankCode, accountNumber )
-      if (response.data.success) {
-        setValidationMessage({text: '사업장 계좌가 유효합니다.' , color: 'green'});
-      } else {
-        setValidationMessage({text: '사업장 계좌가 유효하지 않습니다.' , color: 'red'});
-      }
-    } catch (error) {
-      console.error('Error checking account:', error);
-      setValidationMessage({text: '사업장 계좌 확인 중 오류가 발생했습니다.' , color: 'red'});
-    }
-  };
+        const response = await nextClient.post('/user/account-check', {
+            bankCode: "020",
+            accountNumber
+        });
+        console.log("사장 계좌 확인 응답:", response.data);
 
+        if (response.data.success) {
+            setValidationMessage({ text: '사업장 계좌가 유효합니다.', color: 'green' });
+
+            // 부모 컴포넌트에 유효한 계좌 정보 전달
+            if (onChange) {
+                onChange({
+                    bankCode: selectedBank.code,
+                    bankName: selectedBank.name,
+                    accountNumber
+                });
+            }
+        } else {
+            setValidationMessage({ text: '사업장 계좌가 유효하지 않습니다.', color: 'red' });
+        }
+    } catch (error) {
+        console.error('Error checking account:', error);
+        setValidationMessage({ text: '사업장 계좌 확인 중 오류가 발생했습니다.', color: 'red' });
+    }
+};
   // POST 요청 처리 함수 (직원 추가 및 수정)
   const employeeSubmit = async () => {
     try {
-      const response = await nextClient.post('/user/employee-account-check', {
-        name,
-        bankCode: selectedBank.code,
-        accountNumber
-      });
-      console.log("직원",name, bankCode, accountNumber )
-      if (response.data.success) {
-        setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green'});
-      } else {
-        setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red'});
-      }
+        const response = await nextClient.post('/user/employee-account-check', {
+            name,
+            bankCode: selectedBank.code,
+            accountNumber
+        });
+        console.log("직원 계좌 확인 응답:", response.data);
+
+        if (response.data.success) {
+            setValidationMessage({ text: '직원 계좌가 유효합니다.', color: 'green' });
+
+            // 부모 컴포넌트에 유효한 계좌 정보 전달
+            if (onChange) {
+                onChange({
+                    bankCode: selectedBank.code,
+                    bankName: selectedBank.name,
+                    accountNumber
+                });
+            }
+        } else {
+            setValidationMessage({ text: '직원 계좌가 유효하지 않습니다.', color: 'red' });
+        }
     } catch (error) {
-      console.error('Error checking employee account:', error);
-      setValidationMessage({text: '직원 계좌 확인 중 오류가 발생했습니다.', color:'red'});
+        console.error('Error checking employee account:', error);
+        setValidationMessage({ text: '직원 계좌 확인 중 오류가 발생했습니다.', color: 'red' });
     }
-  };
+};
 
   return (
     <div className={styles.form}>
@@ -183,7 +204,10 @@ const AccountInputForm = ({
           <BaseButton 
             text="계좌 확인"
             type="button"
-            onClick={isPresident ? presidentSubmit : employeeSubmit} 
+            onClick={() => {
+              console.log("Account validation button clicked.");
+              isPresident ? presidentSubmit() : employeeSubmit();
+          }}
           />
         </div>
         {error && <span className={`${styles.error} ${styles.errorMessage}`}>{error}</span>}
