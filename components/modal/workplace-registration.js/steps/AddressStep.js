@@ -79,7 +79,7 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
                     {error}
                 </div>
             )}
-            {showMap && <KakaoMap latAndLng={latAndLng}/>}
+            {showMap && <KakaoMap latAndLng={latAndLng} isChange={mode === "edit"} />}
         </div>
     )
 }
