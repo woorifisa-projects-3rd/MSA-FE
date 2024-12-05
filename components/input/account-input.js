@@ -9,7 +9,6 @@ import { nextClient } from '@/lib/nextClient';
 const AccountInputForm = ({ 
   isPresident = false, 
   onChange, 
-  checkValidation,
   error, 
   name, 
   bankCode, 
@@ -73,18 +72,18 @@ const AccountInputForm = ({
     }
   };
 
-  // 계좌번호 변경 핸들러
   const handleAccountNumberChange = (e) => {
-    const value = e.target.value;
+    // 입력 값에서 모든 공백을 제거
+    const value = e.target.value.replace(/\s/g, '');
     setAccountNumber(value);
     if (onChange) {
-      onChange({
-        bankCode: selectedBank.code,
-        bankName: selectedBank.name,
-        accountNumber: value
-      });
+        onChange({
+            bankCode: selectedBank.code,
+            bankName: selectedBank.name,
+            accountNumber: value
+        });
     }
-  };
+};
 
   const BankSelector = isPresident ? (
     <div className={styles.bankSelector}>
@@ -116,17 +115,14 @@ const AccountInputForm = ({
         accountNumber
       });
       console.log("사장", bankCode, accountNumber )
-      console.log(response.data);
-      
       if (response.data.success) {
-        setValidationMessage({text: '유효한 계좌입니다.' , color: 'green'});
+        setValidationMessage({text: '사업장 계좌가 유효합니다.' , color: 'green'});
       } else {
-        setValidationMessage({text: '유효하지 않은 계좌입니다.' , color: 'red'});
+        setValidationMessage({text: '사업장 계좌가 유효하지 않습니다.' , color: 'red'});
       }
-      checkValidation(response.data.success);
     } catch (error) {
       console.error('Error checking account:', error);
-      setValidationMessage({text: '계좌 확인 중 오류가 발생했습니다.' , color: 'red'});
+      setValidationMessage({text: '사업장 계좌 확인 중 오류가 발생했습니다.' , color: 'red'});
     }
   };
 
@@ -139,17 +135,14 @@ const AccountInputForm = ({
         accountNumber
       });
       console.log("직원",name, bankCode, accountNumber )
-      console.log(response.data);
-      
       if (response.data.success) {
-        setValidationMessage({text: '유효한 계좌입니다.', color:'green', fontSize: '0.8rem', marginTop: '5px'});
+        setValidationMessage({text: '직원 계좌가 유효합니다.', color:'green'});
       } else {
-        setValidationMessage({text: '직원 명에 일치하는 계좌가 없습니다.', color:'red', fontSize: '0.8rem', marginTop: '5px'});
+        setValidationMessage({text: '직원 계좌가 유효하지 않습니다.', color:'red'});
       }
-      checkValidation(response.data.success);
     } catch (error) {
       console.error('Error checking employee account:', error);
-      setValidationMessage({text: '계좌 확인 중 오류가 발생했습니다.', color:'red'});
+      setValidationMessage({text: '직원 계좌 확인 중 오류가 발생했습니다.', color:'red'});
     }
   };
 
@@ -197,9 +190,7 @@ const AccountInputForm = ({
       </div>
 
       {validationMessage && (
-      <p style={{ fontSize: validationMessage.fontSize || '1rem',
-                  color: validationMessage.color,
-                 marginTop: validationMessage.marginTop || '0px'}}>
+      <p style={{ color: validationMessage.color }}>
           {validationMessage.text}
       </p>
       )}
