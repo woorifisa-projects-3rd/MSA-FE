@@ -23,7 +23,7 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
     const [notifications, setNotifications] = useState(initialNotifications);
     const bellRef = useRef();
     const modalRef = useRef();
-    const logoWidth = 250;
+    const logoWidth = 200;
     const pathname = usePathname();
     
    

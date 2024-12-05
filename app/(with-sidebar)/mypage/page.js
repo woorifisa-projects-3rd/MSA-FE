@@ -9,12 +9,14 @@ import { nextClient } from "@/lib/nextClient";
 
 const tabs = [
   { 
+      name: '내 사업장',
+  },
+  { 
       name: '프로필 편집',
   },
   { 
       name: '비밀번호 변경',
-      content:'비밀번호 변경 내용'
-  }
+  },
 ];
 
 

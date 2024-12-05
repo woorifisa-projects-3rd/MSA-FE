@@ -13,8 +13,6 @@
     import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
     import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
 
-
-    const tableName = '보유하신 사업장';
     const tableHeaders = {
         storeName: '사업장 상호명',
         businessNumber: '사업자 번호',
@@ -123,7 +121,6 @@
                 {workplaceInfo.length > 0 ? (
                     <>
                         <DefaultTable
-                            tableName={tableName}
                             tableHeaders={tableHeaders}
                             list={enrichedWorkplaceInfo}
                         />

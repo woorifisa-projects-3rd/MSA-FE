@@ -14,7 +14,7 @@
 
 .leftBackground {
     flex: 1;
-    background-color: #E8EEF9;
+    /* background-color: #E8EEF9; */
 }
 
 .rightBackground {
@@ -81,7 +81,7 @@
 }
 
 .stepNumber {
-    color: #7B9CFF;
+    color: var(--main-woori-blue);
     font-weight: 500;
     margin-right: 0.5rem;
 }
@@ -126,8 +126,8 @@
 .verifyButton {
     padding: 0 1rem;
     background-color: #fff;
-    border: 1px solid #7B9CFF;
-    color: #7B9CFF;
+    border: 1px solid var(--main-woori-blue);;
+    color: var(--main-woori-blue);;
     border-radius: 8px;
     cursor: pointer;
     white-space: nowrap;
@@ -160,7 +160,7 @@
 }
 
 .emphasis {
-    color: #7B9CFF;  
+    color: var(--main-woori-blue);
     font-weight: 500; 
     margin: 0 0.2rem;  
     display: inline-block;  
