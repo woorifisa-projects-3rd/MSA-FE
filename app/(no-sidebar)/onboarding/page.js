@@ -96,7 +96,7 @@ export default function OnboardingPage() {
               <p>매달 직원 한 명씩 급여 이체하기가 번거로우셨던 사장님</p>
               <p>가게의 재무 상황을 문서로 보고 싶으셨던 사장님</p>
             </div>
-            <button className={styles.startButton} onClick={handleSignupClick}>계좌 등록하고 고민 해결</button>
+            <button className={styles.startButton} onClick={handleSignupClick}>계좌 등록하고 해결하기</button>
           </section>
         </main>
       </div>

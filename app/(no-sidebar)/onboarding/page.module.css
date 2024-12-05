@@ -131,7 +131,7 @@
 }
 
 .moreButton:hover, .startButton:hover {
-    background: #6384ff;
+    background: var(--light-orange);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(123, 156, 255, 0.2);
 }
