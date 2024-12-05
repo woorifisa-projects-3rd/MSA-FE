@@ -5,7 +5,7 @@ import { getGeocode } from "@/utils/getGeocode";
 import { useState } from "react";
 import { KakaoMap } from "@/utils/kakao";
 
-export default function AddressStep(){
+export default function AddressStep({mode}){
     const { formData, setFormData, error, success } = useRegistration();
     const [selectedAddress, setSelectedAddress] = useState('');
     const [latAndLng, setlatAndLng] = useState(null);
@@ -58,6 +58,7 @@ export default function AddressStep(){
                 onAddressComplete={handleAddressComplete}
                 initialPostcodeAddress=""
                 initialDetailAddress=""
+
             />
 
             {success && (
@@ -71,7 +72,7 @@ export default function AddressStep(){
                     {error}
                 </div>
             )}
-            {showMap && <KakaoMap latAndLng={latAndLng} />}
+            {showMap && <KakaoMap latAndLng={latAndLng} isChange={mode === "edit"} />}
         </div>
     )
 }

@@ -29,7 +29,7 @@ import EditStoreRegistration from '@/components/modal/workplace-registration.js/
         return bank ? bank.logoUrl : null;
     };
 
-    export default function ProfileDetail({ content,  fetchStores }) {
+    export default function ProfileDetail({ content,  fetchStores, originalStore }) {
         const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
         const [isEditModalOpen, setEditModalOpen] = useState(false);
         const [isFirstRegistrationModalOpen, setFirstRegistrationModalOpen] = useState(false);
@@ -39,15 +39,18 @@ import EditStoreRegistration from '@/components/modal/workplace-registration.js/
         const [deleteStoreId, setdeleteStoreId] = useState(null);
         const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
-        const handleFormSubmit = () => {
-            if (workplaceModalRef.current) {
-                workplaceModalRef.current.handleSubmit();
-            } else {
-                console.error('workplaceModalRef 초기화되지 않음');
-            }
-        };
+       
 
         const workplaceInfo = content;
+
+        const handleEditClick = (storeId) => {
+            const store = originalStore.find((item) => item.id === storeId);
+            if (store) {
+                setSelectedWorkplace(store); // 원본 데이터를 전달
+                setEditModalOpen(true);
+            }
+        };
+    
 
         const handleDeleteClick = (workplace) => {            
             setdeleteStoreId(workplace.storeId);
@@ -99,7 +102,7 @@ import EditStoreRegistration from '@/components/modal/workplace-registration.js/
                 <PrimaryButton
                     text="편집"
                     onClick={() => {
-                        setSelectedWorkplace(workplace);
+                        handleEditClick(workplace.storeId)
                         setEditModalOpen(true);
                     }}
                 />
@@ -199,7 +202,6 @@ import EditStoreRegistration from '@/components/modal/workplace-registration.js/
                     title="사업장 등록"
                     isOpen={isRegistrationModalOpen}
                     onClose={()=>setRegistrationModalOpen(false)}
-                    onConfirm={handleFormSubmit}
                     showButtons={false}
                 >
                     <AdditionalStoreRegistration 

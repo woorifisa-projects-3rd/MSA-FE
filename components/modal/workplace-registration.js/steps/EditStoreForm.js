@@ -93,7 +93,7 @@ export default function EditStoreForm() {
 
             {/* 주소 정보 영역 */}
             <div className={styles.formSection}>
-                <AddressStep />
+                <AddressStep mode="edit" />
             </div>
 
             {error && (

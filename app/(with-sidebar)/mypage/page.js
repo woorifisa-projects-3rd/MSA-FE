@@ -23,6 +23,7 @@ export default function Home() {
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [originalStore, setOriginalStore] = useState([]);
 
   const fetchStores = async () => {
     
@@ -30,7 +31,7 @@ export default function Home() {
     setError(null);
     try {
         const response = await nextClient.get('/mypage/store/storelist');
-        console.log(response)
+        setOriginalStore(response.data);
         const transformedStores = response.data.map(store => ({
             storeId: store.id,
             storeName: store.storeName,
@@ -53,10 +54,11 @@ export default function Home() {
     fetchStores();
   }, []);
 
+  console.log("서버에서 받은 original list", originalStore)
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} fetchStores={fetchStores}/>;
+              return <ProfileDetail content={stores} fetchStores={fetchStores} originalStore={originalStore} />;
         //   case 1:
         //       return <AlarmSetting content={tabs[selectedTab]} />;
           case 1:

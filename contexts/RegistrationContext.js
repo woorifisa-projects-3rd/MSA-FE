@@ -239,11 +239,11 @@ export const RegistrationProvider = ({ children, mode}) => {
     const updateStoreInfo = async (onClose, onSuccess) => {
         try{
             setIsSubmitting(true);
-            const { businessNumber, bankCode, ...filteredFormData } = formData;
+            const { id, businessNumber, bankCode, ...filteredFormData } = formData;
 
             console.log("가게 정보 수정 요청 데이터", filteredFormData);
 
-            const response = await nextClient.put(`/store/edit?storeid=${storeId}`, {
+            const response = await nextClient.put(`/store/edit?storeid=${id}`, {
                 ...filteredFormData
             })
 
