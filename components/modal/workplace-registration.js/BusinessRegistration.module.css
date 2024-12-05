@@ -89,6 +89,7 @@
   padding: 1.5rem;
 }
 
+
 .formTitle {
   font-size: 1.5rem;
   font-weight: 400;
@@ -227,6 +228,47 @@
   height: 1.5rem;
   animation: spin 1s linear infinite;
   margin: 0 auto;
+}
+
+/* 사업장 수정 관련 스타일링 */
+/* 폼 섹션 구분을 위한 스타일 */
+.formSection {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.formSection:last-child {
+  border-bottom: none;
+}
+
+/* 입력창과 버튼을 나란히 배치하기 위한 스타일 */
+.inputWithButton {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* 인증/확인 버튼 스타일 */
+.verificationButton {
+  padding: 0.75rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.verificationButton:hover {
+  background-color: #2563eb;
+}
+
+.verificationButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
 }
 
 @keyframes spin {

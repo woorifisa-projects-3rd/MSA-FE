@@ -17,7 +17,9 @@ export default function Form() {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [editModalData, setEditModalData] = useState(null);
   const searchParams = useSearchParams();
-  const selectedDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(
+    searchParams.get('date') || new Date().toISOString().split('T')[0]
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({});
@@ -36,6 +38,19 @@ export default function Form() {
   };
 
   const [attendanceList, setAttendanceList] = useState([]);
+
+  // 날짜 이동을 위한 함수들
+  const moveNextDay = (date) => {
+    const nextDay = new Date(date);
+    nextDay.setDate(date.getDate() + 1);
+    return nextDay;
+  };
+
+  const movePrevDay = (date) => {
+    const prevDay = new Date(date);
+    prevDay.setDate(date.getDate() - 1);
+    return prevDay;
+  };
 
   const timeToMinutes = (time) => {
     let [hours, minutes] = time.split(':').map(Number);
@@ -271,8 +286,30 @@ export default function Form() {
     <>
       {isLoading && <Loading />}
       <div className={classes.attendanceHeader}>
-        <div className={classes.selectedDate}>{selectedDate}</div>
-        <BaseButton onClick={() => setIsModalOpen(true)} text="기록 추가"/>
+        <div className={classes.navigation}>
+            <button 
+              onClick={() => {
+                const prevDay = movePrevDay(new Date(selectedDate));
+                setSelectedDate(prevDay.toISOString().split('T')[0]);
+              }} 
+              className={classes.navButton}
+            >
+              ◀
+            </button>
+            <div className={classes.selectedDate}>{selectedDate}</div>
+            <button 
+              onClick={() => {
+                const nextDay = moveNextDay(new Date(selectedDate));
+                setSelectedDate(nextDay.toISOString().split('T')[0]);
+              }} 
+              className={classes.navButton}
+            >
+              ▶
+            </button>
+          </div>
+          <div className={classes.basebtnBox}>
+            <BaseButton onClick={() => setIsModalOpen(true)} text="기록 추가"/>
+          </div>
       </div>
 
       <ModalContainer

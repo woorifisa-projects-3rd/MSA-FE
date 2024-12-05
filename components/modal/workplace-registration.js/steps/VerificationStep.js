@@ -4,7 +4,6 @@ import { useState } from "react";
 
 export default function VerificationStep(){
     const { 
-        setCurrentStep,
         verificationData, 
         setVerificationData, 
         sendVerificationEmail, 
@@ -12,7 +11,8 @@ export default function VerificationStep(){
         verifyEmailCode, 
         error,
         success,
-        isEmailErrored
+        isEmailErrored,
+        isEmailNumSuccess
     } = useRegistration()
 
     // 성공 메시지를 위한 상태 추가
@@ -25,7 +25,6 @@ export default function VerificationStep(){
             setVerificationSuccess(true);
         }
     };
-    console.log("3단계", success)
     
     return(
         <div className={styles.formContainer}>
@@ -111,6 +110,11 @@ export default function VerificationStep(){
                       >
                           확인
                       </button>
+                        {isEmailNumSuccess && (
+                            <div className={styles.successText}>
+                                {isEmailNumSuccess}
+                            </div>
+                        )}
                         {isEmailErrored && (
                             <div className={styles.errorText}>
                                 {isEmailErrored}
