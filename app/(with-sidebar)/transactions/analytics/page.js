@@ -281,6 +281,7 @@ export default function SalesExpenses() {
       {
         data: monthlySalesData,
         backgroundColor: "#F6C89F",
+v
       },
     ],
   };
