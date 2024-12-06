@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
@@ -31,6 +32,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "cypress": "^13.16.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
