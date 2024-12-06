@@ -23,7 +23,7 @@ jobs:
       - name: Sync with upstream
         run: |
           git fetch upstream main
-          git merge upstream/main
+          git merge upstream/main --allow-unrelated-histories
           
       - name: Push changes
         run: |
