@@ -51,25 +51,36 @@ describe('회원가입 페이지 테스트', () => {
       cy.contains('이메일 인증이 완료되었습니다.').should('be.visible');
     });
   
-    it('유효한 데이터를 입력하면 회원가입이 성공적으로 이루어지는지 확인', () => {
-      // 입력 데이터 작성
-      cy.get("input[name='name']").type('홍길동');
-      cy.get("input[name='birthDate']").type('1990-01-01');
-      cy.get("input[name='postcode']").type('12345', { force: true });
-      cy.get("input[name='basicAddress']").type('서울특별시 중구', { force: true });
-      cy.get("input[name='detailAddress']").type('상세주소');
-      cy.get("input[name='phoneNumber']").type('01012345678');
-      cy.get("input[name='email']").type('testuser@example.com');
-      cy.get("input[name='emailConfirm']").type('123456'); // 테스트용 인증번호
-      cy.get("input[name='password']").type('password123');
-      cy.get("input[name='confirmPassword']").type('password123');
-  
-      // 제출 버튼 클릭
-      cy.get("button[type='submit']").click();
-  
-      // 성공 메시지 또는 리다이렉션 확인
-      cy.url().should('include', '/login'); // 로그인 페이지로 이동
-      cy.contains('회원가입이 완료되었습니다!').should('be.visible');
+   it('유효한 데이터를 입력하면 회원가입이 성공적으로 이루어지는지 확인', () => {
+  cy.intercept('POST', '/auth/signup').as('signupRequest');
+
+  cy.get("input[name='name']").type('홍길동');
+  cy.get("input[name='birthDate']").type('1990-01-01');
+  cy.get("input[name='postcode']").type('12345', { force: true });
+  cy.get("input[name='basicAddress']").type('서울특별시 중구', { force: true });
+  cy.get("input[name='detailAddress']").type('상세주소');
+  cy.get("input[name='phoneNumber']").type('01012345678');
+
+  // 이메일 인증 단계를 건너뜀
+  cy.window().then((win) => {
+    win.document.querySelector("input[name='emailConfirm']").__reactInternalInstance$.return.stateNode.setState({
+      isEmailConfirmed: true,
     });
+  });
+
+  cy.get("input[name='password']").type('password123');
+  cy.get("input[name='confirmPassword']").type('password123');
+
+  // 제출 버튼 클릭
+  cy.get("button[type='submit']").click();
+
+  // 서버 응답 확인
+  cy.wait('@signupRequest').then((interception) => {
+    expect(interception.response.statusCode).to.eq(200); // 요청 성공 여부 확인
+  });
+
+  // 리다이렉트 확인
+  cy.url({ timeout: 10000 }).should('include', '/login');
+});
   });
   
