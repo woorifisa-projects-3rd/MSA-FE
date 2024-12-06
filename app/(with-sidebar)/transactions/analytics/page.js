@@ -280,7 +280,7 @@ export default function SalesExpenses() {
     datasets: [
       {
         data: monthlySalesData,
-        backgroundColor: "#38BEEF", // woori light blue
+        backgroundColor: "#F8CD67", // woori light blue
       },
     ],
   };
