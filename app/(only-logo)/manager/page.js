@@ -64,7 +64,6 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>사용자</h1>
       <table className={styles.table}>
         <thead>
           <tr>
