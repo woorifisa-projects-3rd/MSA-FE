@@ -55,7 +55,7 @@
 }
 
 .stepCircle.active {
-  background-color: var(--main-orange);
+  background-color: #FC8C37;
   color: white;
 }
 
@@ -77,7 +77,7 @@
 
 .progressLineFill {
   height: 100%;
-  background-color: var(--light-orange);
+  background-color: #FC8C37;
   transition: width 0.3s ease;
 }
   
