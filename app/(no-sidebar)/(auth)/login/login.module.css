@@ -11,10 +11,10 @@
     display: flex;
 }
 
-.leftBackground {
+/* .leftBackground {
     flex: 1;
     background-color: #E8EEF9;
-}
+} */
 
 .rightBackground {
     flex: 1;
@@ -54,7 +54,8 @@
 }
 
 .highlight {
-    color: #7B9CFF;
+    color: var(--main-orange);
+    font-weight: bold;
 }
 
 .subTitle {

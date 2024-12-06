@@ -6,15 +6,18 @@ import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
+import Workplace from "@/components/mypage/content/Workplace";
 
 const tabs = [
+  { 
+      name: '내 사업장',
+  },
   { 
       name: '프로필 편집',
   },
   { 
       name: '비밀번호 변경',
-      content:'비밀번호 변경 내용'
-  }
+  },
 ];
 
 
@@ -58,10 +61,10 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} fetchStores={fetchStores} originalStore={originalStore} />;
-        //   case 1:
-        //       return <AlarmSetting content={tabs[selectedTab]} />;
+              return <Workplace content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
           case 1:
+              return <ProfileDetail />;
+          case 2:
               return <PasswordChange content={tabs[selectedTab]} />;
           default:
               return null;

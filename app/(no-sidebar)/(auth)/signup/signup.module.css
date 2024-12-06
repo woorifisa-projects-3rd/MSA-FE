@@ -10,7 +10,7 @@
     background: #fff;
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    padding: 3rem;
+    padding: 2rem;
 }
 
 .title {
@@ -53,7 +53,7 @@
 
 .inputGroup input:focus {
     outline: none;
-    border-color: #7B9CFF;
+    border-color: var(--main-orange);
     box-shadow: 0 0 0 3px rgba(123, 156, 255, 0.1);
 }
 
@@ -73,7 +73,7 @@
 
 .verifyButton:hover,
 .addressButton:hover {
-    background-color: #7B9CFF;
+    background-color: var(--main-orange);
     color: #fff;
 }
 
@@ -92,7 +92,7 @@
 .linkButton {
     background: none;
     border: none;
-    color: #7B9CFF;
+    color: var(--main-orange);
     text-decoration: underline;
     cursor: pointer;
     margin-left: 0.5rem;
@@ -102,7 +102,7 @@
     width: 100%;
     max-width: 400px;
     padding: 1rem;
-    background-color: #7B9CFF;
+    background-color: var(--main-orange);
     color: white;
     border: none;
     border-radius: 8px;

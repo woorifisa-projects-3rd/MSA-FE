@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from "next/image";
 
 export default function GuestHeader () {
-    const logoWidth = 240;
+    const logoWidth = 150;
 
     return (
         <header className={classes.header_box}>
@@ -23,10 +23,10 @@ export default function GuestHeader () {
                 <div className={classes.header_right}>
                     
                     <Link href="/login">
-                        <button className={classes.profile_button}>로그인</button>
+                        <button className={classes.login_button}>로그인</button>
                     </Link>
                     <Link href="/signup">
-                        <button className={classes.profile_button}>회원가입</button>
+                        <button className={classes.signup_button}>회원가입</button>
                     </Link>
                 </div>
             </div>

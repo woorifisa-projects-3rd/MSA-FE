@@ -1,8 +1,7 @@
 .fc { /* FullCalendar의 root element */
-    margin: 20px auto;
-    padding: 50px 70px;
+    /* margin: 20px auto; */
+    /* padding: 50px 70px; */
     min-height: 80vh;
-    border: 1px solid #e5e7eb;
     border-radius: 20px;
 }
 

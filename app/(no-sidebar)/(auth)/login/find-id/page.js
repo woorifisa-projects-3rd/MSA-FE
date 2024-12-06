@@ -8,6 +8,8 @@ import Image from 'next/image';
 
 export default function FindIdPage() {
 
+    const logoWidth = 180;
+
     // 이메일 가공 함수
     function maskEmail(email) {
         const [localPart, domain] = email.split('@'); // @ 기준으로 분리
@@ -52,14 +54,6 @@ export default function FindIdPage() {
             <div className={styles.contentWrapper}>
                 <div className={styles.leftSection}>
                     <div className={styles.guideContent}>
-                        <Image
-                            src="/images/dashboard.png"
-                            alt="아이디 찾기 안내"
-                            width={500}
-                            height={350}
-                            className={styles.illustration}
-                            unoptimized={true}
-                        />
                         <h2 className={styles.guideTitle}>
                             아이디가 기억나지 않으세요?
                         </h2>
@@ -82,7 +76,15 @@ export default function FindIdPage() {
                 </div>
 
                 <div className={styles.rightSection}>
-                    <h3 className={styles.rightTitle}>ID 찾기</h3>
+                    <h3 className={styles.rightTitle}>
+                        <Image
+                            src="/images/logo.png" 
+                            alt="집계사장" 
+                            width={logoWidth}
+                            height={logoWidth * 0.26}
+                            priority
+                        />
+                    </h3>
                     <form 
                         className={styles.findIdForm} 
                         onSubmit={(e) => {

@@ -192,7 +192,8 @@ export default function Signup() {
     <div className={styles.container}>
       <div className={styles.formWrapper}>
       {loading && <Loading />}
-        <h2 className={styles.title}>회원가입</h2>
+        <h2 className={styles.title}>
+        </h2>
         <form className={styles.form}>
           <div className={styles.formGrid}>
             {/* 왼쪽 섹션 */}

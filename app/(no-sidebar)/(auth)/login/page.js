@@ -2,7 +2,7 @@
 
 import BaseButton from '@/components/button/base-button';
 import styles from './login.module.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation' 
 import { nextClient } from '@/lib/nextClient';
 import Image from 'next/image';
@@ -13,8 +13,10 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('')  
     const [isLoading, setIsLoading] = useState(false);
+    const [textIndex, setTextIndex] = useState(0);
 
-    const router = useRouter()
+    const router = useRouter();
+    const logoWidth = 180;
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -42,6 +44,16 @@ export default function LoginPage() {
         }
     };
 
+    const texts = ["정산", "직원 관리", "매/지출 관리", "급여기록", "명세서 발송", "장부 작성"];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
 
     return (
         <div className={styles.container}>
@@ -58,33 +70,25 @@ export default function LoginPage() {
                         <h1 className={styles.mainTitle}>
                             매일 반복되는 
                             귀찮은<br/>
-                            <span className={styles.highlight}>정산</span>과
-                            <span className={styles.highlight}> 직원관리</span><br/> 이제 그만!
+                            <span className={styles.highlight}>{texts[textIndex]}</span>
+                            <br/> 이제 그만!
                         </h1>
                         <p className={styles.subTitle}>
-                            이제는 자동화된 시스템으로 편하게 관리하세요
+                            이제는 <span className={styles.highlight}>자동화</span>된 시스템으로 편하게 관리하세요
                         </p>
-                        {/* <div className={styles.features}>
-                            <div className={styles.feature}>
-                                <p className={styles.featureText}>✓ 매출/지출 자동 연동으로 실시간 정산</p>
-                                <p className={styles.featureText}>✓ 직원 급여와 근태관리 자동화</p>
-                                <p className={styles.featureText}>✓ 언제 어디서나 웹으로 간편하게</p>
-                            </div>
-                        </div> */}
-                        <div className={styles.imageContainer}>
-                        <Image 
-                            src="/images/hero-charts.png"
-                            alt="대시보드 미리보기"
-                            width={500}
-                            height={350}
-                            className={styles.illustration}
-                        />
-                        </div>
                     </div>    
                 </div>
 
                 <div className={styles.rightSection}>
-                    <h3 className={styles.loginTitle}>로그인</h3>
+                    <h3 className={styles.loginTitle}>
+                        <Image
+                            src="/images/logo.png" 
+                            alt="집계사장" 
+                            width={logoWidth}
+                            height={logoWidth * 0.26}
+                            priority
+                        />
+                    </h3>
 
                     <form className={styles.loginForm} onSubmit={handleLogin}>
                         <div className={styles.inputGroup}>
