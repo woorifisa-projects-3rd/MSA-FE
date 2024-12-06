@@ -5,10 +5,10 @@ on:
     branches:
       - main
 
-jobs: 
-  sync-and-deploy:  
-    runs-on: ubuntu-latest  
-      steps:
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout deployment repo
         uses: actions/checkout@v2
         with:
@@ -28,5 +28,3 @@ jobs:
       - name: Push changes
         run: |
           git push origin main
-
-    
