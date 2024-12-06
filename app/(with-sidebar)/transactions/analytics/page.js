@@ -126,12 +126,12 @@ export default function SalesExpenses() {
         const expensesProcessed = processChartData(expensesCategoryTotals);
 
         const chartColors = [
-          "#394F89",
-          "#0180CD", // main woori blue
-          "#38BEEF", // woori light blue
-          "#93C5FD",
-          "#E0FCFD",
-          "#A2DCEE",
+          "#FF8C42", // 부드러운 오렌지
+          "#FFA559", // 연한 살구색
+          "#FFD57E", // 밝은 머스타드
+          "#FFE8A3", // 은은한 크림 노랑
+          "#FFF4D2", // 연한 레몬빛
+          "#F6C89F", // 따뜻한 코랄 주황
         ];
 
         setSalesData({
@@ -280,7 +280,8 @@ export default function SalesExpenses() {
     datasets: [
       {
         data: monthlySalesData,
-        backgroundColor: "#F8CD67", // woori light blue
+        backgroundColor: "#F6C89F",
+v
       },
     ],
   };
