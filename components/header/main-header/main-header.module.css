@@ -46,14 +46,15 @@
 .headerMenu{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
 }
 .profile_button {
     background-color: #FFFFFF;
     border: 1px solid #e0e0e0; 
-    padding: 9px 20px;
-    border-radius: 4px;
+    padding: 8px 18px;
+    border-radius: 10px;
     font-size: 14px;
+    font-weight: bold;
     color: #333;
     cursor: pointer;
     transition: background-color 0.2s ease;

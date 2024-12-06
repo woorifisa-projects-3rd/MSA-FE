@@ -9,6 +9,8 @@ const BaseButton = ({
     text, 
     onClick,
     type,
+    backgroundColor = 'var(--main-orange)', 
+    hoverColor = 'var(--light-orange)',
     ...props 
 }) => {
   return (
@@ -16,8 +18,13 @@ const BaseButton = ({
         className={styles.baseButton} 
         type={type}
         onClick={onClick}
-        style={props}
-    >
+        style={{
+          backgroundColor: backgroundColor,
+          ...props
+        }}
+        onMouseEnter={(e) => e.target.style.backgroundColor = hoverColor}
+        onMouseLeave={(e) => e.target.style.backgroundColor = backgroundColor}
+      >
       {text}
     </button>
   );

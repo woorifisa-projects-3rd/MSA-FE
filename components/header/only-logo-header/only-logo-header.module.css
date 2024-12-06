@@ -1,0 +1,42 @@
+.header_box{
+    height: var(--header-height);
+    width: 100%;
+    background-color: var(--header-background);
+}
+
+.header_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;  
+    align-items: center; 
+    justify-content: space-between; 
+    height: 100%;
+    padding: 0 3rem 0 3.5rem;
+}
+
+.header_left{
+    /* width: var(--sidebar-width); */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoBox{
+    width: 160px !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+    .header_container {
+        padding: 0 1rem; /* 패딩 줄이기 */
+    }
+
+    .logoBox {
+        width: 180px !important;
+    }
+}
+

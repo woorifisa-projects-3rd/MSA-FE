@@ -1,3 +1,12 @@
+.container {
+  /* max-width: 1000px; */
+  padding: 50px 70px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255, 0.6);  
+}
+
 .selectedDate {
     font-size: 1.5rem;
 }
@@ -5,7 +14,7 @@
 .attendanceHeader {
     display: flex;
     justify-content: space-between;
-    margin: 50px 20px 10px;
+    margin-bottom: 10px;
 }
 .navigation {
     display: flex;
@@ -20,12 +29,13 @@
     color: black;
     border: none;
     border-radius: 3px;
+    padding: 2px 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
   .navButton:hover {
-    background-color: grey;
+    background-color: #e0e0e0;
   }
   
   .navButton:active {

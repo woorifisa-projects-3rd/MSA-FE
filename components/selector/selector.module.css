@@ -5,20 +5,17 @@
 }
 
 .navButton {
-    width: 20px;
-    height: 20px;
-    background-color: #e0e0e0;
+    color: black;
     border: none;
     border-radius: 3px;
+    padding: 2px 5px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    font-size: 10px;
-    color: var(--gray);
-}
-
-.navButton:hover {
-    transform: scale(1.2);
-}
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .navButton:hover {
+    background-color: #e0e0e0;
+  }
 
 .dateText {
     margin: 0 15px;

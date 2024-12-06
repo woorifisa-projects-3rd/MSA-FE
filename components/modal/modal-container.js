@@ -81,7 +81,7 @@ export default function ModalContainer({
                 {/* 하단 취소/확인 버튼 */}
                 {showButtons && (
                     <div className={styles.buttonGroup}>
-                        <BaseButton text="취소" backgroundColor="black" onClick={onClose} />
+                        <BaseButton text="취소" backgroundColor="var(--gray)" hoverColor="#959292" onClick={onClose} />
                         <BaseButton text={confirmText} onClick={onConfirm} />
                     </div>
                 )}

@@ -285,6 +285,7 @@ export default function Form() {
   return (
     <>
       {isLoading && <Loading />}
+      <div className={classes.container}>
       <div className={classes.attendanceHeader}>
         <div className={classes.navigation}>
             <button 
@@ -361,6 +362,7 @@ export default function Form() {
         title="출퇴근 기록 삭제"
         text="해당 출퇴근 기록을 정말 삭제하시겠습니까?"
       />
+      </div>
     </>
   );
 }
