@@ -26,8 +26,8 @@
 }
 
 .tabButtonActive {
-    border-bottom-color: #3b82f6;
-    color: #2563eb;
+    border-bottom-color: #FF7F50;
+    color: #FF7F50;
 }
 
 .tabButtonInactive {
@@ -36,8 +36,8 @@
 }
 
 .tabButtonInactive:hover {
-    color: #374151;
-    border-bottom-color: #d1d5db;
+    color: #FF7F50;
+    border-bottom-color: #FF7F50;
 }
 
 .tabContent {

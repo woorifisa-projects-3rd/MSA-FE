@@ -298,7 +298,7 @@ export default function Signup() {
                   disabled={isEmailConfirmDisabled}
                  />
                 <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
-                  인증번호 보내기
+                인증번호 발송
                 </button>
                 {formErrors.email && <p className={styles.error}>{formErrors.email}</p>}
                 {!formErrors.email && emailSuccess && (
