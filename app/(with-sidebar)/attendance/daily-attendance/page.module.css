@@ -16,24 +16,22 @@
   }
   
   .navButton {
-    background-color: grey;
-    color: #fff;
+    /* background-color: grey; */
+    color: black;
     border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
   .navButton:hover {
-    background-color: black;
+    background-color: grey;
   }
   
   .navButton:active {
     transform: scale(0.95);
   }
+
   .basebtnBox{
     display: flex;
     align-items: center;

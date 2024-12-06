@@ -5,14 +5,14 @@
    font-weight: 500;
    border-radius: 8px;
    border: none;
-   background-color: var(--main-woori-blue);
+   background-color: var(--main-orange);
    color: white;
    cursor: pointer;
    transition: all 0.2s ease;
 }
 
 .baseButton:hover {
-   background-color: #3B5FE3;
+   background-color: var(--light-orange);
 }
 
 .primaryButton {
@@ -24,8 +24,8 @@
    cursor: pointer;
    transition: all 0.2s ease;
    background-color: transparent;
-   border: 0.0625rem solid #4B71F4;
-   color: #4B71F4;
+   border: 0.075rem solid var(--main-orange);
+   color: var(--main-orange);
  }
  
  .primaryButton:hover {

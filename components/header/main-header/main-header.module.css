@@ -25,7 +25,7 @@
 }
 
 .logoBox{
-    width: 180px !important; /* 더 작은 크기로 조정 */
+    width: 160px !important; /* 더 작은 크기로 조정 */
     height: auto !important;
     object-fit: contain; /* 이미지 비율 유지 */
 }
@@ -41,8 +41,7 @@
 .headerTitle{
     font-size: 20px; 
     font-weight: 600;
-    color: var(--woori-deep-blue);
-    padding-left: 20px;
+    padding-left: 50px;
 }
 .headerMenu{
     display: flex;
@@ -73,7 +72,7 @@
 }
 
 .bell_icon {
-    background-color: #f0f0f0; /* 배경색 설정 */
+    /* background-color: #f0f0f0; */
     border-radius: 50%; /* 원형으로 만들기 */
     padding: 10px; /* 아이콘 주위에 여백 추가 */
     display: flex; /* 가운데 정렬을 위한 flex 사용 */
@@ -81,29 +80,29 @@
     justify-content: center;
     cursor: pointer; /* 클릭 가능성 강조 */
     transition: background-color 0.3s ease; /* 배경색 변화 애니메이션 */
-    color: #0180CD; /* 아이콘 기본 색상 */
+    color: var(--gray); /* 아이콘 기본 색상 */
 }
 
 .bell_icon:hover {
-    color: #38BEEF;
+    color: black;
 }
 
 .notificationCnt {
     position: absolute;
     top: 5px; /* 아이콘 위의 위치 조정 */
     right: 5px; /* 아이콘 오른쪽의 위치 조정 */
-    transform: translate(50%, -50%); /* 위치 조정 */
+    transform: translate(20%, -20%); /* 위치 조정 */
     background: red;
     color: white;
     border-radius: 50%;
     padding: 2px 6px;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 10px;
+    /* font-weight: bold; */
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
+    min-width: 17px;
+    height: 17px;
 }
 
 /* 모바일헤더 */

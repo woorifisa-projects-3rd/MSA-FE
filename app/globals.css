@@ -6,12 +6,14 @@
   --header-height:80px;
   --header-padding: 20px 100px;
   --header-background: white;
-  --main-woori-blue: #0180CD;
-  --woori-light-blue: #38BEEF;
+  --main-orange: #FF6F0F;
+  --woori-ligth-blue: #FFAD7A;
   --woori-deep-blue: #0067AC;
+  --light-orange: #FF8C59;
+  --deep-orange: #FF7903;
   --gray: #787878;
   --red: #E3262F;
-  --sidebar-color: #F3F7FE;
+  --sidebar-color: #FFFAF5;
   --sidebar-width: 16%;
 }
 

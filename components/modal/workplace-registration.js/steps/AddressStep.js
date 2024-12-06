@@ -4,20 +4,27 @@ import AddressSearch from "@/components/addsearch/AddressSearch";
 import { getGeocode } from "@/utils/getGeocode";
 import { useState } from "react";
 import { KakaoMap } from "@/utils/kakao";
+import { useEffect } from "react";
 
-export default function AddressStep(){
+export default function AddressStep({mode, initialLatLng, initialAddress }){
     const { formData, setFormData, error, success } = useRegistration();
     const [selectedAddress, setSelectedAddress] = useState('');
-    const [latAndLng, setlatAndLng] = useState(null);
+    const [latAndLng, setlatAndLng] = useState(initialLatLng || null);
+    // const [showMap, setShowMap] = useState(false);
+    const [showMap, setShowMap] = useState(!!initialLatLng);
 
-    const [showMap, setShowMap] = useState(false);
+    // 컴포넌트 마운트 시 edit 모드면 맵 표시
+    useEffect(() => {
+        if (mode === 'edit' && initialLatLng) {
+            setlatAndLng(initialLatLng);
+            setShowMap(true);
+        }
+    }, [mode, initialLatLng]);
 
     const handleAddressComplete = async (postcodeAddress) => {
         try{
             const coordinates = await getGeocode(postcodeAddress);
             console.log(coordinates);
-
-            
             setlatAndLng({
                 lat: coordinates.lat,
                 lng: coordinates.lng
@@ -56,8 +63,9 @@ export default function AddressStep(){
             <AddressSearch 
                 onDetailChange={handleDetailChange}
                 onAddressComplete={handleAddressComplete}
-                initialPostcodeAddress=""
+                initialPostcodeAddress={initialAddress || ""} 
                 initialDetailAddress=""
+
             />
 
             {success && (
@@ -71,7 +79,7 @@ export default function AddressStep(){
                     {error}
                 </div>
             )}
-            {showMap && <KakaoMap latAndLng={latAndLng} />}
+            {showMap && <KakaoMap latAndLng={latAndLng} isChange={mode === "edit"} />}
         </div>
     )
 }

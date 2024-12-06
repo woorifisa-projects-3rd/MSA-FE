@@ -23,10 +23,8 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
     const [notifications, setNotifications] = useState(initialNotifications);
     const bellRef = useRef();
     const modalRef = useRef();
-    const logoWidth = 250;
+    const logoWidth = 160;
     const pathname = usePathname();
-    
-   
 
     // 읽지 않은 알림의 개수
     const unreadNotificationCount = notifications.filter(notification => !notification.read).length;
@@ -61,12 +59,11 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
 
     // 모달 외부를 클릭했을 때 모달을 닫는다
     const handleClickOutside = (event) => {
-        if (
-            bellRef.current &&
-            !bellRef.current.contains(event.target) &&
-            modalRef.current &&
-            !modalRef.current.contains(event.target)
-        ) {
+        const isClickOutside = 
+            !bellRef.current?.contains(event.target) &&
+            !modalRef.current?.contains(event.target);
+
+        if (isClickOutside) {
             setIsAlarmOpen(false);
         }
     };
@@ -118,7 +115,7 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                                 </span>
                             )}
                             {isAlarmOpen && (
-                                <AlarmModal modalRef={modalRef} notifications={notifications} />
+                                <AlarmModal ref={modalRef} notifications={notifications} />
                             )}
                         </div>
                     </div>

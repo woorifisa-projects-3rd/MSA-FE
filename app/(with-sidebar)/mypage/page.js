@@ -6,15 +6,18 @@ import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";
+import Workplace from "@/components/mypage/content/Workplace";
 
 const tabs = [
+  { 
+      name: '내 사업장',
+  },
   { 
       name: '프로필 편집',
   },
   { 
       name: '비밀번호 변경',
-      content:'비밀번호 변경 내용'
-  }
+  },
 ];
 
 
@@ -23,6 +26,7 @@ export default function Home() {
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [originalStore, setOriginalStore] = useState([]);
 
   const fetchStores = async () => {
     
@@ -30,7 +34,7 @@ export default function Home() {
     setError(null);
     try {
         const response = await nextClient.get('/mypage/store/storelist');
-        console.log(response)
+        setOriginalStore(response.data);
         const transformedStores = response.data.map(store => ({
             storeId: store.id,
             storeName: store.storeName,
@@ -53,13 +57,14 @@ export default function Home() {
     fetchStores();
   }, []);
 
+  console.log("서버에서 받은 original list", originalStore)
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <ProfileDetail content={stores} fetchStores={fetchStores}/>;
-        //   case 1:
-        //       return <AlarmSetting content={tabs[selectedTab]} />;
+              return <Workplace content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
           case 1:
+              return <ProfileDetail />;
+          case 2:
               return <PasswordChange content={tabs[selectedTab]} />;
           default:
               return null;

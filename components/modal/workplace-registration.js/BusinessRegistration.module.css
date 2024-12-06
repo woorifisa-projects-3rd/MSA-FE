@@ -92,7 +92,7 @@
 
 .formTitle {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 2rem;
   color: #111827;
 }
@@ -163,7 +163,7 @@
 
 .button {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.5rem;
   border-radius: 0.375rem;
   font-weight: 500;
   cursor: pointer;
@@ -197,6 +197,7 @@
 /* StepNavigation */
 .navigationContainer {
   border-top: 1px solid #e5e7eb;
+
 }
 
 .navigationButtons {
@@ -205,6 +206,7 @@
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .errorText {

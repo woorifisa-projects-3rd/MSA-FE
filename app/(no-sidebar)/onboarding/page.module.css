@@ -24,7 +24,7 @@
 }
 
 .highlight {
-    color: #7B9CFF;
+    color: var(--main-orange);
 }
 
 .heroContent p {
@@ -50,15 +50,15 @@
 }
 
 .primaryButton {
-    background: #7B9CFF;
+    background: var(--main-orange);
     color: white;
     border: none;
 }
 
 .secondaryButton {
     background: white;
-    color: #7B9CFF;
-    border: 1px solid #7B9CFF;
+    color: var(--main-orange);
+    border: 1px solid var(--main-orange);
 }
 
 .dashboardImage {
@@ -120,7 +120,7 @@
 }
 
 .moreButton, .startButton {
-    background: #7B9CFF;
+    background: var(--main-orange);
     color: white;
     border: none;
     padding: 1rem 3rem;
@@ -131,7 +131,7 @@
 }
 
 .moreButton:hover, .startButton:hover {
-    background: #6384ff;
+    background: var(--light-orange);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(123, 156, 255, 0.2);
 }
