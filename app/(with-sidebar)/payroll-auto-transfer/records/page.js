@@ -159,33 +159,34 @@ export default function PayRecords() {
         onClose={closeModal}
         title="자동이체 설정"
         onConfirm={() => handleAutoTransferSelection(selectedBusinessType)}
-        >
-        <div className={classes.modalRadioGroup}>
-            <label>
-            <input
-                type="radio"
-                name="termsAccept"
-                value="1"
-                checked={selectedBusinessType === "1"}
-                onChange={() => setSelectedBusinessType("1")}
-            />
-            자동이체 신청
-            </label>
-            <label>
-            <input
-                type="radio"
-                name="termsAccept"
-                value="0"
-                checked={selectedBusinessType === "0"}
-                onChange={() => setSelectedBusinessType("0")}
-            />
-            자동이체 해제
-            </label>
+      >
+        <div className={classes.modalCardGroup}>
+          <div
+            className={`${classes.modalCard} ${
+              selectedBusinessType === "1" ? classes.selected : ""
+            }`}
+            onClick={() => setSelectedBusinessType("1")}
+          >
+            <p className={classes.cardTitle}>자동이체 신청</p>
+            <p className={classes.cardDescription}>간편하게<br/>
+            자동이체를<br/>사용하세요.</p>
+          </div>
+          <div
+            className={`${classes.modalCard} ${
+              selectedBusinessType === "0" ? classes.selected : ""
+            }`}
+            onClick={() => setSelectedBusinessType("0")}
+          >
+            <p className={classes.cardTitle}>자동이체 해제</p>
+            <p className={classes.cardDescription}>해제하시면
+              <br/>자동이체가<br/>불가능합니다.</p>
+          </div>
         </div>
         <div className={classes.modalFeeInfo}>
-            <p>※ 자동이체 신청 시, 이체 금액의 <strong>0.1%</strong>가 수수료로 부과됩니다.</p>
+          <p>※ 자동이체 신청 시, 이체 금액의 <strong>0.1%</strong>가 수수료로 부과됩니다.</p>
         </div>
-        </ModalContainer>
+      </ModalContainer>
+
 
       {/* 테이블 */}
       <DefaultTable tableHeaders={tableHeaders} list={updatedList} />
