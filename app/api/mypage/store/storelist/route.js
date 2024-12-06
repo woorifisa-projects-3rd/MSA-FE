@@ -15,6 +15,7 @@ export async function GET() {
         );
       }
 
+      console.log("마이페이지 사업장 리스트:", response.data)
       // 성공 응답 반환
       return NextResponse.json(response.data, { status: 200 });
     } catch (error) {
