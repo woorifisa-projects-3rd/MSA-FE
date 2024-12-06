@@ -12,6 +12,7 @@ import { bankCodeList } from "@/constants/bankCodeList";
 import { useAuth } from "@/contexts/AuthProvider";
 import ModalContainer from "@/components/modal/modal-container";
 import classes from "./page.module.css";
+import PrimaryButton from "@/components/button/primary-button";
 
 export default function PayRecords() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,7 +46,7 @@ export default function PayRecords() {
             account: item.accountNumber,
             amount: item.amount === 0 ? "0" : item.amount,
             date: item.issuanceDate,
-            button: <BaseButton text="확인" onClick={() => handleViewStatement(item.payStatementId)}  />,
+            button: <PrimaryButton text="확인" onClick={() => handleViewStatement(item.payStatementId)}  />,
           }));
           setList(formattedData);
         } catch (error) {
