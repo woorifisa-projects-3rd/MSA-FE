@@ -25,6 +25,6 @@ const AlarmModal = forwardRef(({ notifications }, ref) => {
   );
 });
 
-AlarmModal.displayName = "AlarmModal";
+AlarmModal.displayName = 'AlarmModal';
 
 export default AlarmModal;
