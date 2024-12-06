@@ -5,13 +5,12 @@ import classes from './ProfileDetail.module.css';
 import ModalContainer from '@/components/modal/modal-container';
 import { useState, useEffect, useRef } from 'react';
 import PrimaryButton from '@/components/button/primary-button';
-import DeleteConfirmModal from '@/components/modal/delete-confirm/delete-confirm';
-import PresidentInfo from './PresidentInfo';
 import { bankCodeList } from '@/constants/bankCodeList';
 import { nextClient } from '@/lib/nextClient';
 import FirstStoreRegistration from '@/components/modal/workplace-registration.js/FirstStoreRegistration';
 import AdditionalStoreRegistration from '@/components/modal/workplace-registration.js/AdditionalStoreRegistraion';
 import DeleteModal from '@/components/modal/delete-commute-modal/delete-commute-modal';
+import EditStoreRegistration from '@/components/modal/workplace-registration.js/EditStoreRegistration';
 
 const tableName = "보유 사업장";
 const tableHeaders = {
@@ -27,26 +26,26 @@ const getBankLogo = (code) => {
     return bank ? bank.logoUrl : null;
 };
 
-export default function Workplace({ content, fetchStores }) {
+export default function Workplace({ content, fetchStores , originalStore}) {
     const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isFirstRegistrationModalOpen, setFirstRegistrationModalOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState(null);
-    const workplaceModalRef = useRef(null);
     const [error, setError] = useState('');
     const [deleteStoreId, setdeleteStoreId] = useState(null);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
-    const handleFormSubmit = () => {
-        if (workplaceModalRef.current) {
-            workplaceModalRef.current.handleSubmit();
-        } else {
-            console.error('workplaceModalRef 초기화되지 않음');
-        }
-    };
-
     const workplaceInfo = content;
 
+    const handleEditClick = (storeId) => {
+        const store = originalStore.find((item) => item.id === storeId);
+        if (store) {
+            console.log("수정시 전달할 store:", store);
+            setSelectedWorkplace(store); // 원본 데이터를 전달
+            setEditModalOpen(true);
+        }
+    };
+    
     const handleDeleteClick = (workplace) => {            
         setdeleteStoreId(workplace.storeId);
         setDeleteModalOpen(true);
@@ -97,7 +96,7 @@ export default function Workplace({ content, fetchStores }) {
             <PrimaryButton
                 text="편집"
                 onClick={() => {
-                    setSelectedWorkplace(workplace);
+                    handleEditClick(workplace.storeId)
                     setEditModalOpen(true);
                 }}
             />
@@ -173,20 +172,6 @@ export default function Workplace({ content, fetchStores }) {
             </div>
             )}
 
-            {/* 등록 모달 */}
-            <ModalContainer
-                title="사업장 등록"
-                isOpen={isRegistrationModalOpen}
-                onClose={()=>setRegistrationModalOpen(false)}
-                onConfirm={handleFormSubmit}
-                showButtons={false}
-            >
-                <AdditionalStoreRegistration 
-                    onClose={()=>setFirstRegistrationModalOpen(false)} 
-                    onSuccess={fetchStores}
-                />
-            </ModalContainer>
-
             {/* 사업장 최초 등록 모달 */}
             <ModalContainer
                 title="사업장 등록"
@@ -200,15 +185,33 @@ export default function Workplace({ content, fetchStores }) {
                 />
             </ModalContainer>
 
-            {/* 사업장 수정 모달 - 12/3에 반영하겠음 */}
-            <ModalContainer
-                title="사업장 수정"
-                isOpen={isEditModalOpen}
-                onClose={() => setEditModalOpen(false)}
-                onConfirm={handleFormSubmit}
+              {/* 사업장 추가 등록 모달 */}
+              <ModalContainer
+                title="사업장 등록"
+                isOpen={isRegistrationModalOpen}
+                onClose={()=>setRegistrationModalOpen(false)}
+                showButtons={false}
             >
-              
+                <AdditionalStoreRegistration 
+                    onClose={()=>setFirstRegistrationModalOpen(false)} 
+                    onSuccess={fetchStores}
+                />
             </ModalContainer>
+
+            {/* 사업장 수정 모달*/}
+            <ModalContainer
+                    title="사업장 수정"
+                    isOpen={isEditModalOpen}
+                    showButtons={false}
+                    onClose={() => setEditModalOpen(false)}
+            >
+                <EditStoreRegistration
+                    onClose={()=>setEditModalOpen(false)} 
+                    onSuccess={fetchStores}
+                    initialData={selectedWorkplace}
+                />
+            </ModalContainer>
+
             <DeleteModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}

@@ -61,7 +61,7 @@ export default function Home() {
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <Workplace content={stores} refreshStores={stores} fetchStores={fetchStores}/>;
+              return <Workplace content={stores} fetchStores={fetchStores} originalStore={originalStore}/>;
           case 1:
               return <ProfileDetail />;
           case 2:

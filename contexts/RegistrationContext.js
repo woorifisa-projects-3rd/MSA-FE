@@ -34,7 +34,7 @@ export const RegistrationProvider = ({ children, mode}) => {
     // 수정 모드를 위한 초기 데이터 설정 함수 추가
     const  initializeEditStore = (store) => {
         if (store) {
-            setStoreId(store.storeId);
+            setStoreId(store.id);
             setFormData({
                 storeName: store.storeName,
                 businessNumber: store.businessNumber,
@@ -243,7 +243,7 @@ export const RegistrationProvider = ({ children, mode}) => {
 
             console.log("가게 정보 수정 요청 데이터", filteredFormData);
 
-            const response = await nextClient.put(`/store/edit?storeid=${id}`, {
+            const response = await nextClient.put(`/store/edit?storeid=${storeId}`, {
                 ...filteredFormData
             })
 
