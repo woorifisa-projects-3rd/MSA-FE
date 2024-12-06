@@ -1,39 +1,47 @@
-.modalRadioGroup {
-    display: flex;
-    flex-direction: row; /* 가로 정렬 */
-    justify-content: center; /* 중앙 정렬 */
-    gap: 40px; /* 라디오 버튼 사이 간격 */
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .modalRadioGroup label {
-    font-size: 2rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.buttonGroup {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-  .modalInfoText p {
-    font-size: 18px; /* 원하는 크기 */
-    line-height: 1.6; /* 줄 간격 조정 */
-    margin: 10px 0; /* 위아래 간격 조정 */
-  }
-  
-  .modalInfoText strong {
-    font-size: 20px; /* 강조된 텍스트 크기 */
-  }
-  
-  .modalRadioGroup label:hover {
-    color: #007BFF; /* 호버 시 색상 강조 */
-  }
-  
-  .modalRadioGroup input[type="radio"] {
-    accent-color: #007BFF; /* 라디오 버튼 색상 */
-    width: 20px;
-    height: 20px;
-  }
-  
+.businessTypeButton {
+  flex: 1;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.businessTypeButton p {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.businessTypeButton span {
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+  color: #666;
+}
+
+.businessTypeButton:hover {
+  border-color: #ff7f50;
+  background-color: var(--sidebar-color);
+}
+
+.businessTypeButton.selected {
+  border-color: #ff4500;
+  background-color: #fff4e6;
+  color: var(--main-orange);
+  font-weight: bold;
+}
+
+.highlight {
+  font-weight: bold;
+  font-size: 18px;
+}
