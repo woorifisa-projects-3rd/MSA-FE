@@ -159,7 +159,7 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                             </span>
                         )}
                         {isAlarmOpen && (
-                            <AlarmModal modalRef={modalRef} notifications={notifications} />
+                            <AlarmModal ref={modalRef} notifications={notifications} />
                         )}
                     </div>
                     <button 
