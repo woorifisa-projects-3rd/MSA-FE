@@ -1,0 +1,24 @@
+.only_logo_layout{
+    display: grid;
+    grid-template-areas: 
+        "header"
+        "main";
+    grid-template-rows: var(--header-height) 1fr;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+}
+.only_logo_header{
+    grid-area: header;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: var(--header-height);
+}
+
+.only_logo_main{
+    grid-area: main;
+}
+  
+  

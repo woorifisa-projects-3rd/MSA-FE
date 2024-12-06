@@ -280,7 +280,7 @@ export default function SalesExpenses() {
     datasets: [
       {
         data: monthlySalesData,
-        backgroundColor: "#38BEEF", // woori light blue
+        backgroundColor: "#F8CD67", // woori light blue
       },
     ],
   };
@@ -393,39 +393,34 @@ export default function SalesExpenses() {
           title="사업자 유형 선택"
           onConfirm={() => handleBusinessTypeSelection(selectedBusinessType)}
         >
-          <div className={styles.modalInfoText}>
+        <div className={styles.buttonGroup}>
+          <button
+            className={`${styles.businessTypeButton} ${
+              selectedBusinessType === "0" ? styles.selected : ""
+            }`}
+            onClick={() => setSelectedBusinessType("0")}
+          >
             <p>
-              💡 <strong>연 매출이 1억 400만원 이상</strong>인 경우 일반사업자를
-              선택해 주세요.
+              💡 <strong>간이사업자</strong>
             </p>
+            <span>연 매출이<br/>
+            <dev className={styles.highlight}>1억 400만원<br/>미만</dev>
+            인 경우<br/>선택하세요.</span>
+          </button>
+          <button
+            className={`${styles.businessTypeButton} ${
+              selectedBusinessType === "1" ? styles.selected : ""
+            }`}
+            onClick={() => setSelectedBusinessType("1")}
+          >
             <p>
-              📊 <strong>연 매출이 1억 400만원 미만</strong>인 경우 간이사업자를
-              선택해 주세요.
+              📊 <strong>일반사업자</strong>
             </p>
-          </div>
-
-          <div className={styles.modalRadioGroup}>
-            <label>
-              <input
-                type="radio"
-                name="businessType"
-                value="0"
-                checked={selectedBusinessType === "0"}
-                onChange={() => setSelectedBusinessType("0")}
-              />
-              간이사업자
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="businessType"
-                value="1"
-                checked={selectedBusinessType === "1"}
-                onChange={() => setSelectedBusinessType("1")}
-              />
-              일반사업자
-            </label>
-          </div>
+            <span>연 매출이<br/>
+            <dev className={styles.highlight}>1억 400만원<br/>이상</dev>
+            인 경우<br/>선택하세요.</span>
+          </button>
+        </div>
         </ModalContainer>
 
         <div className={classes.rightSection}>

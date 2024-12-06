@@ -25,7 +25,6 @@ const AlarmModal = forwardRef(({ notifications }, ref) => {
   );
 });
 
-// 이 줄을 추가해주세요!
 AlarmModal.displayName = 'AlarmModal';
 
 export default AlarmModal;
