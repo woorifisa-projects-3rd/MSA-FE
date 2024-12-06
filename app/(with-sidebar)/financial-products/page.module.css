@@ -24,7 +24,7 @@
     font-size: 16px;
     line-height: 1.6;
     max-width: 600px;
-    margin: 16px;
+    margin: 16px 8px;
   }
   
   .productGrid {
@@ -60,6 +60,7 @@
     font-weight: 600;
     color: #1a1a1a;
     margin-bottom: 8px;
+    margin-left: 8px;
     letter-spacing: -0.5px;
   }
   
@@ -83,7 +84,7 @@
   }
   
   .applyButton:hover {
-    background: #0066dd;
+    background: var(--light-orange);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 120, 255, 0.3);
   }
@@ -122,7 +123,7 @@
   }
   
   .rateValue {
-    color: #0078FF;
+    color: var(--main-orange);
     font-weight: 600;
     font-size: 16px;
   }
@@ -136,16 +137,16 @@
   
   .tag {
     padding: 8px 16px;
-    background: rgba(0, 120, 255, 0.08);
+    background: #FFEED5;
     border-radius: 20px;
     font-size: 14px;
-    color: #0078FF;
+    color: var(--main-orange);
     font-weight: 500;
     transition: all 0.2s ease;
   }
   
   .tag:hover {
-    background: rgba(0, 120, 255, 0.12);
+    background: #FFDFC3;
   }
   
   @media (max-width: 768px) {
