@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 .no_sidebar_layout{
     display: grid;
     grid-template-areas: 
@@ -6,6 +13,7 @@
     grid-template-rows: var(--header-height) 1fr;
     grid-template-columns: 1fr;
     min-height: 100vh;
+    font-family: 'Pretendard-Regular';
 }
 .no_side_header{
     grid-area: header;
