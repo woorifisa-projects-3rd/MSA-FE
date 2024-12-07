@@ -17,6 +17,13 @@ describe('회원가입 페이지 테스트', () => {
       cy.get("input[name='confirmPassword']").should('be.visible');
       cy.get("button[type='submit']").should('be.visible');
     });
+
+    // 정상확인
+
+    // 한번 더 호출 근데, 일부러 에러날만한 데이터
+
+    // 에러데이터 정상적으로 오는지 확인
+
   
     it('유효하지 않은 입력값에 대한 오류 메시지가 표시되는지 확인', () => {
       // 각 필드를 비워둔 상태로 제출
