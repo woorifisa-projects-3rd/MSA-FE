@@ -13,9 +13,13 @@ export default function FindIdPage() {
     // 이메일 가공 함수
     function maskEmail(email) {
         const [localPart, domain] = email.split('@'); // @ 기준으로 분리
-        const visiblePart = localPart.slice(0, -4); // 앞부분에서 마지막 4자리를 제외한 부분
-        const maskedLocalPart = visiblePart + '****'; // 4자리를 별표로 대체
-        return `${maskedLocalPart}@${domain}`;
+        const len = localPart.length;
+        if(len>=4){
+            const visiblePart = localPart.slice(0, -2); // 앞부분에서 마지막 4자리를 제외한 부분
+            const maskedLocalPart = visiblePart + '**'; // 4자리를 별표로 대체
+            return `${maskedLocalPart}@${domain}`;
+        }
+        return `${localPart}@${domain}`;
     }
 
     // ID 찾기 버튼 핸들러
@@ -31,14 +35,12 @@ export default function FindIdPage() {
             console.log("response.data:", response.data);
 
 
-            if (response.data) {
+            if (response.data.email) {
                 const email = maskEmail(response.data.email);
                 alert(`고객님께서 등록하신 이메일은 ${email} 입니다.`);
                 window.location.href = '/login'; // 리다이렉트
             }
         } catch (error) {
-            console.log(error.response.data);
-            
             const errorMessage = error.response?.data?.message || "서버와의 연결에 문제가 발생했습니다.";
             alert(errorMessage);
         }

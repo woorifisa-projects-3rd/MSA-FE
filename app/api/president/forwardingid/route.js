@@ -9,10 +9,7 @@ export async function POST(request) {
 
         // Spring Boot로 요청 보내기
         const response = await springClient.post('/user/president/id-find', { name, phone_number });
-        
 
-      
-        console.log('Spring Boot 응답:', response.data.message);
         if (response.status === 200) {
             console.log(response.data.email)
             return NextResponse.json( {email: response.data.email},{ status: 200 });
