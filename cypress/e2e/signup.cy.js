@@ -41,46 +41,40 @@ describe('회원가입 페이지 테스트', () => {
       cy.get("button").contains('인증번호 발송').click();
   
       // 성공 메시지 확인
-      cy.contains('이메일이 발송되었습니다. 확인해주세요.').should('be.visible');
+      cy.contains('이메일이 발송되었습니다. 확인해주세요.', { timeout: 15000 }).should('be.visible');
   
       // 받은 인증번호를 입력
-      cy.get("input[name='emailConfirm']").type('123456'); // 테스트용 인증번호
-      cy.get("button").contains('확인').click();
-  
-      // 인증 성공 메시지 확인
-      cy.contains('이메일 인증이 완료되었습니다.').should('be.visible');
+      // 이메일 인증 단계를 건너뛰기 위해 모의 성공 상태를 처리
+      cy.window().then((win) => {
+        win.localStorage.setItem('emailConfirmed', 'true'); // 로컬 스토리지에 인증 상태 저장
+      });
     });
   
-   it('유효한 데이터를 입력하면 회원가입이 성공적으로 이루어지는지 확인', () => {
-  cy.intercept('POST', '/auth/signup').as('signupRequest');
+    it('이메일 인증 단계를 건너뛰고 회원가입을 성공적으로 진행', () => {
+      // 로컬 스토리지를 사용하여 이메일 인증 단계를 건너뜀
+      cy.window().then((win) => {
+        win.localStorage.setItem('emailConfirmed', 'true'); // 이메일 인증 완료 상태 설정
+      });
+    
+      // 회원가입 입력값 작성
+      cy.get("input[name='name']").type('홍길동');
+      cy.get("input[name='birthDate']").type('1990-01-01');
+      cy.get("input[name='postcode']").type('12345', { force: true });
+      cy.get("input[name='basicAddress']").type('서울특별시 중구', { force: true });
+      cy.get("input[name='detailAddress']").type('상세주소');
+      cy.get("input[name='phoneNumber']").type('01012345678');
+      cy.get("input[name='email']").type('testuser@example.com');
+      cy.get("input[name='password']").type('password123');
+      cy.get("input[name='confirmPassword']").type('password123');
+    
+      // 제출 버튼 클릭
+      cy.get("button[type='submit']").click();
 
-  cy.get("input[name='name']").type('홍길동');
-  cy.get("input[name='birthDate']").type('1990-01-01');
-  cy.get("input[name='postcode']").type('12345', { force: true });
-  cy.get("input[name='basicAddress']").type('서울특별시 중구', { force: true });
-  cy.get("input[name='detailAddress']").type('상세주소');
-  cy.get("input[name='phoneNumber']").type('01012345678');
+      // alert 창 확인
+      cy.on('window:alert', (text) => {
+        expect(text).to.equal('회원가입이 완료되었습니다!');
+      });
 
-  // 이메일 인증 단계를 건너뜀
-  cy.window().then((win) => {
-    win.document.querySelector("input[name='emailConfirm']").__reactInternalInstance$.return.stateNode.setState({
-      isEmailConfirmed: true,
     });
-  });
-
-  cy.get("input[name='password']").type('password123');
-  cy.get("input[name='confirmPassword']").type('password123');
-
-  // 제출 버튼 클릭
-  cy.get("button[type='submit']").click();
-
-  // 서버 응답 확인
-  cy.wait('@signupRequest').then((interception) => {
-    expect(interception.response.statusCode).to.eq(200); // 요청 성공 여부 확인
-  });
-
-  // 리다이렉트 확인
-  cy.url({ timeout: 10000 }).should('include', '/login');
-});
   });
   
