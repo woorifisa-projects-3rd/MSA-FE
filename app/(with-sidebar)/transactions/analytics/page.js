@@ -42,6 +42,7 @@ export default function SalesExpenses() {
   const [expensesData, setExpensesData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessType, setSelectedBusinessType] = useState(null); // 선택된 사업자 유형 상태
+  const [error, setError] = useState("");
 
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -158,7 +159,7 @@ export default function SalesExpenses() {
           ],
         });
       } catch (error) {
-        console.error("API 호출 실패: ", error);
+        setError(error.response.data.error)
       }
     };
     loadTransactionAnalyticsPageData();
@@ -281,7 +282,6 @@ export default function SalesExpenses() {
       {
         data: monthlySalesData,
         backgroundColor: "#F6C89F",
-v
       },
     ],
   };
@@ -360,6 +360,7 @@ v
                 식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
               </span>
           </h3>
+       
           <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
         </div>
       </div>
@@ -369,6 +370,11 @@ v
             className={classes.chartContainer}
             style={{ position: "relative" }}
           >
+            {error && (
+                <div className={styles.errorText}>
+                    {error}
+                </div>
+            )}
             <div className={classes.chartStyle}>
               {/* <h2>매출</h2> */}
               {salesData.labels ? (

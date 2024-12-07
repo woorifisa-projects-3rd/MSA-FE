@@ -23,6 +23,7 @@
     position: sticky;  /* 혹은 position relative로  */
     top: var(--header-height);
     height: calc(100vh - var(--header-height));
+    z-index: 100000;
 }
 .main{
     grid-area: main;
