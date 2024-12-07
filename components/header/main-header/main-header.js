@@ -103,7 +103,8 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                         <Link href="/mypage">
                             <button className={classes.profile_button}>내 정보</button>
                         </Link>
-                        <div ref={bellRef} className={classes.bellContainer}>
+                        {/* 알림 관련 삭제 */}
+                        {/* <div ref={bellRef} className={classes.bellContainer}>
                             <FiBell
                                 size={45}
                                 className={classes.bell_icon}
@@ -117,7 +118,7 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                             {isAlarmOpen && (
                                 <AlarmModal ref={modalRef} notifications={notifications} />
                             )}
-                        </div>
+                        </div> */}
                     </div>
                     
                 </div>

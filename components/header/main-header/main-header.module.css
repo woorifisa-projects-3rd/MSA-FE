@@ -32,7 +32,7 @@
 .headerRight {
     width: calc(100% - var(--sidebar-width));
     height: 100%;
-    padding-right: 100px;
+    padding-right: 50px;
     display: flex;
     align-items: center; 
     justify-content: space-between;
