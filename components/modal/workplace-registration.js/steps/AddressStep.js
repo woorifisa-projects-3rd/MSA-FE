@@ -7,7 +7,7 @@ import { KakaoMap } from "@/utils/kakao";
 import { useEffect } from "react";
 
 export default function AddressStep({mode, initialLatLng, initialAddress }){
-    const { formData, setFormData, error, success } = useRegistration();
+    const { formData, setFormData, error, success , setSuccess} = useRegistration();
     const [selectedAddress, setSelectedAddress] = useState('');
     const [latAndLng, setlatAndLng] = useState(initialLatLng || null);
     // const [showMap, setShowMap] = useState(false);
@@ -18,6 +18,7 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
         if (mode === 'edit' && initialLatLng) {
             setlatAndLng(initialLatLng);
             setShowMap(true);
+            
         }
     }, [mode, initialLatLng]);
 
@@ -30,7 +31,7 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
                 lng: coordinates.lng
             })
             setShowMap(true)
-
+            setSuccess("카카오맵을 통해 자세한 위치를 클릭해주세요.")
             setSelectedAddress(postcodeAddress);
             setFormData(prev => ({
                 ...prev,
@@ -65,8 +66,8 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
                 onAddressComplete={handleAddressComplete}
                 initialPostcodeAddress={initialAddress || ""} 
                 initialDetailAddress=""
-
             />
+
 
             {success && (
                 <div className={styles.successText}>
@@ -74,12 +75,13 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
                 </div>
             )}
 
+            {showMap && <KakaoMap latAndLng={latAndLng} isChange={mode === "edit"} />}
+
             {error && (
                 <div className={styles.errorText}>
                     {error}
                 </div>
             )}
-            {showMap && <KakaoMap latAndLng={latAndLng} isChange={mode === "edit"} />}
         </div>
     )
 }

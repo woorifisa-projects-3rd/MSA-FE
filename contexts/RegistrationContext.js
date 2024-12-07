@@ -267,24 +267,47 @@ export const RegistrationProvider = ({ children, mode}) => {
     // 모든 필수 데이터 검증 함수
     const validateAllData = () => {
         console.log(formData)
+
+        // 위도/경도를 제외한 필수 필드들
         const requiredFields = {
             storeName: formData.storeName,
             businessNumber: formData.businessNumber,
             accountNumber: formData.accountNumber,
             bankCode: formData.bankCode,
             location: formData.location,
-            latitude: formData.latitude,
-            longitude: formData.longitude
         };
 
+        const locationFields =  {
+            latitude: formData.latitude,
+            longitude: formData.longitude
+        }
+
+        // 기본 필수 필드 검증
         const emptyFields = Object.entries(requiredFields)
             .filter(([_, value]) => !value)
             .map(([key]) => key);
 
+        // 위치 필드 검증
+        const emptyLocationFields = Object.entries(locationFields)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);   
+
+        // 에러 메시지 생성
+        let errorMessage = [];
+
         if (emptyFields.length > 0) {
             setError(`다음 항목을 모두 입력해주세요: ${emptyFields.join(', ')}`);
+        }
+
+        if (emptyLocationFields.length > 0) {
+            errorMessage.push('맵에 정확한 위치를 눌러주세요.');
+        }
+
+        if (errorMessage.length > 0) {
+            setError(errorMessage.join('\n'));
             return false;
         }
+
         return true;
     };
 
@@ -335,6 +358,7 @@ export const RegistrationProvider = ({ children, mode}) => {
             isPinVerified,
             validateAllData,
             success,
+            setSuccess,
             isEmailErrored,
             isEmailNumSuccess,
             isSubmitting,

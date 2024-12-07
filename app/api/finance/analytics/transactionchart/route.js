@@ -31,13 +31,14 @@ export async function GET(request) {
 
     } catch (error) {
         // 오류 처리 및 로그 출력
-        console.error('Spring Boot 요청 실패: ', error.message);
-        console.log('Spring Boot 에러 응답: ', error.response?.data);
-
-        // 에러 응답 반환
-        return NextResponse.json(
-            { error: error.response?.data || 'Spring Boot 서버 오류' },
-            { status: error.response?.status || 500 }
-        );
+        const errorMessage = error.response.data.message // 확인테스트
+        const statusCode = error.response?.status || 500;
+        console.log("transactionchart 오류메세지:", errorMessage)
+        return NextResponse.json({ 
+            success: false,
+            error: errorMessage 
+        }, { 
+            status: statusCode 
+        }); 
     }
 }

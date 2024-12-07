@@ -34,13 +34,22 @@ export default function DefaultTable({ tableName, tableHeaders, list }) {
                                // key로 데이터 접근
                                if (!data[key]) {
                                    return (
-                                       <td key={colIndex} className={classes.cell}>
-                                           <PrimaryButton  text={tableHeaders[key]}/>
+                                       <td 
+                                            key={colIndex} 
+                                            className={classes.cell}
+                                            data-label={tableHeaders[key]}
+                                        >
+                                          
+                                           <span className={classes.noDataText}> 데이터가 없습니다.</span>
                                        </td>
                                    );
                                }
                                return (
-                                   <td key={colIndex} className={classes.cell}>
+                                    <td 
+                                        key={colIndex} 
+                                        className={classes.cell}
+                                        data-label={tableHeaders[key]}
+                                    >
                                        {data[key]}
                                    </td>
                                );

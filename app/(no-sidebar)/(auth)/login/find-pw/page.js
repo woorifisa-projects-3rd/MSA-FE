@@ -43,14 +43,6 @@ export default function FindPasswordPage() {
             <div className={styles.contentWrapper}>
                 <div className={styles.leftSection}>
                     <div className={styles.guideContent}>
-                        <Image
-                            src="/images/dashboard.png"
-                            alt="비밀번호 찾기 안내"
-                            width={500}
-                            height={350}
-                            className={styles.illustration}
-                            unoptimized={true}
-                        />
                         <h2 className={styles.guideTitle}>
                             비밀번호가 기억나지 않으세요? 
                         </h2>

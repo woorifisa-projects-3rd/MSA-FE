@@ -34,27 +34,119 @@
     padding: 10px;
 }
 
+.modalCardGroup {
+  display: flex;
+  gap: 20px; /* 카드 간 간격 */
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.modalCard {
+  flex: 1;
+  padding: 16px 20px;
+  border: 2px solid #ddd; /* 기본 테두리 */
+  border-radius: 10px;
+  text-align: center;
+  background-color: #f9f9f9; /* 카드 배경색 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modalCard:hover {
+  border-color: #ff7f50;
+  background-color: var(--sidebar-color);
+}
+
+.modalCard.selected {
+  background-color: #fff4e6;
+  border-color: #ff4500;
+  color: var(--main-orange); /* 선택된 상태 텍스트 색상 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.cardDescription {
+  font-size: 14px;
+  color: #666;
+}
+
 .modalFeeInfo {
-    margin-top: 16px;
-    font-size: 14px;
-    color: #555;
-    text-align: center;
-  }
-  .modalFeeInfo strong {
-    color: #d9534f; /* 강조 색상 */
-  }
-  
-  .modalRadioGroup {
-    display: flex;
-    justify-content: center; /* 가운데 정렬 */
-    gap: 20px; /* 버튼 간 간격 */
-    margin-top: 16px;
-  }
-  
-  .modalRadioGroup label {
-    display: flex;
-    align-items: center; /* 라디오 버튼과 텍스트를 수직으로 정렬 */
-    font-size: 20px;
-    cursor: pointer; /* 클릭 가능한 느낌을 줌 */
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+}
+
+.modalFeeInfo strong {
+  color: #d9534f; /* 강조 텍스트 색상 */
+}
+
+
+/* 반응형 스타일 */
+@media screen and (max-width: 768px) {
+  .container {
+      margin: 10px auto;
+      padding: 20px;
   }
 
+  .header {
+      flex-direction: column;
+      gap: 15px;
+      align-items: stretch;
+  }
+
+  .filtering {
+      width: 100%;
+  }
+
+  .filtering > * {
+      width: 100%;
+  }
+
+  .modalCardGroup {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .modalCard {
+      width: 100%;
+      padding: 12px 16px;
+  }
+
+  .cardTitle {
+      font-size: 16px;
+  }
+
+  .cardDescription {
+      font-size: 13px;
+  }
+
+  .modalFeeInfo {
+      margin-top: 12px;
+      font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+      padding: 15px;
+  }
+
+  .cardTitle {
+      font-size: 15px;
+  }
+
+  .cardDescription {
+      font-size: 12px;
+  }
+
+  .modalFeeInfo {
+      font-size: 12px;
+  }
+}

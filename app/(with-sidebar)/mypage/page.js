@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import ProfileDetail from "../../../components/mypage/content/ProfileDetail";
 import PasswordChange from "../../../components/mypage/content/PasswordChange";
-import AlarmSetting from "@/components/mypage/content/AlarmSetting";
 import Loading from "@/components/loading/Loading";
 import classes from "./page.module.css";
 import { nextClient } from "@/lib/nextClient";

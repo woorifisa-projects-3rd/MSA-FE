@@ -42,6 +42,7 @@ export default function SalesExpenses() {
   const [expensesData, setExpensesData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessType, setSelectedBusinessType] = useState(null); // 선택된 사업자 유형 상태
+  const [error, setError] = useState("");
 
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -67,6 +68,11 @@ export default function SalesExpenses() {
         });
         const data = response.data;
 
+        // if(response.data){
+          
+        // }
+        console.log("차트 페이지 - 서버에서 받는 원본 매출/지출 데이터", data)
+
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
         const filteredSales = (data.data.sales || []).filter(
           (item) =>
@@ -91,6 +97,7 @@ export default function SalesExpenses() {
           }));
         };
 
+        console.log("지출/매출 페이지 filterdSales", filteredSales);
         const salesCategoryTotals = calculateCategoryTotals(filteredSales);
         const expensesCategoryTotals =
           calculateCategoryTotals(filteredExpenses);
@@ -126,12 +133,12 @@ export default function SalesExpenses() {
         const expensesProcessed = processChartData(expensesCategoryTotals);
 
         const chartColors = [
-          "#394F89",
-          "#0180CD", // main woori blue
-          "#38BEEF", // woori light blue
-          "#93C5FD",
-          "#E0FCFD",
-          "#A2DCEE",
+          "#FF8C42", // 부드러운 오렌지
+          "#FFA559", // 연한 살구색
+          "#FFD57E", // 밝은 머스타드
+          "#FFE8A3", // 은은한 크림 노랑
+          "#FFF4D2", // 연한 레몬빛
+          "#F6C89F", // 따뜻한 코랄 주황
         ];
 
         setSalesData({
@@ -158,7 +165,7 @@ export default function SalesExpenses() {
           ],
         });
       } catch (error) {
-        console.error("API 호출 실패: ", error);
+        setError(error.response.data.error)
       }
     };
     loadTransactionAnalyticsPageData();
@@ -280,7 +287,7 @@ export default function SalesExpenses() {
     datasets: [
       {
         data: monthlySalesData,
-        backgroundColor: "#F8CD67", // woori light blue
+        backgroundColor: "#F6C89F",
       },
     ],
   };
@@ -336,38 +343,49 @@ export default function SalesExpenses() {
       </div>
 
       <div className={classes.gridContainer}>
-  <div className={classes.leftSection}>
-    <div className={classes.summaryContainer}>
-      <div className={classes.card}>
-        <div className={classes.icon}>📈</div>
-        <div className={classes.textContainer}>
-          <h3>
-            매출
-              <span className={classes.tooltip}>
-                원가를 감하지 않은, 일일 매출 정산금과 온라인 결제 정산금 등을 포함한 총 매출액입니다.
-              </span>
-          </h3>
-          <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
-        </div>
-      </div>
-      <div className={classes.card}>
-        <div className={classes.icon}>📉</div>
-        <div className={classes.textContainer}>
-          <h3>
-            지출
-              <span className={classes.tooltip2}>
-                식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
-              </span>
-          </h3>
-          <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
-        </div>
-      </div>
-    </div>
+        <div className={classes.leftSection}>
+          {/* 왼쪽 섹션 매출/지출 카드 */}
+          <div className={classes.summaryContainer}>
+            {/* 왼쪽 매출 카드 */}
+            <div className={classes.card}>
+              <div className={classes.icon}>📈</div>
+              <div className={classes.textContainer}>
+                <h3>
+                  매출
+                    <span className={classes.tooltip}>
+                      원가를 감하지 않은, 일일 매출 정산금과 온라인 결제 정산금 등을 포함한 총 매출액입니다.
+                    </span>
+                </h3>
+                <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
+              </div>
+            </div>
+            {/* 오른쪽 지출 카드 */}
+            <div className={classes.card}>
+              <div className={classes.icon}>📉</div>
+              <div className={classes.textContainer}>
+                <h3>
+                  지출
+                    <span className={classes.tooltip2}>
+                      식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
+                    </span>
+                </h3>
+            
+                <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
+              </div>
+            </div>
+          </div>
 
+
+          {/* 왼쪽 섹션 차트 컨테이너  */}
           <div
             className={classes.chartContainer}
             style={{ position: "relative" }}
           >
+            {/* {error && (
+                <div className={styles.errorText}>
+                    {error}
+                </div>
+            )} */}
             <div className={classes.chartStyle}>
               {/* <h2>매출</h2> */}
               {salesData.labels ? (
@@ -387,7 +405,31 @@ export default function SalesExpenses() {
           </div>
         </div>
 
-        <ModalContainer
+        <div className={classes.rightSection}>
+          <h2>{selectedYear}년 월별 매출</h2>
+          {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
+            <Bar data={monthlySalesBarData} options={barChartOptions} className={classes.barContainer} />
+          ) : (
+            <Loading />
+          )}
+
+          <div className={classes.reportsContainer}>
+            {salesData.labels && expensesData.labels ? (
+              <>
+                <BaseButton
+                  text="손익계산서 발급"
+                  onClick={handleGenerateIncomeStatement}
+                />
+                <BaseButton text="간편장부 발급" onClick={handleOpenModal} />
+              </>
+            ) : (
+              <p></p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <ModalContainer
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           title="사업자 유형 선택"
@@ -421,31 +463,7 @@ export default function SalesExpenses() {
             인 경우<br/>선택하세요.</span>
           </button>
         </div>
-        </ModalContainer>
-
-        <div className={classes.rightSection}>
-          <h2>{selectedYear}년 월별 매출</h2>
-          {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
-            <Bar data={monthlySalesBarData} options={barChartOptions} />
-          ) : (
-            <Loading />
-          )}
-
-          <div className={classes.reportsContainer}>
-            {salesData.labels && expensesData.labels ? (
-              <>
-                <BaseButton
-                  text="손익계산서 발급"
-                  onClick={handleGenerateIncomeStatement}
-                />
-                <BaseButton text="간편장부 발급" onClick={handleOpenModal} />
-              </>
-            ) : (
-              <p></p>
-            )}
-          </div>
-        </div>
-      </div>
+      </ModalContainer>
     </div>
   );
 }
