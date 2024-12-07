@@ -45,3 +45,10 @@
   font-weight: bold;
   font-size: 18px;
 }
+
+
+.errorText {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}

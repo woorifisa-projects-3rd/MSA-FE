@@ -11,11 +11,12 @@ const BaseButton = ({
     type,
     backgroundColor = 'var(--main-orange)', 
     hoverColor = 'var(--light-orange)',
+    className,
     ...props 
 }) => {
   return (
     <button 
-        className={styles.baseButton} 
+        className={`${styles.baseButton} ${className || ''}`} 
         type={type}
         onClick={onClick}
         style={{

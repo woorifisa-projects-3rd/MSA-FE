@@ -49,3 +49,71 @@
 
 
 
+/* 반응형 스타일 추가 */
+@media screen and (max-width: 768px) {
+    .table {
+        display: block;
+        width: 100%;
+    }
+    
+    .tableHeader {
+        display: none; /* 모바일에서는 헤더 숨기기 */
+    }
+
+     /* tbody 스타일 추가 */
+     .table tbody {
+        display: block;
+        width: 100%;
+    }
+    
+    .bodyRow {
+        display: block;
+        /* flex-wrap: wrap; */
+        height: auto; 
+        width: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .cell {
+        width: 100%;
+        display: flex;
+        padding: 8px 0;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    /* 각 셀에 라벨 추가 */
+    .cell:before {
+        content: attr(data-label);
+        width: 40%;
+        padding-right: 1rem;
+        font-weight: bold;
+        color: var(--gray);
+    }
+    
+    /* 마지막 셀의 경계선 제거 */
+    .cell:last-child {
+        border-bottom: none;
+    }
+    
+    
+}
+
+/* 더 작은 화면에서의 추가 조정 */
+@media screen and (max-width: 480px) {
+    .workplaceTitle {
+        font-size: 18px;
+    }
+    
+    .cell:before {
+        width: 50%;
+    }
+    
+    .cell button {
+        width: 50%;
+    }
+}

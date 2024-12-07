@@ -53,3 +53,64 @@
     color: #333;
   }
   
+
+/* 태블릿 반응형 */
+@media screen and (max-width: 768px) {
+  .container {
+      padding: 30px 20px;
+  }
+
+  .attendanceHeader {
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+  }
+
+  .navigation {
+      width: 100%;
+      justify-content: center;
+      margin: 10px 0;
+  }
+
+  .basebtnBox {
+      width: 100%;
+  }
+
+  .basebtnBox button {
+      width: 100%;
+  }
+
+  .selectedDate {
+      font-size: 18px;
+  }
+
+}
+
+/* 모바일 반응형 */
+@media screen and (max-width: 480px) {
+  .container {
+      padding: 20px 15px;
+  }
+
+  .navigation {
+      gap: 10px;
+  }
+
+  .selectedDate {
+      font-size: 16px;
+  }
+
+  .navButton {
+      padding: 4px 8px;
+      font-size: 14px;
+  }
+
+  .addButton {
+    font-size: 0;  /* 기존 텍스트 숨기기 */
+  }
+
+  .addButton::after {
+      content: "출퇴근 기록 추가";
+      font-size: 14px;  /* 원하는 폰트 크기 */
+  }
+}

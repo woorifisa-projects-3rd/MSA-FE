@@ -154,4 +154,8 @@
         align-items: center;
         justify-content: space-between;
     }
+    .mobileRight{
+        font-size: 14px;
+        gap: 5px;
+    }
 }

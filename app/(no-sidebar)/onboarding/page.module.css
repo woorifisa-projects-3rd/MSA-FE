@@ -137,9 +137,14 @@
 }
 
 @media (max-width: 768px) {
+    .main{
+        padding: 1rem;
+    }
     .hero {
         flex-direction: column;
         gap: 2rem;
+        padding: 1rem;
+        align-items: start;
     }
 
     .featureGrid {
@@ -147,6 +152,7 @@
     }
 
     .buttonGroup {
-        flex-direction: column;
+        flex-direction: flex;
+        font-size: 13px;
     }
 }

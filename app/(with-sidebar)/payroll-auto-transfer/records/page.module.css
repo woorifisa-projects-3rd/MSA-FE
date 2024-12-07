@@ -87,3 +87,66 @@
   color: #d9534f; /* 강조 텍스트 색상 */
 }
 
+
+/* 반응형 스타일 */
+@media screen and (max-width: 768px) {
+  .container {
+      margin: 10px auto;
+      padding: 20px;
+  }
+
+  .header {
+      flex-direction: column;
+      gap: 15px;
+      align-items: stretch;
+  }
+
+  .filtering {
+      width: 100%;
+  }
+
+  .filtering > * {
+      width: 100%;
+  }
+
+  .modalCardGroup {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .modalCard {
+      width: 100%;
+      padding: 12px 16px;
+  }
+
+  .cardTitle {
+      font-size: 16px;
+  }
+
+  .cardDescription {
+      font-size: 13px;
+  }
+
+  .modalFeeInfo {
+      margin-top: 12px;
+      font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+      padding: 15px;
+  }
+
+  .cardTitle {
+      font-size: 15px;
+  }
+
+  .cardDescription {
+      font-size: 12px;
+  }
+
+  .modalFeeInfo {
+      font-size: 12px;
+  }
+}

@@ -97,6 +97,7 @@
 
     .header_right {
         gap: 10px; 
+        padding-right: 0px;
     }
 
     .profile_button {
