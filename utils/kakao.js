@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import BaseButton from "@/components/button/base-button";
 
 export const KakaoMap = ({latAndLng,isChange = false }) => {
-    const {setFormData} =  useRegistration();
+    const {setFormData, setError} =  useRegistration();
     const mapContainer = useRef(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const {lat,lng}= latAndLng;
@@ -75,6 +75,12 @@ export const KakaoMap = ({latAndLng,isChange = false }) => {
                         lat: latlng.getLat(),
                         lng: latlng.getLng()
                     });
+                    
+                    setFormData(prev => ({
+                        ...prev,
+                        latitude: latlng.getLat(),
+                        longitude: latlng.getLng()
+                    }))
                 } catch (error) {
                     console.error('Click event handler error:', error);
                 }
@@ -89,7 +95,7 @@ export const KakaoMap = ({latAndLng,isChange = false }) => {
 
     const handleConfirmLocation = () => {
         if (currentLocation) {
-
+            setError("");
             setFormData(prev => ({
                 ...prev,
                 latitude: currentLocation.getLat(),
@@ -132,7 +138,7 @@ export const KakaoMap = ({latAndLng,isChange = false }) => {
            />
             <div>
                 <div ref={mapContainer} style={{ width: '500px', height: '400px' }} />
-                <BaseButton text="위치 확정" onClick={handleConfirmLocation} />
+                {/* <BaseButton text="위치 확정" onClick={handleConfirmLocation} /> */}
             </div>
         </>
     );
