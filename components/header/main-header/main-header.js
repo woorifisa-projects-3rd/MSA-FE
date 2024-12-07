@@ -143,12 +143,8 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                     <Link href="/mypage">
                         <button className={classes.profile_button}>내 정보</button>
                     </Link>
-                    {/* <button className={classes.bellButton}>
-                        <Bell className={classes.bellIcon} />
-                        <span className={classes.notificationCount}>5</span>
-                    </button> */}
                     <div ref={bellRef} className={classes.bellContainer}>
-                        <FiBell
+                        {/* <FiBell
                             size={45}
                             className={classes.bell_icon}
                             onClick={handleBellClick}
@@ -157,7 +153,7 @@ export default function MainHeader ({ isMobileMenuOpen, onMenuToggle }) {
                             <span className={classes.notificationCnt}>
                                 {unreadNotificationCount}
                             </span>
-                        )}
+                        )} */}
                         {isAlarmOpen && (
                             <AlarmModal ref={modalRef} notifications={notifications} />
                         )}

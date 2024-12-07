@@ -32,7 +32,7 @@ export default function OnboardingPage() {
         <main className={styles.main}>
           <section className={styles.hero}>
             <div className={styles.heroContent}>
-            <h1 className={styles.mainTitle}>
+              <h1 className={styles.mainTitle}>
                   계좌를 연동하고<br />
                   <span className={styles.highlight}>{texts[textIndex]}</span>
                   <br/> 한 번에<br /> 해결하세요!

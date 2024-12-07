@@ -100,10 +100,6 @@
         border-bottom: none;
     }
     
-    /* 버튼을 포함한 셀 스타일 조정 */
-    .cell button {
-        margin: 0 auto;
-    }
     
 }
 

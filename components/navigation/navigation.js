@@ -104,7 +104,7 @@ export default function Navigation({ isMobileMenuOpen }) {
                 </button>
             </nav>
 
-             {/* 모바일 네비게이션 */}
+            {/* 모바일 네비게이션 */}
             <div className={`${classes.mobileNav} ${isMobileMenuOpen ? classes.open : ''}`}>
                 <div className={classes.mobileNavContent}>
                     {/* 상단 드롭다운 섹션 */}
