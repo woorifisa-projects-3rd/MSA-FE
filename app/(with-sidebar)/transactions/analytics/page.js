@@ -51,14 +51,17 @@ export default function SalesExpenses() {
   const {storeId} = useAuth();
   console.log("storeId?",storeId);
 
-
+  // storeId ,selectedYear, selectedMonth가 변할 때마다 왼쪽 섹션 sales data, expenses data 새로 가져오기
   useEffect(() => {
+    // if (!storeId) return;
+
     const loadTransactionAnalyticsPageData = async () => {
 
       console.log(selectedYear, selectedMonth);
 
 
       try {
+        // sales data와 expenses data를 가져오기 위한 api
         const response = await nextClient.get('/finance/analytics/transactionchart', {
           params: {
             storeId: storeId,
@@ -99,9 +102,14 @@ export default function SalesExpenses() {
         };
 
         console.log("지출/매출 페이지 filterdSales", filteredSales);
+
+        // filterdSales와 filteredExpenses를 카테고리리별로 나눔
         const salesCategoryTotals = calculateCategoryTotals(filteredSales);
-        const expensesCategoryTotals =
-          calculateCategoryTotals(filteredExpenses);
+        const expensesCategoryTotals = calculateCategoryTotals(filteredExpenses);
+         
+        console.log(salesCategoryTotals, expensesCategoryTotals)
+          
+        // 월별 데이터 -> 오른쪽 섹션 차트를 위한 1년 월별 데이터
         const monthlySales = data.data.monthlySales;
 
         // 카테고리 5개까지, 나머지는 '기타'로
@@ -128,8 +136,10 @@ export default function SalesExpenses() {
         setTotalSales(data.data.totalSales || 0);
         setTotalExpenses(data.data.totalExpenses || 0);
         setMonthlySalesData(monthlySales || []);
-        console.log(data.data.monthlySales);
+        console.log("최종 montnlySaelsData?",monthlySalesData);
 
+
+        // 카테고리별로 나눈 데이터를 다시 카테고리 5개까지, 나머지는 '기타'로 처리
         const salesProcessed = processChartData(salesCategoryTotals);
         const expensesProcessed = processChartData(expensesCategoryTotals);
 
@@ -142,6 +152,7 @@ export default function SalesExpenses() {
           "#F6C89F", // 따뜻한 코랄 주황
         ];
 
+        // 가공된 sales data와 expens data를 저장
         setSalesData({
           labels: salesProcessed.labels,
           datasets: [

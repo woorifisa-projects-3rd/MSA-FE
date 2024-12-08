@@ -14,9 +14,11 @@ const PresidentInfo = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState({ birthDate: '', phoneNumber: '' });
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadMyPageData = async () => {
+      setIsLoading(true);
       try {
         const response = await nextClient.get('/mypage/president');
         const data = response.data;
@@ -35,11 +37,15 @@ const PresidentInfo = () => {
 
       } catch (error) {
         console.error('마이페이지 정보 로드 에러:', error.message);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadMyPageData();
   },[])
+
+ 
 
   const formatBirthDate = (input) => {
     const numbers = input.replace(/[^0-9]/g, '');
@@ -122,7 +128,12 @@ const PresidentInfo = () => {
   return (
     <div className={styles.container}>
         <div className={styles.headerSection}>
-            <h2 className={styles.title}> {name} 사장님</h2>
+            <h2 className={styles.title}>
+              {isLoading ? (
+                <span className={`${styles.skeleton}`} style={{ width: '80px', height: '24px', display: 'inline-block', verticalAlign: 'middle' }} />
+              ) : name}
+              {' 사장님'}
+            </h2>
             <div className={styles.email}>{email}</div>
         </div>
         <div className={styles.changeSection}>
@@ -130,7 +141,11 @@ const PresidentInfo = () => {
             <div className={styles.inputWrapper}>
               <label className={styles.label}>생년월일</label>
               <div className={styles.inputChange}>
-              {isEditingBirth ? (
+              {isLoading ? (
+                // 로딩 중일 때는 스켈레톤 UI 표시
+                <div className={`${styles.displayText} ${styles.skeleton}`} style={{ width: '120px' }} />
+              ) : isEditingBirth ? (
+                // 편집 모드일 때는 input 표시
                 <input
                   type="text"
                   value={birthDate.replace(/[년월일\s]/g, '')}
@@ -139,6 +154,7 @@ const PresidentInfo = () => {
                   placeholder="YYYYMMDD"
                 />
               ) : (
+                // 일반 모드일 때는 텍스트 표시
                 <div className={styles.displayText}>{birthDate}</div>
               )}
               <BaseButton
@@ -156,7 +172,10 @@ const PresidentInfo = () => {
             <div className={styles.inputWrapper}>
               <label className={styles.label}>전화번호</label>
               <div className={styles.inputChange}>
-              {isEditingPhone ? (
+              {/* 부분적 렌더링 - skeleton 적용 */}
+              {isLoading ? (
+                <div className={`${styles.displayText} ${styles.skeleton}`} style={{ width: '120px' }} />
+              ) : isEditingPhone ? (
                 <input
                   type="tel"
                   value={phoneNumber.replace(/-/g, '')}
@@ -177,18 +196,26 @@ const PresidentInfo = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className={styles.saveButton}>
-          <PrimaryButton
-            text="변경 사항 저장"
-            onClick={handleSave}
-          />
-          {errorMessage && (
-          <div className={styles.errorMessage}>
-            {errorMessage}
+          
+          <div className={styles.saveButtonBox}>
+            <div className={styles.saveButton}>
+              <PrimaryButton
+                text="변경 사항 저장"
+                onClick={handleSave}
+                style={{ padding: '10px 20px', fontSize: '16px' }}
+          
+              />
+              {errorMessage && (
+              <div className={styles.errorMessage}>
+                {errorMessage}
+              </div>
+              )}
+            </div>
           </div>
-          )}
+
+        
         </div>
+    
     </div>
   );
 };

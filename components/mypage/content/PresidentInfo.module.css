@@ -30,7 +30,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
   gap: 1rem; /* 요소들 사이 간격 추가 */
 }
 
@@ -64,17 +63,43 @@
   border-radius: 10px;
   color: gray;
 }
-
+.saveButtonBox{
+  margin-top: auto;
+  flex: 1;
+}
 .saveButton {
   display: flex;
   align-items: center;
-  gap: 10px;
+  width: 100%;
 }
 
 .errorMessage {
   color: red;
   font-size: 0.8rem;
 }
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
 
 /* 반응형 스타일 추가 */
 @media screen and (max-width: 768px) {
@@ -100,14 +125,16 @@
   .input, .displayText {
       width: 100%;  /* 입력 필드 전체 너비 사용 */
   }
-
+  .saveButtonBox{
+      width: 100%;
+  }
   .saveButton {
       flex-direction: column;  /* 버튼과 에러 메시지를 세로로 배치 */
       width: 100%;
   }
 
   .saveButton button {
-      width: 100%;  /* 저장 버튼 전체 너비 사용 */
+      width: 100%;
   }
 }
 
