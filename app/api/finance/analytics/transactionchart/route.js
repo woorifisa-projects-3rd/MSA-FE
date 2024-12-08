@@ -15,12 +15,12 @@ export async function GET(request) {
 
 
         // 필수 파라미터 검증
-        // if (!storeId || !year || !month) {
-        //     return NextResponse.json(
-        //         { error: '필수 파라미터(storeid, year, month)가 누락되었습니다.' },
-        //         { status: 400 }
-        //     );
-        // }
+        if (!storeId ) {
+            return NextResponse.json(
+                { error: '먼저 가게 등록을 해주세요' },
+                { status: 400 }
+            );
+        }
 
         // Spring Boot 서버로 GET 요청
         const response = await springClient.get(`/finance/transactionchart?storeid=${storeId}&year=${year}&month=${month}`);
@@ -31,18 +31,11 @@ export async function GET(request) {
         return NextResponse.json({ success: true, data: response.data });
 
     } catch (error) {
-        console.log("transaction api 스프링부트로부터 응답",error.response.data);
-        
-        let errorMessage = 'Spring Boot 서버 오류';
-        const statusCode = error.response?.status;
-
-        if (statusCode === 400) {
-            errorMessage = '가게 등록을 먼저 해주세요';
-        }
-
+      
+        console.error('Spring Boot 요청 실패:', error.message);
         return NextResponse.json(
-            { error: errorMessage },
-            { status: statusCode || 500 }
+          { error: error.response?.data || 'Spring Boot 서버 오류' },
+          { status: error.response?.status || 500 }
         );
     }
 }
