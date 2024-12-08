@@ -1,36 +1,37 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import styles from './signup.module.css';
-import PostcodeModal from '@/components/postcode-search/PostcodeModal';
-import { nextClient } from '@/lib/nextClient';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import styles from "./signup.module.css";
+import PostcodeModal from "@/components/postcode-search/PostcodeModal";
+import { nextClient } from "@/lib/nextClient";
+import { useRouter } from "next/navigation";
 import { validateForm, commonValidateRules } from "@/utils/validation";
-import Loading from '@/components/loading/Loading';
+import Loading from "@/components/loading/Loading";
+import BaseButton from "@/components/button/base-button";
 
 export default function Signup() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    birthDate: '',
-    postcode: '',
-    basicAddress: '',
-    detailAddress: '',
-    phoneNumber: '',
-    email: '',
-    emailConfirm: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    birthDate: "",
+    postcode: "",
+    basicAddress: "",
+    detailAddress: "",
+    phoneNumber: "",
+    email: "",
+    emailConfirm: "",
+    password: "",
+    confirmPassword: "",
     isEmailConfirmed: false, // 이메일 인증 상태 확인
     termsAccept: false,
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [error, setError] = useState('');
-  const [emailSuccess, setEmailSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [emailSuccess, setEmailSuccess] = useState("");
   const [isEmailConfirmDisabled, setEmailConfirmDisabled] = useState(false);
-  const [emailConfirmNumber, setEmailConfirmNumber] = useState('');
+  const [emailConfirmNumber, setEmailConfirmNumber] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -50,7 +51,6 @@ export default function Signup() {
         return rest;
       }
     });
-    
   };
 
   const handlePostcodeSelect = (selectedPostcode, selectedAddress) => {
@@ -94,21 +94,20 @@ export default function Signup() {
     setLoading(true);
     try {
       // 이메일 전송 요청
-      const response = await nextClient.post('/auth/signup/email', {
+      const response = await nextClient.post("/auth/signup/email", {
         email: formData.email,
       });
 
       // 성공 응답 처리
-      if(response.data.success){
-        setEmailSuccess('이메일이 발송되었습니다. 확인해주세요.');
+      if (response.data.success) {
+        setEmailSuccess("이메일이 발송되었습니다. 확인해주세요.");
         setEmailConfirmNumber(response.data.pin); // PIN 설정
-        console.log("email로 받은 pinNumber",response.data.pin)
-        setError(''); // 에러 상태 초기화
+        console.log("email로 받은 pinNumber", response.data.pin);
+        setError(""); // 에러 상태 초기화
       }
-  
     } catch (error) {
       // 에러 처리
-      const errorMessage = error.response.data.error
+      const errorMessage = error.response.data.error;
       setFormErrors((prevErrors) => ({
         ...prevErrors,
         email: errorMessage,
@@ -116,13 +115,12 @@ export default function Signup() {
     }
     setLoading(false);
   };
-  
 
   // 이메일 인증 확인
-  const handleEmailConfirm = () => {        
+  const handleEmailConfirm = () => {
     if (emailConfirmNumber == formData.emailConfirm) {
       setEmailConfirmDisabled(true);
-      setEmailSuccess('');
+      setEmailSuccess("");
       setFormData((prevData) => ({
         ...prevData,
         isEmailConfirmed: true,
@@ -136,7 +134,7 @@ export default function Signup() {
     } else {
       setFormErrors((prevErrors) => ({
         ...prevErrors,
-        emailConfirm: '인증번호가 일치하지 않습니다. 다시 확인해주세요.',
+        emailConfirm: "인증번호가 일치하지 않습니다. 다시 확인해주세요.",
       }));
 
       setFormData((prevData) => ({
@@ -152,7 +150,7 @@ export default function Signup() {
     // 유효성 검사 수행
     const errors = validateForm(formData, validateRules);
     setFormErrors(errors);
-    
+
     // 오류가 없으면 제출
     if (Object.keys(errors).length === 0) {
       const fullAddress = `${formData.basicAddress}, ${formData.detailAddress}`;
@@ -169,15 +167,14 @@ export default function Signup() {
 
       setLoading(true);
       try {
-        const response = await nextClient.post('/auth/signup', submissionData);
+        const response = await nextClient.post("/auth/signup", submissionData);
         console.log(submissionData);
-        alert('회원가입이 완료되었습니다!');
-        router.push('/login');
-        
+        alert("회원가입이 완료되었습니다!");
+        router.push("/login");
       } catch (error) {
         let errorMessage;
-        if (error.response.status == '400') {
-          errorMessage = '이미 등록된 전화번호 혹은 이메일입니다.'
+        if (error.response.status == "400") {
+          errorMessage = "이미 등록된 전화번호 혹은 이메일입니다.";
         } else {
           errorMessage = error.response?.data?.error || error.message;
         }
@@ -186,14 +183,13 @@ export default function Signup() {
       }
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
-      {loading && <Loading />}
-        <h2 className={styles.title}>
-        </h2>
+        {loading && <Loading />}
+        <h2 className={styles.title}></h2>
         <form className={styles.form}>
           <div className={styles.formGrid}>
             {/* 왼쪽 섹션 */}
@@ -205,20 +201,23 @@ export default function Signup() {
                   placeholder="이름"
                   value={formData.name}
                   onChange={handleChange}
-                   />
-                   {formErrors.name && <p className={styles.error}>{formErrors.name}</p>}
+                />
+                {formErrors.name && (
+                  <p className={styles.error}>{formErrors.name}</p>
+                )}
               </div>
 
               <div className={styles.inputGroup}>
-                <input type="text"
-                name="birthDate"
-                placeholder="생년월일"
-                value={formData.birthDate}
-                onChange={handleChange}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
-                 />
-                 {formErrors.birthDate && (
+                <input
+                  type="text"
+                  name="birthDate"
+                  placeholder="생년월일"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => (e.target.type = "text")}
+                />
+                {formErrors.birthDate && (
                   <p className={styles.error}>{formErrors.birthDate}</p>
                 )}
               </div>
@@ -232,13 +231,19 @@ export default function Signup() {
                   readOnly
                   className={styles.readOnlyInput}
                 />
-                <button
+                {/* <button
                   type="button"
                   className={styles.addressButton}
                   onClick={() => setIsModalOpen(true)}
                 >
                   우편번호찾기
-                </button>
+                </button> */}
+                <BaseButton
+                  text={"우편번호 찾기"}
+                  type="button"
+                  className={styles.addressButton}
+                  onClick={() => setIsModalOpen(true)}
+                ></BaseButton>
                 {formErrors.postcode && (
                   <p className={styles.error}>{formErrors.postcode}</p>
                 )}
@@ -274,7 +279,6 @@ export default function Signup() {
 
             {/* 오른쪽 섹션 */}
             <div className={styles.rightSection}>
-
               <div className={styles.inputGroup}>
                 <input
                   type="tel"
@@ -282,8 +286,8 @@ export default function Signup() {
                   placeholder="전화번호"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                 />
-                 {formErrors.phoneNumber && (
+                />
+                {formErrors.phoneNumber && (
                   <p className={styles.error}>{formErrors.phoneNumber}</p>
                 )}
               </div>
@@ -296,11 +300,25 @@ export default function Signup() {
                   value={formData.email}
                   onChange={handleChange}
                   disabled={isEmailConfirmDisabled}
-                 />
-                <button type="button" className={styles.verifyButton} onClick={emailSendHandler} disabled={isEmailConfirmDisabled}>
-                인증번호 발송
-                </button>
-                {formErrors.email && <p className={styles.error}>{formErrors.email}</p>}
+                />
+                {/* <button
+                  type="button"
+                  className={styles.verifyButton}
+                  onClick={emailSendHandler}
+                  disabled={isEmailConfirmDisabled}
+                >
+                  인증번호 발송
+                </button> */}
+                <BaseButton
+                  text={"인증번호 발송"}
+                  type="button"
+                  className={styles.verifyButton}
+                  onClick={emailSendHandler}
+                  disabled={isEmailConfirmDisabled}
+                ></BaseButton>
+                {formErrors.email && (
+                  <p className={styles.error}>{formErrors.email}</p>
+                )}
                 {!formErrors.email && emailSuccess && (
                   <p className={styles.success}>{emailSuccess}</p>
                 )}
@@ -314,16 +332,27 @@ export default function Signup() {
                   value={formData.emailConfirm}
                   onChange={handleChange}
                   disabled={isEmailConfirmDisabled}
-                  />
-                <button
+                />
+                {/* <button
                   type="button"
                   className={styles.verifyButton}
                   disabled={isEmailConfirmDisabled}
                   onClick={handleEmailConfirm}
                 >
-                  {isEmailConfirmDisabled ? '확인 완료' : '확인'}
-                </button>
-                {formErrors.emailConfirm && <p className={styles.error}>{formErrors.emailConfirm}</p>}
+                  {isEmailConfirmDisabled ? "확인 완료" : "확인"}
+                </button> */}
+
+                <BaseButton
+                  text={isEmailConfirmDisabled ? "확인 완료" : "확인"}
+                  type="button"
+                  className={styles.verifyButton}
+                  disabled={isEmailConfirmDisabled}
+                  onClick={handleEmailConfirm}
+                />
+
+                {formErrors.emailConfirm && (
+                  <p className={styles.error}>{formErrors.emailConfirm}</p>
+                )}
               </div>
 
               <div className={styles.inputGroup}>
@@ -346,8 +375,8 @@ export default function Signup() {
                   placeholder="password 재입력"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                 />
-                 {formErrors.confirmPassword && (
+                />
+                {formErrors.confirmPassword && (
                   <p className={styles.error}>{formErrors.confirmPassword}</p>
                 )}
               </div>
@@ -362,8 +391,8 @@ export default function Signup() {
                 className={styles.linkButton}
                 onClick={() =>
                   window.open(
-                    'https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131',
-                    '_blank'
+                    "https://nbi.wooribank.com/nbi/woori?withyou=BISVC0131",
+                    "_blank"
                   )
                 }
               >
@@ -371,7 +400,11 @@ export default function Signup() {
               </button>
             </div>
 
-            <button type="submit" onClick={submitHandler} className={styles.submitButton}>
+            <button
+              type="submit"
+              onClick={submitHandler}
+              className={styles.submitButton}
+            >
               회원 가입
             </button>
           </div>
