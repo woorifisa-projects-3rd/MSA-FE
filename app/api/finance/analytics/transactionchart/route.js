@@ -10,16 +10,17 @@ export async function GET(request) {
         const year = searchParams.get('selectedYear');
         const month = searchParams.get('selectedMonth');
 
+
         console.log(storeId, year, month);
 
 
         // 필수 파라미터 검증
-        if (!storeId || !year || !month) {
-            return NextResponse.json(
-                { error: '필수 파라미터(storeid, year, month)가 누락되었습니다.' },
-                { status: 400 }
-            );
-        }
+        // if (!storeId || !year || !month) {
+        //     return NextResponse.json(
+        //         { error: '필수 파라미터(storeid, year, month)가 누락되었습니다.' },
+        //         { status: 400 }
+        //     );
+        // }
 
         // Spring Boot 서버로 GET 요청
         const response = await springClient.get(`/finance/transactionchart?storeid=${storeId}&year=${year}&month=${month}`);
@@ -30,14 +31,18 @@ export async function GET(request) {
         return NextResponse.json({ success: true, data: response.data });
 
     } catch (error) {
-        // 오류 처리 및 로그 출력
-        console.error('Spring Boot 요청 실패: ', error.message);
-        console.log('Spring Boot 에러 응답: ', error.response?.data);
+        console.log("transaction api 스프링부트로부터 응답",error.response.data);
+        
+        let errorMessage = 'Spring Boot 서버 오류';
+        const statusCode = error.response?.status;
 
-        // 에러 응답 반환
+        if (statusCode === 400) {
+            errorMessage = '가게 등록을 먼저 해주세요';
+        }
+
         return NextResponse.json(
-            { error: error.response?.data || 'Spring Boot 서버 오류' },
-            { status: error.response?.status || 500 }
+            { error: errorMessage },
+            { status: statusCode || 500 }
         );
     }
 }
