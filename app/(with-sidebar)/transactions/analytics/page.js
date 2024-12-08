@@ -66,6 +66,7 @@ export default function SalesExpenses() {
             selectedMonth: selectedMonth,
           },
         });
+       
         const data = response.data;
 
         // if(response.data){
@@ -165,7 +166,7 @@ export default function SalesExpenses() {
           ],
         });
       } catch (error) {
-        setError(error.response.data.error)
+        console.error("손익계산서 요청 실패:", error);
       }
     };
     loadTransactionAnalyticsPageData();
