@@ -4,13 +4,13 @@ import styles from './button.module.css';
 // 사용방법: baseButton에 커스텀 스타일을 추가하고 싶다면  props로 얼마든지 추가해도됨
 // 사용예시  -> test/page.js 에서 확인 
 
-const PrimaryButton = ({ text, onClick,type, ...props }) => {
+const PrimaryButton = ({ text, onClick,type, className, ...props }) => {
   return (
     <button 
-        className={styles.primaryButton} 
+        className={`${styles.primaryButton} ${className || ''}`} 
         type={type}
         onClick={onClick}
-        style={props}
+        style={props.style} 
     >
       {text}
     </button>

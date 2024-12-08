@@ -81,7 +81,7 @@ export default function OnboardingPage() {
               </div>
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>🔍</div>
-                <p>가계의 매출과 지출을 한 눈에 조회하고, 문서로 받아볼 수 있어요</p>
+                <p>가게의 매출과 지출을 한 눈에 조회하고, 문서로 받아볼 수 있어요</p>
               </div>
             </div>
             <button className={styles.moreButton} onClick={handleSignupClick}>무료로 시작하기</button>
