@@ -16,7 +16,7 @@ export async function GET(request) {
         // 성공 응답 반환
         return NextResponse.json({ success: true, data: response.data });
     } catch (error) {
-        console.error('Spring Boot 요청 실패:', error.response);
+        console.log('Spring Boot 요청 실패:', error.response);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
