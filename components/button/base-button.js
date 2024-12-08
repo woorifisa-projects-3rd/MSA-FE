@@ -12,6 +12,7 @@ const BaseButton = ({
     backgroundColor = 'var(--main-orange)', 
     hoverColor = 'var(--light-orange)',
     className,
+    disabled = false,
     ...props 
 }) => {
   return (
@@ -20,7 +21,8 @@ const BaseButton = ({
         type={type}
         onClick={onClick}
         style={{
-          backgroundColor: backgroundColor,
+          backgroundColor: disabled ? 'var(--disabled-gray)' : backgroundColor,  // 비활성화된 경우 스타일 변경
+          cursor: disabled ? 'not-allowed' : 'pointer',  // 비활성화 시 커서 변경
           ...props
         }}
         onMouseEnter={(e) => e.target.style.backgroundColor = hoverColor}

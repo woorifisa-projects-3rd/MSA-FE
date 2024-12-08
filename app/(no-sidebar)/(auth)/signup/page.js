@@ -93,6 +93,7 @@ export default function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
+      setEmailSuccess("");
       // 이메일 전송 요청
       const response = await nextClient.post("/auth/signup/email", {
         email: formData.email,
@@ -319,9 +320,12 @@ export default function Signup() {
                 {formErrors.email && (
                   <p className={styles.error}>{formErrors.email}</p>
                 )}
-                {!formErrors.email && emailSuccess && (
+                {emailSuccess && (
                   <p className={styles.success}>{emailSuccess}</p>
                 )}
+                {/* {!formErrors.email && emailSuccess && (
+                  
+                )} */}
               </div>
 
               <div className={styles.inputGroup}>

@@ -171,7 +171,7 @@
 .errorMessage {
     width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin: 0.5rem 0 1rem 0;
     color: #dc2626;  /* 빨간색 */
     background-color: #fee2e2;  /* 연한 빨간색 배경 */
     border: 1px solid #fecaca;

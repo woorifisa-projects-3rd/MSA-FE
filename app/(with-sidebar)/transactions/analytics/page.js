@@ -20,6 +20,9 @@ import classes from "./page.module.css";
 import styles from './ModalStyles.module.css';
 import Loading from '@/components/loading/Loading';
 import { useAuth } from '@/contexts/AuthProvider';
+import { financeApi } from "@/api/financeApi";
+import { chartUtils } from "@/utils/chartUtils";
+import { pdfUtils } from "@/utils/pdfUtils";
 
 ChartJS.register(
   ArcElement,
@@ -48,32 +51,48 @@ export default function SalesExpenses() {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const EmptyStateMessage = ({ message }) => (
+    <div className={styles.emptyState}>
+      <div className={styles.emptyStateIcon}>📊</div>
+      <p>{message}</p>
+    </div>
+  );
+
   const {storeId} = useAuth();
+  const [isStoreIdLoading, setIsStoreIdLoading] = useState(true);
+
+   // storeId 로딩 상태 체크
+   useEffect(() => {
+    console.log("storeId 가져오는 중 !! ")
+    setIsStoreIdLoading(false); // useAuth 훅의 데이터가 로드되면 로딩 상태 false로
+  }, [storeId]);
+
+
   console.log("storeId?",storeId);
 
-
+  // storeId ,selectedYear, selectedMonth가 변할 때마다 왼쪽 섹션 sales data, expenses data 새로 가져오기
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
-
-      console.log(selectedYear, selectedMonth);
-
-
       try {
-        const response = await nextClient.get('/finance/analytics/transactionchart', {
-          params: {
-            storeId: storeId,
-            selectedYear: selectedYear,
-            selectedMonth: selectedMonth,
-          },
-        });
+        console.log("transaction-chart 데이터 요청 중!!")
+        // sales data와 expenses data를 가져오기 위한 api
+        const result = await financeApi.getTransactionChart(storeId, selectedYear, selectedMonth)
        
-        const data = response.data;
+        // 응답을 실패한 경우
+        if (!result.success) {
+            setError(result.error);
+            console.log("트랜잭션 차트 요청 페이지",result.error)
+            return;
+        }
 
-        // if(response.data){
-          
-        // }
+        // 성공시 에러 상태 초기화
+        setError("");  // 이 부분 추가
+
+        const data = result.data;
+
         console.log("차트 페이지 - 서버에서 받는 원본 매출/지출 데이터", data)
 
+        // 현재 월의 데이터 필터링 
         // 'data.sales'와 'data.expenses'가 undefined일 경우 빈 배열로 처리
         const filteredSales = (data.data.sales || []).filter(
           (item) =>
@@ -85,6 +104,8 @@ export default function SalesExpenses() {
             new Date(item.transactionDate).getFullYear() === selectedYear &&
             new Date(item.transactionDate).getMonth() + 1 === selectedMonth
         );
+
+        // 카테고리별 합계 계산
 
         const calculateCategoryTotals = (items) => {
           const categories = [
@@ -99,49 +120,33 @@ export default function SalesExpenses() {
         };
 
         console.log("지출/매출 페이지 filterdSales", filteredSales);
+
+        // 카테고리별 합계 계산
         const salesCategoryTotals = calculateCategoryTotals(filteredSales);
-        const expensesCategoryTotals =
-          calculateCategoryTotals(filteredExpenses);
+        const expensesCategoryTotals = calculateCategoryTotals(filteredExpenses);
+         
+        console.log(salesCategoryTotals, expensesCategoryTotals)
+          
+        // 월별 데이터 -> 오른쪽 섹션 차트를 위한 1년 월별 데이터
         const monthlySales = data.data.monthlySales;
 
-        // 카테고리 5개까지, 나머지는 '기타'로
-        const processChartData = (categories, maxLabels = 5) => {
-          const sortedCategories = [...categories].sort(
-            (a, b) => b.total - a.total
-          );
-
-          const topCategories = sortedCategories.slice(0, maxLabels);
-          const others = sortedCategories.slice(maxLabels);
-
-          const topLabels = topCategories.map((item) => item.category);
-          const topData = topCategories.map((item) => item.total);
-
-          if (others.length > 0) {
-            topLabels.push("기타");
-            topData.push(others.reduce((sum, item) => sum + item.total, 0));
-          }
-
-          return { labels: topLabels, data: topData };
-        };
+  
 
         setList({ 매출: filteredSales, 지출: filteredExpenses });
         setTotalSales(data.data.totalSales || 0);
         setTotalExpenses(data.data.totalExpenses || 0);
         setMonthlySalesData(monthlySales || []);
-        console.log(data.data.monthlySales);
+        console.log("최종 montnlySaelsData?",monthlySalesData);
 
-        const salesProcessed = processChartData(salesCategoryTotals);
-        const expensesProcessed = processChartData(expensesCategoryTotals);
 
-        const chartColors = [
-          "#FF8C42", // 부드러운 오렌지
-          "#FFA559", // 연한 살구색
-          "#FFD57E", // 밝은 머스타드
-          "#FFE8A3", // 은은한 크림 노랑
-          "#FFF4D2", // 연한 레몬빛
-          "#F6C89F", // 따뜻한 코랄 주황
-        ];
 
+        // 차트 데이터 생성
+        const salesProcessed = chartUtils.processChartData(salesCategoryTotals);
+        const expensesProcessed = chartUtils.processChartData(expensesCategoryTotals);
+        console.log("salesProcessed",salesProcessed)
+    
+
+        // 가공된 sales data와 expens data를 저장
         setSalesData({
           labels: salesProcessed.labels,
           datasets: [
@@ -149,7 +154,7 @@ export default function SalesExpenses() {
               label: "매출 카테고리별",
               data: salesProcessed.data,
               hoverOffset: 6,
-              backgroundColor: chartColors,
+              backgroundColor: chartUtils.chartColors,
             },
           ],
         });
@@ -161,30 +166,23 @@ export default function SalesExpenses() {
               label: "지출 카테고리별",
               data: expensesProcessed.data,
               hoverOffset: 6,
-              backgroundColor: chartColors,
+              backgroundColor: chartUtils.chartColors,
             },
           ],
         });
-      } catch (error) {
-        console.error("손익계산서 요청 실패:", error);
+      }  catch (error) {
+        setError("예상치 못한 오류가 발생했습니다.");
+        console.error("데이터 로드 실패:", error);
       }
     };
     loadTransactionAnalyticsPageData();
-  }, [storeId ,selectedYear, selectedMonth]);
+  }, [storeId, selectedYear, selectedMonth, isStoreIdLoading]);
 
-  const donutChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          boxWidth: 12,
-          boxHeight: 12,
-        },
-      },
-    },
-  };
+  if (isStoreIdLoading) {
+    return <Loading />;
+  }
+
+
 
   // 간편장부
   const handleBusinessTypeSelection = async (type) => {
@@ -192,37 +190,27 @@ export default function SalesExpenses() {
     console.log(`${type} 선택 완료`);
 
     try {
-      const response = await PdfnextClient.post(
-        `/finance/analytics/transactionsimplepdf`,
-        {
-          storeId: storeId,
-          selectedYear: selectedYear,
-          selectedMonth: selectedMonth,
-          type: type,
-        }, // 요청 본문
-        { responseType: 'arraybuffer' }
+      const result = await financeApi.generateSimpleLedgerPDF(
+        storeId,
+        selectedYear,
+        selectedMonth,
+        type
       );
-      console.log("데이터: ", response.data);
+
+      if (!result.success) {
+        alert(result.error);
+        return;
+      }
 
       handleCloseModal();
 
-      const pdfBlob = new Blob([new Uint8Array(response.data)], {
-        type: "application/pdf",
-      });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const fileName = pdfUtils.generateFileName(
+        selectedYear,
+        selectedMonth,
+        "간편장부"
+      );
+      pdfUtils.downloadPDF(result.data, fileName);
 
-      const fileName = `${selectedYear}년_${String(selectedMonth).padStart(
-        2,
-        "0"
-      )}월_간편장부.pdf`;
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
     } catch (error) {
       console.error("간편장부 요청 실패:", error);
       alert("간편장부 요청 중 오류가 발생했습니다.");
@@ -231,38 +219,25 @@ export default function SalesExpenses() {
 
   // 손익계산서
   const handleGenerateIncomeStatement = async () => {
-    try {
-      const response = await PdfnextClient.post(
-        `/finance/analytics/transactionpdf`,
-        {
-          storeId: storeId,
-          selectedYear: selectedYear,
-          selectedMonth: selectedMonth,
-        }, // 요청 본문
-        { responseType: 'arraybuffer' }
+      try {
+        const result = await financeApi.generateIncomeStatementPDF(
+          storeId, 
+          selectedYear, 
+          selectedMonth
       );
 
-      console.log("데이터: ", response.data);
+      if(!result.success){
+        alert(result.error);
+        return;
+      }
 
-      const pdfBlob = new Blob([new Uint8Array(response.data)], {
-        type: "application/pdf",
-      });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+      console.log("데이터: ", result.data);
 
       // 동적으로 파일명 설정
-      const fileName = `${selectedYear}년_${String(selectedMonth).padStart(
-        2,
-        "0"
-      )}월_손익계산서.pdf`;
-
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.setAttribute("download", fileName); // 동적 파일명
-      document.body.appendChild(link);
-      link.click();
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
+      const fileName = pdfUtils.generateFileName(selectedYear, selectedMonth, "손익계산서");
+      // pdf로 다운
+      pdfUtils.downloadPDF(result.data, fileName);
+   
     } catch (error) {
       console.error("손익계산서 요청 실패:", error);
       alert("손익계산서 요청 중 오류가 발생했습니다.");
@@ -293,26 +268,7 @@ export default function SalesExpenses() {
     ],
   };
 
-  const barChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: "",
-        position: "bottom",
-      },
-    },
-    scales: {
-      y: {
-        ticks: {
-          callback: (value) => {
-            if (value >= 1000000) {
-              return `${value / 1000000}백만`; // 100만 단위로 변환
-            }
-          },
-        },
-      },
-    },
-  };
+ 
 
   return (
     <div className={classes.container}>
@@ -382,34 +338,35 @@ export default function SalesExpenses() {
             className={classes.chartContainer}
             style={{ position: "relative" }}
           >
-            {/* {error && (
-                <div className={styles.errorText}>
-                    {error}
+            {error ? (
+              <div className={styles.errorMessage}>{error}</div>
+            ) : (
+              <>
+                <div className={classes.chartStyle}>
+                  {!salesData.labels || (salesData.labels && salesData.datasets[0].data.length === 0) ? (
+                    <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 매출 데이터가 없습니다.`} />
+                  ) : (
+                    <Doughnut data={salesData} options={chartUtils.donutChartOptions} />
+                  )}
                 </div>
-            )} */}
-            <div className={classes.chartStyle}>
-              {/* <h2>매출</h2> */}
-              {salesData.labels ? (
-                <Doughnut data={salesData} options={donutChartOptions} />
-              ) : (
-                <Loading />
-              )}
-            </div>
-            <div className={classes.chartStyle}>
-              {/* <h2>지출</h2> */}
-              {expensesData.labels ? (
-                <Doughnut data={expensesData} options={donutChartOptions} />
-              ) : (
-                <Loading />
-              )}
-            </div>
+                <div className={classes.chartStyle}>
+                  {!expensesData.labels || (expensesData.labels && expensesData.datasets[0].data.length === 0) ? (
+                    <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 지출 데이터가 없습니다.`} />
+                  ) : (
+                    <Doughnut data={expensesData} options={chartUtils.donutChartOptions} />
+                  )}
+                </div>
+              </>
+            )}
+           
+          
           </div>
         </div>
 
         <div className={classes.rightSection}>
           <h2>{selectedYear}년 월별 매출</h2>
           {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
-            <Bar data={monthlySalesBarData} options={barChartOptions} className={classes.barContainer} />
+            <Bar data={monthlySalesBarData} options={chartUtils.barChartOptions} className={classes.barContainer} />
           ) : (
             <Loading />
           )}
