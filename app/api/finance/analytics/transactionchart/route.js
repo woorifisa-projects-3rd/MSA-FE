@@ -33,6 +33,8 @@ export async function GET(request) {
     } catch (error) {
       
         console.error('Spring Boot 요청 실패:', error.message);
+        console.log("차트 에러 응답", error.response)
+        console.log("차트 에러 응답 데이터", error.response.data)
         return NextResponse.json(
           { error: error.response?.data || 'Spring Boot 서버 오류' },
           { status: error.response?.status || 500 }

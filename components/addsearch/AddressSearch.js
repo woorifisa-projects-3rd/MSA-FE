@@ -42,9 +42,9 @@ const AddressSearch = ({ onAddressChange, initialPostcodeAddress, initialDetailA
     onDetailChange(updatedDetail);
    }
     
-   if (onAddressChange) {
-    onAddressChange(postcodeAddress, updatedDetail);
-    }
+  //  if (onAddressChange) {
+  //   onAddressChange(postcodeAddress, updatedDetail);
+  //   }
   };
 
   // 우편번호 찾기 버튼 클릭 시 열기/닫기 토글 함수

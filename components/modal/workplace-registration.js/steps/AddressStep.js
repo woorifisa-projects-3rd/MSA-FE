@@ -6,12 +6,22 @@ import { useState } from "react";
 import { KakaoMap } from "@/utils/kakao";
 import { useEffect } from "react";
 
-export default function AddressStep({mode, initialLatLng, initialAddress }){
+export default function AddressStep({mode, initialLatLng }){
     const { formData, setFormData, error, success , setSuccess} = useRegistration();
     const [selectedAddress, setSelectedAddress] = useState('');
     const [latAndLng, setlatAndLng] = useState(initialLatLng || null);
     // const [showMap, setShowMap] = useState(false);
     const [showMap, setShowMap] = useState(!!initialLatLng);
+
+    // location 문자열을 기본 주소와 상세 주소로 분리
+    const parseAddress = (location) => {
+        if (!location) return { base: '', detail: '' };
+        const [base, detail] = location.split(',').map(str => str.trim());
+        return { base, detail: detail || '' };
+    };
+
+    const { base: initialPostcode, detail: initialDetail } = parseAddress(formData.location);
+
 
     // 컴포넌트 마운트 시 edit 모드면 맵 표시
     useEffect(() => {
@@ -64,8 +74,8 @@ export default function AddressStep({mode, initialLatLng, initialAddress }){
             <AddressSearch 
                 onDetailChange={handleDetailChange}
                 onAddressComplete={handleAddressComplete}
-                initialPostcodeAddress={initialAddress || ""} 
-                initialDetailAddress=""
+                initialPostcodeAddress={initialPostcode}
+                initialDetailAddress={initialDetail}
             />
 
 

@@ -22,45 +22,17 @@ const tabs = [
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [stores, setStores] = useState([]);
-  const [loading, setLoading] = useState(false);
+//   const [stores, setStores] = useState([]);
+//   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [originalStore, setOriginalStore] = useState([]);
+//   const [originalStore, setOriginalStore] = useState([]);
 
-  const fetchStores = async () => {
-    
-    setLoading(true);
-    setError(null);
-    try {
-        const response = await nextClient.get('/mypage/store/storelist');
-        setOriginalStore(response.data);
-        const transformedStores = response.data.map(store => ({
-            storeId: store.id,
-            storeName: store.storeName,
-            businessNumber: store.businessNumber,
-            accountNumber: store.accountNumber,
-            bankCode: store.bankCode,
-            location: store.location,
-        }));
-        
-        setStores(transformedStores);
-    } catch (error) {
-        console.error("가게 데이터를 가져오는데 실패했습니다.");
-        setError(error.response?.data?.error || error.message);
-    } finally {
-        setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchStores();
-  }, []);
 
-  console.log("서버에서 받은 original list", originalStore)
   const renderTabContent = () => {
       switch(selectedTab) {
           case 0:
-              return <Workplace content={stores} fetchStores={fetchStores} originalStore={originalStore}/>;
+              return <Workplace />;
           case 1:
               return <ProfileDetail />;
           case 2:
@@ -73,9 +45,9 @@ export default function Home() {
   return (
       <div className={classes.container}>
           <div className={classes.content}>
-            {loading && <Loading />}
+            {/* {loading && <Loading />} */}
             {error && <p className={classes.errorMessage}>에러: {error}</p>}
-            {!loading && !error && (
+            { !error && (
                 <>
                   <div className={classes.tabNavigation}>
                       <nav className={classes.tabList}>

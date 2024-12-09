@@ -1,6 +1,7 @@
 'use client'
 import DefaultTable from '@/components/table/DefaultTable';
-import classes from './ProfileDetail.module.css';
+// import classes from './ProfileDetail.module.css';
+import classes from './Workplace.module.css';
 // import WorkplaceModal from '@/components/modal/workplace-registration.js/workplace-registration';
 import ModalContainer from '@/components/modal/modal-container';
 import { useState, useEffect, useRef } from 'react';
@@ -26,7 +27,9 @@ const getBankLogo = (code) => {
     return bank ? bank.logoUrl : null;
 };
 
-export default function Workplace({ content, fetchStores , originalStore}) {
+export default function Workplace() {
+    const [stores, setStores] = useState([]);
+    const [originalStore, setOriginalStore] = useState([]);
     const [isRegistrationModalOpen, setRegistrationModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isFirstRegistrationModalOpen, setFirstRegistrationModalOpen] = useState(false);
@@ -34,8 +37,39 @@ export default function Workplace({ content, fetchStores , originalStore}) {
     const [error, setError] = useState('');
     const [deleteStoreId, setdeleteStoreId] = useState(null);
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const workplaceInfo = content;
+    const fetchStores = async () => {
+    
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await nextClient.get('/mypage/store/storelist');
+            console.log("매출/재출 데이터",response.data) // businessNumber 있음 
+            setOriginalStore(response.data);
+            const transformedStores = response.data.map(store => ({
+                storeId: store.id,
+                storeName: store.storeName,
+                businessNumber: store.businessNumber,
+                accountNumber: store.accountNumber,
+                bankCode: store.bankCode,
+                location: store.location,
+            }));
+            console.log("transformedStores:", transformedStores); // businessNumber undefined 
+            setStores(transformedStores); 
+        } catch (error) {
+            console.error("가게 데이터를 가져오는데 실패했습니다.");
+            setError(error.response?.data?.error || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchStores();
+    }, []);
+
 
     const handleEditClick = (storeId) => {
         const store = originalStore.find((item) => item.id === storeId);
@@ -75,7 +109,11 @@ export default function Workplace({ content, fetchStores , originalStore}) {
         }
     };
 
-    const enrichedWorkplaceInfo = workplaceInfo.map((workplace) => ({
+    console.log("stores", stores);
+
+    console.log("selectedWorkplace", selectedWorkplace);
+    const enrichedWorkplaceInfo = stores.map((workplace) => ({
+     
         ...workplace,
         accountNumber: (
             <div className={classes.accountContainer}>
@@ -115,7 +153,7 @@ export default function Workplace({ content, fetchStores , originalStore}) {
     return (
         <div className={classes.container}>
 
-            {workplaceInfo.length > 0 ? (
+            {stores.length > 0 ? (
                 <>
                     <DefaultTable
                         tableName={tableName}
@@ -148,28 +186,31 @@ export default function Workplace({ content, fetchStores , originalStore}) {
                 </>
             ) : (
                 <div className={classes.addButtonContainer}>
-                <button
-                    onClick={() => setFirstRegistrationModalOpen(true)}
-                    className={classes.addButton}
-                >
-                    <div className={classes.iconContainer}>
-                        <svg
-                            className={classes.icon}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                            />
-                        </svg>
+                    <div className={classes.noStoreText}>
+                        등록된 사업장이 없습니다.                       
                     </div>
-                    <span className={classes.addButtonText}>사업장 최초 등록</span>
-                </button>
-            </div>
+                    <button
+                        onClick={() => setFirstRegistrationModalOpen(true)}
+                        className={classes.addButton}
+                    >
+                        <div className={classes.iconContainer}>
+                            <svg
+                                className={classes.icon}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 4v16m8-8H4"
+                                />
+                            </svg>
+                        </div>
+                        <span className={classes.addButtonText}>사업장 최초 등록</span>
+                    </button>
+                </div>
             )}
 
             {/* 사업장 최초 등록 모달 */}

@@ -34,7 +34,7 @@ export default function Form() {
     startTime: "출근시간",
     endTime: "퇴근시간",
     totalHours: "총 근무시간",
-    salary: "급여금액",
+    // salary: "급여금액",
     edit: "수정",
     delete: "삭제",
   };
@@ -142,7 +142,7 @@ export default function Form() {
         startTime: item.startTime.substring(11, 16),
         endTime: item.endTime ? item.endTime.substring(11, 16) : "미퇴근",
         totalHours: item.totalHours,
-        salary: `${item.salary}원`,
+        // salary: `${item.salary}원`,
         commuteDate: item.commuteDate || selectedDate, // 날짜 정보 추가
         edit: (
           <PrimaryButton onClick={() => handleEditClick(item)} text="수정" />
@@ -303,7 +303,6 @@ export default function Form() {
 
   return (
     <>
-      {isLoading && <Loading />}
       <div className={classes.container}>
         <div className={classes.attendanceHeader}>
           <div className={classes.navigation}>
@@ -368,7 +367,15 @@ export default function Form() {
           />
         </ModalContainer>
 
-        <DefaultTable tableHeaders={tableHeaders} list={attendanceList} />
+        {isLoading ? (
+          <div>
+            <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px", marginTop: "15px" }} />
+            <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px" }} />
+            <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px" }} />
+          </div>
+        ) : (
+          <DefaultTable tableHeaders={tableHeaders} list={attendanceList} />
+        )}
 
         <DeleteModal
           isOpen={isDeleteModalOpen}
