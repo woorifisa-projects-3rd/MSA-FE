@@ -215,16 +215,8 @@ export const RegistrationProvider = ({ children, mode}) => {
             
             if (response.data) {
                 setError("");
-                setSuccess("가게 등록에 성공했습니다!")
-                setTimeout(() => {
-                    if(onSuccess){
-                        onSuccess();
-                    }
-                    if (onClose) {
-                        onClose();
-                    }
-                    setIsSubmitting(false);
-                }, 1000); // 2초 후 모달 닫기
+                if(onSuccess) onSuccess();
+                window.location.href = `/success?type=register&storeName=${formData.storeName}`;
                 return true;
             }
         
@@ -250,11 +242,9 @@ export const RegistrationProvider = ({ children, mode}) => {
             if (response.data) {
                 setError("");
                 setSuccess("가게 정보가 수정되었습니다!");
-                setTimeout(() => {
-                    if(onSuccess) onSuccess();
-                    if(onClose) onClose();
-                    setIsSubmitting(false);
-                }, 1000);
+                if(onSuccess) onSuccess();
+                window.location.href = `/success?type=edit&storeName=${formData.storeName}`;
+                // 모달이 닫히고 나서 페이지 이동
                 return true;
             }
         } catch(error){

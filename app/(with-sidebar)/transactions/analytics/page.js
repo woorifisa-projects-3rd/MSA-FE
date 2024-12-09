@@ -45,8 +45,9 @@ export default function SalesExpenses() {
   const [expensesData, setExpensesData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessType, setSelectedBusinessType] = useState(null); // 선택된 사업자 유형 상태
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -74,19 +75,25 @@ export default function SalesExpenses() {
   useEffect(() => {
     const loadTransactionAnalyticsPageData = async () => {
       try {
+        setIsLoading(true);
         console.log("transaction-chart 데이터 요청 중!!")
         // sales data와 expenses data를 가져오기 위한 api
         const result = await financeApi.getTransactionChart(storeId, selectedYear, selectedMonth)
        
         // 응답을 실패한 경우
         if (!result.success) {
-            setError(result.error);
-            console.log("트랜잭션 차트 요청 페이지",result.error)
-            return;
+          // 오류 응답 데이터 확인 후 적절한 메시지 설정
+          if (result.error && result.error.includes("계좌 정보를 찾을 수 없습니다.")) {
+            setError("계좌 정보를 찾을 수 없습니다. 관리자에게 문의해주세요.");
+          } else {
+            setError("데이터를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.");
+          }
+          console.log("트랜잭션 차트 요청 페이지", result.error)
+          return;
         }
 
         // 성공시 에러 상태 초기화
-        setError("");  // 이 부분 추가
+        setError(null);
 
         const data = result.data;
 
@@ -170,20 +177,19 @@ export default function SalesExpenses() {
             },
           ],
         });
+
       }  catch (error) {
         setError("예상치 못한 오류가 발생했습니다.");
         console.error("데이터 로드 실패:", error);
+      } finally {
+        setIsLoading(false); // 로딩 상태 종료
       }
     };
     loadTransactionAnalyticsPageData();
   }, [storeId, selectedYear, selectedMonth, isStoreIdLoading]);
 
-  if (isStoreIdLoading) {
-    return <Loading />;
-  }
 
-
-
+  console.log("error",error);
   // 간편장부
   const handleBusinessTypeSelection = async (type) => {
     setSelectedBusinessType(type);
@@ -300,91 +306,97 @@ export default function SalesExpenses() {
       </div>
 
       <div className={classes.gridContainer}>
-        <div className={classes.leftSection}>
-          {/* 왼쪽 섹션 매출/지출 카드 */}
-          <div className={classes.summaryContainer}>
-            {/* 왼쪽 매출 카드 */}
-            <div className={classes.card}>
-              <div className={classes.icon}>📈</div>
-              <div className={classes.textContainer}>
-                <h3>
-                  매출
-                    <span className={classes.tooltip}>
-                      원가를 감하지 않은, 일일 매출 정산금과 온라인 결제 정산금 등을 포함한 총 매출액입니다.
-                    </span>
-                </h3>
-                <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
+        {isLoading ? (
+          <Loading />
+        ): (
+          <>
+            <div className={classes.leftSection}>
+              {/* 왼쪽 섹션 매출/지출 카드 */}
+              <div className={classes.summaryContainer}>
+                {/* 왼쪽 매출 카드 */}
+                <div className={classes.card}>
+                  <div className={classes.icon}>📈</div>
+                  <div className={classes.textContainer}>
+                    <h3>
+                      매출
+                        <span className={classes.tooltip}>
+                          원가를 감하지 않은, 일일 매출 정산금과 온라인 결제 정산금 등을 포함한 총 매출액입니다.
+                        </span>
+                    </h3>
+                    <p>{totalSales ? totalSales.toLocaleString() : 0}원</p>
+                  </div>
+                </div>
+                {/* 오른쪽 지출 카드 */}
+                <div className={classes.card}>
+                  <div className={classes.icon}>📉</div>
+                  <div className={classes.textContainer}>
+                    <h3>
+                      지출
+                        <span className={classes.tooltip2}>
+                          식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
+                        </span>
+                    </h3>
+                
+                    <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
+                  </div>
+                </div>
+              </div>
+
+
+              {/* 왼쪽 섹션 차트 컨테이너  */}
+              <div
+                className={classes.chartContainer}
+                style={{ position: "relative" }}
+              >
+                {error ? (
+                  <div className={styles.errorMessage}>{error}</div>
+                ) : (
+                  <>
+                    <div className={classes.chartStyle}>
+                      {!salesData.labels || (salesData.labels && salesData.datasets[0].data.length === 0) ? (
+                        <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 매출 데이터가 없습니다.`} />
+                      ) : (
+                        <Doughnut data={salesData} options={chartUtils.donutChartOptions} />
+                      )}
+                    </div>
+                    <div className={classes.chartStyle}>
+                      {!expensesData.labels || (expensesData.labels && expensesData.datasets[0].data.length === 0) ? (
+                        <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 지출 데이터가 없습니다.`} />
+                      ) : (
+                        <Doughnut data={expensesData} options={chartUtils.donutChartOptions} />
+                      )}
+                    </div>
+                  </>
+                )}
+              
               </div>
             </div>
-            {/* 오른쪽 지출 카드 */}
-            <div className={classes.card}>
-              <div className={classes.icon}>📉</div>
-              <div className={classes.textContainer}>
-                <h3>
-                  지출
-                    <span className={classes.tooltip2}>
-                      식자재, 인건비, 임대료 등 모든 지출의 합계입니다.
-                    </span>
-                </h3>
-            
-                <p>{totalExpenses ? totalExpenses.toLocaleString() : 0}원</p>
+
+            <div className={classes.rightSection}>
+              <h2>{selectedYear}년 월별 매출</h2>
+              {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
+                <Bar data={monthlySalesBarData} options={chartUtils.barChartOptions} className={classes.barContainer} />
+              ) : (
+                <Loading />
+              )}
+
+              <div className={classes.reportsContainer}>
+                {salesData.labels && expensesData.labels ? (
+                  <>
+                    <BaseButton
+                      text="손익계산서 발급"
+                      onClick={handleGenerateIncomeStatement}
+                    />
+                    <BaseButton text="간편장부 발급" onClick={handleOpenModal} />
+                  </>
+                ) : (
+                  <p></p>
+                )}
               </div>
             </div>
-          </div>
-
-
-          {/* 왼쪽 섹션 차트 컨테이너  */}
-          <div
-            className={classes.chartContainer}
-            style={{ position: "relative" }}
-          >
-            {error ? (
-              <div className={styles.errorMessage}>{error}</div>
-            ) : (
-              <>
-                <div className={classes.chartStyle}>
-                  {!salesData.labels || (salesData.labels && salesData.datasets[0].data.length === 0) ? (
-                    <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 매출 데이터가 없습니다.`} />
-                  ) : (
-                    <Doughnut data={salesData} options={chartUtils.donutChartOptions} />
-                  )}
-                </div>
-                <div className={classes.chartStyle}>
-                  {!expensesData.labels || (expensesData.labels && expensesData.datasets[0].data.length === 0) ? (
-                    <EmptyStateMessage message={`${selectedYear}년 ${selectedMonth}월의 지출 데이터가 없습니다.`} />
-                  ) : (
-                    <Doughnut data={expensesData} options={chartUtils.donutChartOptions} />
-                  )}
-                </div>
-              </>
-            )}
-           
-          
-          </div>
-        </div>
-
-        <div className={classes.rightSection}>
-          <h2>{selectedYear}년 월별 매출</h2>
-          {monthlySalesBarData?.datasets ? ( // 데이터셋 확인
-            <Bar data={monthlySalesBarData} options={chartUtils.barChartOptions} className={classes.barContainer} />
-          ) : (
-            <Loading />
-          )}
-
-          <div className={classes.reportsContainer}>
-            {salesData.labels && expensesData.labels ? (
-              <>
-                <BaseButton
-                  text="손익계산서 발급"
-                  onClick={handleGenerateIncomeStatement}
-                />
-                <BaseButton text="간편장부 발급" onClick={handleOpenModal} />
-              </>
-            ) : (
-              <p></p>
-            )}
-          </div>
-        </div>
+          </>
+        )}
+    
       </div>
 
       <ModalContainer

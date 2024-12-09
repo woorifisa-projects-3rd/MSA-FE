@@ -12,7 +12,10 @@ export const financeApi = {
                 data: response.data
             };
         } catch(error){
-            const errorMessage = error.response.data.error || '데이터를 불러오는데 실패했습니다.';
+            let errorMessage = '데이터를 불러오는데 실패했습니다.';
+            if (error.response && error.response.data && error.response.data.message) {
+                errorMessage = error.response.data.message;
+            }
             return {
                 success: false,
                 error: errorMessage

@@ -21,6 +21,7 @@ export default function PayRecords() {
   const [list, setList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessType, setSelectedBusinessType] = useState("0");
+  const [isLoading, setIsLoading] = useState(true);
 
   const { storeId } = useAuth();
   const selectedYear = selectedDate.getFullYear();
@@ -28,33 +29,43 @@ export default function PayRecords() {
 
   // 데이터 로드
   useEffect(() => {
-    if (storeId) {
-      const loadPayStatementPageData = async () => {
-        try {
-          const response = await nextClient.get("/attendance/paystatement/employees", {
-            params: {
-              storeId,
-              selectedYear,
-              selectedMonth,
-            },
-          });
-
-          console.log('급여기록 데이터 : ',response.data);
-          const data = response.data.data;
-          const formattedData = data.map((item) => ({
-            name: item.name,
-            account: item.accountNumber,
-            amount: item.amount === 0 ? "0" : item.amount,
-            date: item.issuanceDate,
-            button: <PrimaryButton text="확인" onClick={() => handleViewStatement(item.payStatementId)}  />,
-          }));
-          setList(formattedData);
-        } catch (error) {
-          console.error("급여 기록 로드 오류:", error.message);
-        }
-      };
-      loadPayStatementPageData();
+    if (!storeId) {
+      setIsLoading(false);
+      setList([]);
+      return;
     }
+
+    const loadPayStatementPageData = async () => {
+      setIsLoading(true);
+      try {
+        setIsLoading(true); 
+        const response = await nextClient.get("/attendance/paystatement/employees", {
+          params: {
+            storeId,
+            selectedYear,
+            selectedMonth,
+          },
+        });
+
+        console.log('급여기록 데이터 : ',response.data);
+        const data = response.data.data;
+        const formattedData = data.map((item) => ({
+          name: item.name,
+          account: item.accountNumber,
+          amount: item.amount === 0 ? "0" : item.amount,
+          date: item.issuanceDate,
+          button: <PrimaryButton text="확인" onClick={() => handleViewStatement(item.payStatementId)}  />,
+        }));
+        setList(formattedData);
+      } catch (error) {
+        console.log("급여기록 실패",error)
+        console.error("급여 기록 로드 오류:", error.message);
+      } finally {
+        setIsLoading(false); // 로딩 종료
+      }
+    };
+    loadPayStatementPageData();
+
   }, [storeId, selectedYear, selectedMonth]);
 
         // 확인 버튼 클릭 시 급여 명세서 보기
@@ -133,6 +144,7 @@ export default function PayRecords() {
     return { ...item, account: updatedAccount };
   });
 
+  
   const tableHeaders = {
     name: "직원 이름",
     account: "계좌번호",
@@ -189,7 +201,16 @@ export default function PayRecords() {
 
 
       {/* 테이블 */}
-      <DefaultTable tableHeaders={tableHeaders} list={updatedList} />
+      {isLoading ? (
+        // 로딩 중일 때 Skeleton UI 표시
+        <div>
+          <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px", marginTop:"15px" }} />
+          <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px" }} />
+          <div className={classes.skeleton} style={{ width: "100%", height: "40px", marginBottom: "10px" }} />
+        </div>
+      ) : (
+        <DefaultTable tableHeaders={tableHeaders} list={list} />
+      )}
     </div>
   );
 }

@@ -18,8 +18,6 @@ const BusinessSelectDropdown = () => {
         async function fetchStores() {
             try{
                 const response = await nextClient.get('/store/storelist');
-                console.log("api 응답 데이터:",response.data);
-
                 if (response.data.length === 0) {
                     console.log("가게 목록이 없음, 마이페이지로 이동");
                     router.push('/mypage');
