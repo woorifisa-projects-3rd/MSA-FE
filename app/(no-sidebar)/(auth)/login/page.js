@@ -31,7 +31,7 @@ export default function LoginPage() {
             });
         
             if (response.data.success) {
-                router.push('/mypage');
+                router.push('/transactions/analytics');
                 if (email === 'zipgyesajang@gmail.com') {
                     router.push('/manager');
                 }
