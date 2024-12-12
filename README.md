@@ -22,18 +22,18 @@
 
 <br>
 
-## 기술 스택
+## 🍟 기술 스택
 ![집계사장_기술스택](https://github.com/user-attachments/assets/40e36fb6-c2e5-45cb-8efd-16cc133154e8)
 
 <br>
 
-## 🍟 시연 영상
+## 🥤 시연 영상
 링크를 누르시면 유튜브로 연결됩니다. <br>
 [집계사장 시연 영상](https://youtu.be/G0IX0aQYYmw)
 
 <br>
 
-## 🥤 멤버
+## 🍔 멤버
 <table>
   <tr>
     <td height="140px" align="center"> <a href="https://github.com/jihyuk0414"> <img src="https://avatars.githubusercontent.com/u/123541776?v=4" width="140px" />
